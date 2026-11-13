@@ -1,0 +1,97 @@
+{
+  "atualizado_em": "12/11/2026",
+  "fuso": "America/Sao_Paulo",
+  "arquivo": "data/precatorios.sqlite",
+  "tamanho_bytes": 144527360,
+  "bases": [
+    {
+      "id": "siop",
+      "nome": "SIOP — precatórios federais expedidos para 2026",
+      "tabela": "siop",
+      "registros": 164012,
+      "soma_valor_atualizado": 71863980979.84454,
+      "fonte": "Secretaria de Orçamento Federal / SIOP (Ministério do Planejamento)",
+      "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/precatorios-content/painel-precatorios/dados-abertos",
+      "arquivo_origem": "expedidos_2026.csv",
+      "testado_em": "12/11/2026",
+      "limites": "Não traz número do precatório, processo nem credor. O valor atualizado usa correção única pelo IPCA."
+    },
+    {
+      "id": "trf2_pagos",
+      "nome": "TRF2 — lista de ordem cronológica (pagos, proposta 2024)",
+      "tabela": "trf_pagos",
+      "filtro": {
+        "tribunal": "TRF2"
+      },
+      "registros": 15964,
+      "fonte": "Tribunal Regional Federal da 2ª Região",
+      "url": "https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs",
+      "arquivo_origem": "lista de ordem cronológica de precatórios pagos 2024 (CSV)",
+      "testado_em": "12/11/2026",
+      "limites": "Arquivo de precatórios já pagos. CPF/CNPJ do beneficiário vem parcial na origem."
+    },
+    {
+      "id": "trf4_pagos",
+      "nome": "TRF4 — precatórios pagos na ordem cronológica (2022–2025)",
+      "tabela": "trf_pagos",
+      "filtro": {
+        "tribunal": "TRF4"
+      },
+      "registros": 210486,
+      "fonte": "Tribunal Regional Federal da 4ª Região",
+      "url": "https://consulta.trf4.jus.br/trf4/controlador.php?acao=pagina_precatorios",
+      "arquivo_origem": "precatórios pagos ordem cronológica 2022-2025 (XLSX)",
+      "testado_em": "12/11/2026",
+      "limites": "Arquivo de precatórios já pagos. CPF/CNPJ do beneficiário vem parcial na origem."
+    },
+    {
+      "id": "trf2_extra",
+      "nome": "TRF2 — pagos extraorçamentários (exercício 2026)",
+      "tabela": "trf2_extra",
+      "registros": 426,
+      "fonte": "Tribunal Regional Federal da 2ª Região",
+      "url": "https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs",
+      "arquivo_origem": "pagos extraorçamentários 2026 (CSV)",
+      "testado_em": "12/11/2026"
+    },
+    {
+      "id": "trf2_mapa",
+      "nome": "TRF2 — mapa anual da dívida (2025)",
+      "tabela": "trf_mapas",
+      "filtro": {
+        "tribunal": "TRF2"
+      },
+      "registros": 125,
+      "fonte": "Tribunal Regional Federal da 2ª Região / CNJ (mapa da dívida)",
+      "url": "https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs",
+      "arquivo_origem": "mapa anual da dívida 2025 (CSV)",
+      "testado_em": "12/11/2026"
+    },
+    {
+      "id": "trf4_mapa",
+      "nome": "TRF4 — mapa de precatórios (2025)",
+      "tabela": "trf_mapas",
+      "filtro": {
+        "tribunal": "TRF4"
+      },
+      "registros": 285,
+      "fonte": "Tribunal Regional Federal da 4ª Região / CNJ (mapa da dívida)",
+      "url": "https://consulta.trf4.jus.br/trf4/controlador.php?acao=pagina_precatorios",
+      "arquivo_origem": "mapa de precatórios 2025 (CSV)",
+      "testado_em": "12/11/2026"
+    },
+    {
+      "id": "trf5_mapa",
+      "nome": "TRF5 — mapa anual da dívida (2025)",
+      "tabela": "trf_mapas",
+      "filtro": {
+        "tribunal": "TRF5"
+      },
+      "registros": 499,
+      "fonte": "Tribunal Regional Federal da 5ª Região / CNJ (mapa da dívida)",
+      "url": "https://www.trf5.jus.br/",
+      "arquivo_origem": "mapa anual da dívida 2025 (CSV)",
+      "testado_em": "12/11/2026"
+    }
+  ]
+}

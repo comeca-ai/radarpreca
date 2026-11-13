@@ -1,0 +1,1047 @@
+{
+  "n": 164012,
+  "sum_orig": "69667793659.80",
+  "sum_atu": "71863980979.84454312792810891",
+  "desc_atu": {
+    "n": 164012,
+    "min": 0.01031523709947941,
+    "p10": 50556.534625350614,
+    "p25": 113509.10629312471,
+    "median": 159185.02774580504,
+    "p75": 265787.91259941616,
+    "p90": 470550.13466362236,
+    "p95": 690233.9573384993,
+    "p99": 1727570.4393468217,
+    "max": 1518907806.3588617,
+    "mean": 438162.94527134934,
+    "std": 8942960.381786808
+  },
+  "desc_orig": {
+    "n": 164012,
+    "min": 0.01,
+    "p10": 49011.51,
+    "p25": 110040.23,
+    "median": 154320.28,
+    "p75": 257665.345,
+    "p90": 456169.96499999997,
+    "p95": 669140.1764999991,
+    "p99": 1674775.308299999,
+    "max": 1472489475.24,
+    "mean": 424772.53895934444,
+    "std": 8669660.518261999
+  },
+  "desc_lag": {
+    "n": 164012,
+    "min": 0.013689253935660506,
+    "p10": 2.2587268993839835,
+    "p25": 3.811088295687885,
+    "median": 6.669404517453799,
+    "p75": 14.499657768651609,
+    "p90": 25.52498288843258,
+    "p95": 29.727583846680357,
+    "p99": 37.889117043121146,
+    "max": 124.95003422313484,
+    "mean": 10.384922587006916,
+    "std": 9.191450643268256
+  },
+  "top1_n": 1641,
+  "top10_n": 16402,
+  "top1_sum": "35822339789.5458212903",
+  "top10_sum": "46800779975.82981380594",
+  "top1_share": 0.4984741911193703,
+  "top10_share": 0.6512411271643284,
+  "empty": {
+    "Chave": 0,
+    "Exercício": 0,
+    "Código do Tribunal": 0,
+    "Nome do Tribunal": 0,
+    "Tribunal Expedidor": 297356,
+    "Data de Ajuizamento da Ação Originária": 0,
+    "Data da Autuação": 0,
+    "Tipo de Despesa": 0,
+    "Tributário": 0,
+    "Código da UO Executada": 0,
+    "Nome da UO Executada": 0,
+    "Natureza de Despesa": 0,
+    "Tipo de Causa": 0,
+    "Valor Original do Precatório": 0,
+    "Fundef": 0,
+    "Anos_Decorridos": 0,
+    "Class_Tempo": 0,
+    "Class_Tribunais": 0,
+    "Class_NFGC": 0,
+    "DataInicio": 0,
+    "DataFim": 0,
+    "IndiceAtualizacao": 0,
+    "Valor Atualizado": 0,
+    "FaixaValor": 0
+  },
+  "chave_unique": 164012,
+  "chave_dup": 0,
+  "full_row_dup": 0,
+  "neg_orig": 0,
+  "neg_atu": 0,
+  "zero_orig": 0,
+  "zero_atu": 0,
+  "faixa_mismatch": 0,
+  "ajuiz_na": 0,
+  "autu_na": 0,
+  "lag_neg": 0,
+  "lag_zero": 0,
+  "autu_min": "2021-10-21",
+  "autu_max": "2025-04-14",
+  "ajuiz_min": "1899-12-29",
+  "ajuiz_max": "2025-03-27",
+  "indice_val": 1.031523709947941,
+  "inicio": "2025-04-01 00:00:00,000",
+  "fim": "2026-02-01 00:00:00,000",
+  "cnj_n": 15334,
+  "expedidor_preenchido": 15334,
+  "tjdft_n": 152,
+  "lag_median": 6.669404517453799,
+  "lag_p90": 25.52498288843258,
+  "anos_decorridos_median": 6.0,
+  "n_uos": 144,
+  "n_tribunais": 34,
+  "n_causas": 1750,
+  "autu_year": {
+    "2021": 1,
+    "2022": 1,
+    "2023": 1,
+    "2024": 83636,
+    "2025": 80373
+  },
+  "ramo": [
+    {
+      "k": "Justiça Federal",
+      "qtde": 143007,
+      "valor": 66334120785.244995,
+      "share_qtde": 0.871930102675414,
+      "share_valor": 0.9230510177810705
+    },
+    {
+      "k": "Justiça Estadual",
+      "qtde": 15426,
+      "valor": 3260811757.1030965,
+      "share_qtde": 0.0940540936029071,
+      "share_valor": 0.04537477207138922
+    },
+    {
+      "k": "Justiça do Trabalho",
+      "qtde": 4469,
+      "valor": 1244217673.5285733,
+      "share_qtde": 0.027248006243445602,
+      "share_valor": 0.017313508889488533
+    },
+    {
+      "k": "STF",
+      "qtde": 32,
+      "valor": 694015711.0377454,
+      "share_qtde": 0.0001951076750481672,
+      "share_valor": 0.009657351312507912
+    },
+    {
+      "k": "STJ",
+      "qtde": 1078,
+      "valor": 330815052.93013114,
+      "share_qtde": 0.006572689803185133,
+      "share_valor": 0.0046033499455438425
+    }
+  ],
+  "tribunais": [
+    {
+      "k": "Tribunal Regional Federal da 1a. Região",
+      "qtde": 31032,
+      "valor": 26107804199.74749,
+      "share_qtde": 0.18920566787796014,
+      "share_valor": 0.36329471097725385
+    },
+    {
+      "k": "Tribunal Regional Federal da 3a. Região",
+      "qtde": 39330,
+      "valor": 16979424123.085588,
+      "share_qtde": 0.239799526863888,
+      "share_valor": 0.23627168842549584
+    },
+    {
+      "k": "Tribunal Regional Federal da 4a. Região",
+      "qtde": 37676,
+      "valor": 9680842283.599802,
+      "share_qtde": 0.22971489890983587,
+      "share_valor": 0.13471063182980297
+    },
+    {
+      "k": "Tribunal Regional Federal da 2a. Região",
+      "qtde": 13400,
+      "valor": 6447309471.416929,
+      "share_qtde": 0.08170133892642002,
+      "share_valor": 0.08971545109955967
+    },
+    {
+      "k": "Tribunal Regional Federal da 5a. Região",
+      "qtde": 11042,
+      "valor": 4977509452.514882,
+      "share_qtde": 0.0673243421213082,
+      "share_valor": 0.06926292399402292
+    },
+    {
+      "k": "Conselho Nacional de Justiça",
+      "qtde": 15334,
+      "valor": 3245547240.8660693,
+      "share_qtde": 0.09349315903714363,
+      "share_valor": 0.045162363629372794
+    },
+    {
+      "k": "Tribunal Regional Federal da 6ª Região",
+      "qtde": 10527,
+      "valor": 2141231254.8803027,
+      "share_qtde": 0.06418432797600175,
+      "share_valor": 0.029795611454935218
+    },
+    {
+      "k": "Supremo Tribunal Federal",
+      "qtde": 32,
+      "valor": 694015711.0377454,
+      "share_qtde": 0.0001951076750481672,
+      "share_valor": 0.009657351312507912
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 1a. Região - Rio de Janeiro",
+      "qtde": 707,
+      "valor": 337653220.43873036,
+      "share_qtde": 0.004310660195595444,
+      "share_valor": 0.004698504255329674
+    },
+    {
+      "k": "Superior Tribunal de Justiça",
+      "qtde": 1078,
+      "valor": 330815052.93013114,
+      "share_qtde": 0.006572689803185133,
+      "share_valor": 0.0046033499455438425
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 7a. Região - Ceará",
+      "qtde": 1097,
+      "valor": 184187676.8848113,
+      "share_qtde": 0.006688534985244982,
+      "share_valor": 0.002563004085961642
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 4a. Região - Rio Grande do Sul",
+      "qtde": 724,
+      "valor": 184132115.05674246,
+      "share_qtde": 0.004414311147964783,
+      "share_valor": 0.0025622309333014183
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 2a. Região - São Paulo",
+      "qtde": 715,
+      "valor": 177820450.61824796,
+      "share_qtde": 0.004359437114357486,
+      "share_valor": 0.002474403006815343
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 14a. Região - Rondônia/Acre",
+      "qtde": 205,
+      "valor": 90660242.19612661,
+      "share_qtde": 0.0012499085432773212,
+      "share_valor": 0.0012615532977717139
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 5a. Região - Bahia",
+      "qtde": 101,
+      "valor": 38866256.85250582,
+      "share_qtde": 0.0006158085993707778,
+      "share_valor": 0.0005408308351774516
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 6a. Região - Pernambuco",
+      "qtde": 105,
+      "valor": 37380422.4352309,
+      "share_qtde": 0.0006401970587517987,
+      "share_valor": 0.0005201551865838725
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 3a. Região - Minas Gerais",
+      "qtde": 227,
+      "valor": 31547685.305649903,
+      "share_qtde": 0.0013840450698729362,
+      "share_valor": 0.00043899161826976965
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 13a. Região - Paraíba",
+      "qtde": 106,
+      "valor": 27417621.647438403,
+      "share_qtde": 0.0006462941735970539,
+      "share_valor": 0.00038152105232144227
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 15a. Região - Campinas/SP",
+      "qtde": 126,
+      "valor": 26256281.710117225,
+      "share_qtde": 0.0007682364705021583,
+      "share_valor": 0.0003653608017830412
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 10a. Região - Distrito Federal/Tocantins",
+      "qtde": 60,
+      "valor": 22813034.38912923,
+      "share_qtde": 0.0003658268907153135,
+      "share_valor": 0.0003174474065878361
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 17a. Região - Espírito Santo",
+      "qtde": 67,
+      "valor": 22526979.805270497,
+      "share_qtde": 0.0004085066946321001,
+      "share_valor": 0.0003134669064825196
+    },
+    {
+      "k": "Tribunal de Justiça do Distrito Federal",
+      "qtde": 92,
+      "valor": 15264516.237026893,
+      "share_qtde": 0.0005609345657634807,
+      "share_valor": 0.00021240844201642658
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 11a. Região - Amazonas/Roraima",
+      "qtde": 24,
+      "valor": 10254981.095833234,
+      "share_qtde": 0.0001463307562861254,
+      "share_valor": 0.00014269987490269173
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 9a. Região - Paraná",
+      "qtde": 35,
+      "valor": 9860462.062069641,
+      "share_qtde": 0.00021339901958393289,
+      "share_valor": 0.00013721007280177217
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 19a. Região - Alagoas",
+      "qtde": 29,
+      "valor": 7873537.98708155,
+      "share_qtde": 0.00017681633051240154,
+      "share_valor": 0.00010956167303464327
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 8a. Região - Pará/Amapá",
+      "qtde": 25,
+      "valor": 6739988.350660552,
+      "share_qtde": 0.00015242787113138064,
+      "share_valor": 9.378812944625061e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 18a. Região - Goiás",
+      "qtde": 18,
+      "valor": 6405731.973871064,
+      "share_qtde": 0.00010974806721459406,
+      "share_valor": 8.913689287082022e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 24a. Região - Mato Grosso do Sul",
+      "qtde": 23,
+      "valor": 4717840.701450786,
+      "share_qtde": 0.00014023364144087017,
+      "share_valor": 6.56495874167336e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 22a. Região - Piauí",
+      "qtde": 20,
+      "valor": 4690560.241459483,
+      "share_qtde": 0.0001219422969051045,
+      "share_valor": 6.526997499310578e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 16a. Região - Maranhão",
+      "qtde": 18,
+      "valor": 4069320.2080361876,
+      "share_qtde": 0.00010974806721459406,
+      "share_valor": 5.6625310100445126e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 23a. Região - Mato Grosso",
+      "qtde": 17,
+      "valor": 3276341.111338011,
+      "share_qtde": 0.00010365095236933883,
+      "share_valor": 4.5590865780966344e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 12a. Região - Santa Catarina",
+      "qtde": 15,
+      "valor": 3274743.8278188678,
+      "share_qtde": 9.145672267882837e-05,
+      "share_valor": 4.556863929841744e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 20a. Região - Sergipe",
+      "qtde": 4,
+      "valor": 1674755.220268338,
+      "share_qtde": 2.43884593810209e-05,
+      "share_valor": 2.330451496610035e-05
+    },
+    {
+      "k": "Tribunal Regional do Trabalho da 21a. Região - Rio Grande do Norte",
+      "qtde": 1,
+      "valor": 117423.40868478997,
+      "share_qtde": 6.097114845255225e-06,
+      "share_valor": 1.6339674908592016e-06
+    }
+  ],
+  "nfgc": [
+    {
+      "k": "OCC",
+      "qtde": 15055,
+      "valor": 37811519417.66273,
+      "share_qtde": 0.09179206399531742,
+      "share_valor": 0.5261539773070406
+    },
+    {
+      "k": "Previdência",
+      "qtde": 112125,
+      "valor": 24370117774.16428,
+      "share_qtde": 0.6836390020242421,
+      "share_valor": 0.33911449716373615
+    },
+    {
+      "k": "Pessoal",
+      "qtde": 32783,
+      "valor": 9140348203.660103,
+      "share_qtde": 0.19988171597200205,
+      "share_valor": 0.12718956115475522
+    },
+    {
+      "k": "LOAS/FNAS",
+      "qtde": 4048,
+      "valor": 541881322.0325282,
+      "share_qtde": 0.02468112089359315,
+      "share_valor": 0.007540374394016772
+    },
+    {
+      "k": "FAT",
+      "qtde": 1,
+      "valor": 114262.3249061287,
+      "share_qtde": 6.097114845255225e-06,
+      "share_valor": 1.5899804512385068e-06
+    }
+  ],
+  "faixa": [
+    {
+      "k": "Até R$ 1 milhão",
+      "qtde": 160087,
+      "valor": 33218524069.282143,
+      "share_qtde": 0.9760688242323733,
+      "share_valor": 0.46224163504939747
+    },
+    {
+      "k": "Acima de R$ 1 milhão e até R$ 10 milhões",
+      "qtde": 3547,
+      "valor": 7301943652.135969,
+      "share_qtde": 0.021626466356120283,
+      "share_valor": 0.10160783681304716
+    },
+    {
+      "k": "Acima de R$ 10 milhões e até R$ 100 milhões",
+      "qtde": 302,
+      "valor": 9091150233.499672,
+      "share_qtde": 0.001841328683267078,
+      "share_valor": 0.1265049627023785
+    },
+    {
+      "k": "Acima de R$ 100 milhões e até R$ 500 milhões",
+      "qtde": 67,
+      "valor": 13486043684.003199,
+      "share_qtde": 0.0004085066946321001,
+      "share_valor": 0.18766068202909028
+    },
+    {
+      "k": "Acima de R$ 500 milhões e até R$ 1 bilhão",
+      "qtde": 5,
+      "valor": 3612933386.978484,
+      "share_qtde": 3.0485574226276125e-05,
+      "share_valor": 0.050274606801866316
+    },
+    {
+      "k": "Acima de R$ 1 bilhão",
+      "qtde": 4,
+      "valor": 5153385953.945076,
+      "share_qtde": 2.43884593810209e-05,
+      "share_valor": 0.07171027660422026
+    }
+  ],
+  "tempo": [
+    {
+      "k": "Até 5 anos",
+      "qtde": 59755,
+      "valor": 16320466038.562016,
+      "share_qtde": 0.36433309757822596,
+      "share_valor": 0.22710217018368858
+    },
+    {
+      "k": "De 5 até 10 anos",
+      "qtde": 45826,
+      "valor": 18620690905.861656,
+      "share_qtde": 0.2794063848986659,
+      "share_valor": 0.25911020586354855
+    },
+    {
+      "k": "De 10 até 15 anos",
+      "qtde": 18896,
+      "valor": 6707552240.277063,
+      "share_qtde": 0.11521108211594273,
+      "share_valor": 0.09333677523596012
+    },
+    {
+      "k": "De 15 até 20 anos",
+      "qtde": 13908,
+      "valor": 8577438348.153904,
+      "share_qtde": 0.08479867326780967,
+      "share_valor": 0.11935657099986696
+    },
+    {
+      "k": "20 anos ou mais",
+      "qtde": 25627,
+      "valor": 21637833446.989906,
+      "share_qtde": 0.15625076213935565,
+      "share_valor": 0.3010942777169358
+    }
+  ],
+  "fundef": [
+    {
+      "k": "Não Fundef",
+      "qtde": 163801,
+      "valor": 64105659099.955124,
+      "share_qtde": 0.9987135087676512,
+      "share_valor": 0.8920415794657219
+    },
+    {
+      "k": "Fundef",
+      "qtde": 211,
+      "valor": 7758321879.889418,
+      "share_qtde": 0.0012864912323488525,
+      "share_valor": 0.10795842053427807
+    }
+  ],
+  "tributario": [
+    {
+      "k": "Não",
+      "qtde": 159457,
+      "valor": 57762699581.44726,
+      "share_qtde": 0.9722276418798624,
+      "share_valor": 0.8037781764086764
+    },
+    {
+      "k": "Sim",
+      "qtde": 4555,
+      "valor": 14101281398.397282,
+      "share_qtde": 0.02777235812013755,
+      "share_valor": 0.19622182359132348
+    }
+  ],
+  "nat_desp": [
+    {
+      "k": "33909100",
+      "qtde": 130597,
+      "valor": 59512100100.84967,
+      "share_qtde": 0.7962649074457967,
+      "share_valor": 0.8281213939085956
+    },
+    {
+      "k": "31909100",
+      "qtde": 32783,
+      "valor": 9140348203.660103,
+      "share_qtde": 0.19988171597200205,
+      "share_valor": 0.12718956115475522
+    },
+    {
+      "k": "45909100",
+      "qtde": 632,
+      "valor": 3211532675.3347697,
+      "share_qtde": 0.0038533765822013023,
+      "share_valor": 0.04468904493664911
+    }
+  ],
+  "tipo_desp": [
+    {
+      "k": "12",
+      "qtde": 110629,
+      "valor": 24708361989.93833,
+      "share_qtde": 0.6745177182157404,
+      "share_valor": 0.3438212252236375
+    },
+    {
+      "k": "21",
+      "qtde": 5744,
+      "valor": 24092617669.24616,
+      "share_qtde": 0.03502182767114601,
+      "share_valor": 0.33525303414520463
+    },
+    {
+      "k": "11",
+      "qtde": 32783,
+      "valor": 9140348203.660103,
+      "share_qtde": 0.19988171597200205,
+      "share_valor": 0.12718956115475522
+    },
+    {
+      "k": "41",
+      "qtde": 211,
+      "valor": 7758321879.889418,
+      "share_qtde": 0.0012864912323488525,
+      "share_valor": 0.10795842053427807
+    },
+    {
+      "k": "13",
+      "qtde": 13922,
+      "valor": 2936654742.039389,
+      "share_qtde": 0.08488403287564325,
+      "share_valor": 0.04086406989981564
+    },
+    {
+      "k": "39",
+      "qtde": 398,
+      "valor": 2884043786.781657,
+      "share_qtde": 0.0024266517084115796,
+      "share_valor": 0.04013197915643632
+    },
+    {
+      "k": "31",
+      "qtde": 234,
+      "valor": 327488888.5531122,
+      "share_qtde": 0.0014267248737897227,
+      "share_valor": 0.0045570657802127875
+    },
+    {
+      "k": "14",
+      "qtde": 91,
+      "valor": 16143819.736372886,
+      "share_qtde": 0.0005548374509182255,
+      "share_valor": 0.00022464410565983938
+    }
+  ],
+  "top20_uo": [
+    {
+      "cod": "71103",
+      "nome": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "qtde": 31212,
+      "valor": 40319046980.71303,
+      "share_valor": 0.5610466666468308,
+      "share_qtde": 0.19030314855010608
+    },
+    {
+      "cod": "33904",
+      "nome": "Fundo do Regime Geral de Previdência Social",
+      "qtde": 112125,
+      "valor": 24370117774.16428,
+      "share_valor": 0.33911449716373615,
+      "share_qtde": 0.6836390020242421
+    },
+    {
+      "cod": "33201",
+      "nome": "Instituto Nacional do Seguro Social",
+      "qtde": 6526,
+      "valor": 1869819523.5061798,
+      "share_valor": 0.026018869230617796,
+      "share_qtde": 0.0397897714801356
+    },
+    {
+      "cod": "49201",
+      "nome": "Instituto Nacional de Colonização e Reforma Agrária - INCRA",
+      "qtde": 732,
+      "valor": 1508418106.045142,
+      "share_valor": 0.02098990461533439,
+      "share_qtde": 0.004463088066726825
+    },
+    {
+      "cod": "55901",
+      "nome": "Fundo Nacional de Assistência Social",
+      "qtde": 4048,
+      "valor": 541881322.0325282,
+      "share_valor": 0.007540374394016772,
+      "share_qtde": 0.02468112089359315
+    },
+    {
+      "cod": "56202",
+      "nome": "Companhia Brasileira de Trens Urbanos - CBTU",
+      "qtde": 7,
+      "valor": 314761003.0093801,
+      "share_valor": 0.004379955002738578,
+      "share_qtde": 4.267980391678658e-05
+    },
+    {
+      "cod": "36211",
+      "nome": "Fundação Nacional de Saúde",
+      "qtde": 1276,
+      "valor": 260219466.5435367,
+      "share_valor": 0.0036209998805454375,
+      "share_qtde": 0.0077799185425456675
+    },
+    {
+      "cod": "26244",
+      "nome": "Universidade Federal do Rio Grande do Sul",
+      "qtde": 735,
+      "valor": 249051468.46295574,
+      "share_valor": 0.0034655952128898396,
+      "share_qtde": 0.004481379411262591
+    },
+    {
+      "cod": "39252",
+      "nome": "Departamento Nacional de Infraestrutura de Transportes - DNIT",
+      "qtde": 515,
+      "valor": 235200350.2631772,
+      "share_valor": 0.0032728544544330636,
+      "share_qtde": 0.003140014145306441
+    },
+    {
+      "cod": "26242",
+      "nome": "Universidade Federal de Pernambuco",
+      "qtde": 562,
+      "valor": 192450468.44130284,
+      "share_valor": 0.0026779822912298555,
+      "share_qtde": 0.0034265785430334364
+    },
+    {
+      "cod": "24204",
+      "nome": "Comissão Nacional de Energia Nuclear",
+      "qtde": 192,
+      "valor": 129797149.83735433,
+      "share_valor": 0.001806150286521952,
+      "share_qtde": 0.0011706460502890032
+    },
+    {
+      "cod": "36213",
+      "nome": "Agência Nacional de Saúde Suplementar - ANS",
+      "qtde": 68,
+      "valor": 116282532.7131105,
+      "share_valor": 0.0016180920000204817,
+      "share_qtde": 0.0004146038094773553
+    },
+    {
+      "cod": "28233",
+      "nome": "Superintendência da Zona Franca de Manaus - SUFRAMA",
+      "qtde": 36,
+      "valor": 112241176.11227301,
+      "share_valor": 0.0015618558084578272,
+      "share_qtde": 0.00021949613442918812
+    },
+    {
+      "cod": "44201",
+      "nome": "Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis - IBAMA",
+      "qtde": 332,
+      "valor": 106405430.63662906,
+      "share_valor": 0.00148065037847642,
+      "share_qtde": 0.002024242128624735
+    },
+    {
+      "cod": "36210",
+      "nome": "Hospital Nossa Senhora da Conceição S.A. - CONCEIÇÃO",
+      "qtde": 462,
+      "valor": 99966375.56781954,
+      "share_valor": 0.0013910497888484188,
+      "share_qtde": 0.002816867058507914
+    },
+    {
+      "cod": "83201",
+      "nome": "Banco Central do Brasil - BACEN",
+      "qtde": 204,
+      "valor": 92434305.8039694,
+      "share_valor": 0.0012862397065074107,
+      "share_qtde": 0.001243811428432066
+    },
+    {
+      "cod": "26245",
+      "nome": "Universidade Federal do Rio de Janeiro",
+      "qtde": 362,
+      "valor": 92200261.04786047,
+      "share_valor": 0.001282982932349929,
+      "share_qtde": 0.0022071555739823917
+    },
+    {
+      "cod": "47205",
+      "nome": "Fundação Instituto Brasileiro de Geografia e Estatística",
+      "qtde": 336,
+      "valor": 80197198.17771637,
+      "share_valor": 0.0011159581905184049,
+      "share_qtde": 0.0020486305880057557
+    },
+    {
+      "cod": "26231",
+      "nome": "Universidade Federal de Alagoas",
+      "qtde": 162,
+      "valor": 61890150.15048882,
+      "share_valor": 0.0008612123807592423,
+      "share_qtde": 0.0009877326049313464
+    },
+    {
+      "cod": "26236",
+      "nome": "Universidade Federal Fluminense",
+      "qtde": 131,
+      "valor": 53187317.87220613,
+      "share_valor": 0.000740110931053533,
+      "share_qtde": 0.0007987220447284345
+    }
+  ],
+  "top20_causa": [
+    {
+      "k": "FUNDEF/Fundo de Manutenção e Desenvolvimento do Ensino Fundamental e Valorização do Magistério - Contribuições Especiais - Contribuições - Direito Tributário",
+      "qtde": 141,
+      "valor": 6200050260.876154,
+      "share_qtde": 0.0008596931931809867,
+      "share_valor": 0.08627479547250606
+    },
+    {
+      "k": "Reajuste da Tabela do SUS - Saúde - Serviços - Administrativo",
+      "qtde": 28,
+      "valor": 4070746471.3196683,
+      "share_qtde": 0.0001707192156671463,
+      "share_valor": 0.05664515680618051
+    },
+    {
+      "k": "Entidades sem Fins Lucrativos - Imunidade - Limitacoes ao Poder de Tributar - Direito Tributario",
+      "qtde": 6,
+      "valor": 2828200082.7902446,
+      "share_qtde": 3.658268907153135e-05,
+      "share_valor": 0.03935490414291772
+    },
+    {
+      "k": "Aposentadoria por Tempo de Contribuição (Art. 55/6)",
+      "qtde": 13407,
+      "valor": 2748494287.200135,
+      "share_qtde": 0.0817440187303368,
+      "share_valor": 0.038245783906279786
+    },
+    {
+      "k": "Aposentadoria Especial (Art. 57/8)",
+      "qtde": 8767,
+      "valor": 2657163399.6576815,
+      "share_qtde": 0.05345340584835256,
+      "share_valor": 0.0369748984599521
+    },
+    {
+      "k": "Reajuste da Tabela do SUS",
+      "qtde": 31,
+      "valor": 2204600480.213598,
+      "share_qtde": 0.00018901056020291198,
+      "share_valor": 0.030677405428345458
+    },
+    {
+      "k": "Aposentadoria Especial (Art 57/8) - Beneficios em Especie/Concessao/Conversao/Restabelecimento - Previdenciario",
+      "qtde": 5657,
+      "valor": 1856463444.0563471,
+      "share_qtde": 0.03449137867960881,
+      "share_valor": 0.025833017023883263
+    },
+    {
+      "k": "Aposentadoria por tempo de contribuicao (Art. 55/6) - Beneficios em Especie - Direito Previdenciario",
+      "qtde": 7094,
+      "valor": 1733939680.1379306,
+      "share_qtde": 0.043252932712240566,
+      "share_valor": 0.024128077188268253
+    },
+    {
+      "k": "6107 (Auxílio-Acidente (Art. 86))",
+      "qtde": 7561,
+      "valor": 1530316389.117764,
+      "share_qtde": 0.046100285344974755,
+      "share_valor": 0.021294623095636282
+    },
+    {
+      "k": "Desapropriação Indireta - Intervenção na Propriedade - Administrativo",
+      "qtde": 31,
+      "valor": 1436564225.281073,
+      "share_qtde": 0.00018901056020291198,
+      "share_valor": 0.019990045161622505
+    },
+    {
+      "k": "Salario-Educacao - Contribuicao Social - Contribuicoes - Direito Tributario",
+      "qtde": 7,
+      "valor": 1256587703.1453617,
+      "share_qtde": 4.267980391678658e-05,
+      "share_valor": 0.017485640038474807
+    },
+    {
+      "k": "Índice de 28,86% Lei 8.622/1993 e 8.627/1993 - Reajuste de Vencimentos - Servidor Público Civil - Administrativo",
+      "qtde": 2072,
+      "valor": 1207776613.1523812,
+      "share_qtde": 0.012633221959368827,
+      "share_valor": 0.01680642509202381
+    },
+    {
+      "k": "FUNDEF/FUNDO DE MANUTENÇÃO E DESENVOLVIMENTO DO ENSINO FUNDAMENTAL E VALORIZAÇÃO DO MAGISTÉRIO - CONTRIBUIÇÕES ESPECIAIS - CONTRIBUIÇÕES - TRIBUTÁRIO",
+      "qtde": 69,
+      "valor": 978841809.6768475,
+      "share_qtde": 0.00042070092432261056,
+      "share_valor": 0.013620756828812197
+    },
+    {
+      "k": "Aposentadoria por Tempo de Servico (Art 52/6)  e/ou Tempo de Contribuicao - Beneficios em Especie/Concessao/Conversao/Restabelecimento - Previdenciario",
+      "qtde": 3326,
+      "valor": 762078002.9366039,
+      "share_qtde": 0.020279003975318878,
+      "share_valor": 0.010604450136854253
+    },
+    {
+      "k": "7757 (Auxílio-Doença Acidentário)",
+      "qtde": 3009,
+      "valor": 657201404.6174772,
+      "share_qtde": 0.018346218569372973,
+      "share_valor": 0.009145073730354576
+    },
+    {
+      "k": "Compensação de Prejuízos",
+      "qtde": 2,
+      "valor": 636932228.1171575,
+      "share_qtde": 1.219422969051045e-05,
+      "share_valor": 0.008863024556012223
+    },
+    {
+      "k": "Repeticao de Indebito - Credito Tributario - Tributario",
+      "qtde": 82,
+      "valor": 605898213.9329653,
+      "share_qtde": 0.0004999634173109285,
+      "share_valor": 0.008431180762208255
+    },
+    {
+      "k": "Aposentadoria por Invalidez (Art 42/7) - Beneficios em Especie/Concessao/Conversao/Restabelecimento - Previdenciario",
+      "qtde": 3285,
+      "valor": 594130337.932297,
+      "share_qtde": 0.020029022266663414,
+      "share_valor": 0.008267428687243625
+    },
+    {
+      "k": "COMUM – Precatório referente à complementação da União ao FUNDEF.",
+      "qtde": 1,
+      "valor": 579464452.4619311,
+      "share_qtde": 6.097114845255225e-06,
+      "share_valor": 0.008063350298175823
+    },
+    {
+      "k": "IPI/ Imposto sobre Produtos Industrializados - Impostos - Tributario",
+      "qtde": 25,
+      "valor": 579063253.2909372,
+      "share_qtde": 0.00015242787113138064,
+      "share_valor": 0.008057767540784376
+    }
+  ],
+  "top10_ind": [
+    {
+      "Chave": "0843066",
+      "tribunal": "Tribunal Regional Federal da 3a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Entidades sem Fins Lucrativos - Imunidade - Limitacoes ao Poder de Tributar - Direito Tributario",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 1472489475.24,
+      "atu": 1518907806.3588617
+    },
+    {
+      "Chave": "0842313",
+      "tribunal": "Tribunal Regional Federal da 3a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Entidades sem Fins Lucrativos - Imunidade - Limitacoes ao Poder de Tributar - Direito Tributario",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 1262045776.73,
+      "atu": 1301830141.7366605
+    },
+    {
+      "Chave": "0852396",
+      "tribunal": "Tribunal Regional Federal da 3a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Salario-Educacao - Contribuicao Social - Contribuicoes - Direito Tributario",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 1216674643.38,
+      "atu": 1255028741.938926
+    },
+    {
+      "Chave": "0804950",
+      "tribunal": "Tribunal Regional Federal da 1a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "FUNDEF/Fundo de Manutenção e Desenvolvimento do Ensino Fundamental e Valorização do Magistério - Contribuições Especiais - Contribuições - Direito Tributário",
+      "nfgc": "OCC",
+      "fundef": "Fundef",
+      "orig": 1044686858.4,
+      "atu": 1077619263.9106274
+    },
+    {
+      "Chave": "0802977",
+      "tribunal": "Tribunal Regional Federal da 1a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Reajuste da Tabela do SUS - Saúde - Serviços - Administrativo",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 962822245.02,
+      "atu": 993173974.2034359
+    },
+    {
+      "Chave": "0804477",
+      "tribunal": "Tribunal Regional Federal da 1a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "FUNDEF/Fundo de Manutenção e Desenvolvimento do Ensino Fundamental e Valorização do Magistério - Contribuições Especiais - Contribuições - Direito Tributário",
+      "nfgc": "OCC",
+      "fundef": "Fundef",
+      "orig": 904279180.81,
+      "atu": 932785415.4178162
+    },
+    {
+      "Chave": "0827633",
+      "tribunal": "Tribunal Regional Federal da 2a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Compensação de Prejuízos",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 569022567.47,
+      "atu": 586960269.840757
+    },
+    {
+      "Chave": "0794769",
+      "tribunal": "Supremo Tribunal Federal",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "COMUM – Precatório referente à complementação da União ao FUNDEF.",
+      "nfgc": "OCC",
+      "fundef": "Fundef",
+      "orig": 561755824.78,
+      "atu": 579464452.4619311
+    },
+    {
+      "Chave": "0826329",
+      "tribunal": "Tribunal Regional Federal da 1a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Desapropriação Indireta - Intervenção na Propriedade - Administrativo",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 504641114.92,
+      "atu": 520549275.0545437
+    },
+    {
+      "Chave": "0805468",
+      "tribunal": "Tribunal Regional Federal da 1a. Região",
+      "expedidor": "",
+      "uo": "Encargos Financeiros da União - Pagamento de Sentenças Judiciais",
+      "causa": "Reajuste da Tabela do SUS - Saúde - Serviços - Administrativo",
+      "nfgc": "OCC",
+      "fundef": "Não Fundef",
+      "orig": 427737764.24,
+      "atu": 441221645.45368254
+    }
+  ],
+  "class_tempo_raw": {
+    "Até 5 anos": 59755,
+    "De 5 até 10 anos": 45826,
+    "20 anos ou mais": 25627,
+    "De 10 até 15 anos": 18896,
+    "De 15 até 20 anos": 13908
+  },
+  "anos_min": 0.0,
+  "anos_max": 124.0
+}

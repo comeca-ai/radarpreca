@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Radar Precatório: briefing, projeto e consulta às bases públicas do SIOP, TRF2, TRF4 e TRF5.">
+  <title>Radar Precatório — aprendizado, projeto e bases</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f4f0e8;
+      --paper-2: #ebe6db;
+      --card: #fffcf7;
+      --ink: #1c1a16;
+      --ink-soft: #4a453c;
+      --muted: #6e685c;
+      --line: #d5cfc3;
+      --line-strong: #c4bdae;
+      --seal: #8a2e1c;
+      --seal-soft: #f3e4de;
+      --pine: #1e4a44;
+      --pine-soft: #e4eeec;
+      --gold: #b8862a;
+      --shadow: 0 1px 2px rgba(28, 26, 22, 0.04), 0 8px 24px rgba(28, 26, 22, 0.06);
+      --radius: 14px;
+      --nav-h: 102px;
+      --max: 1080px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
+
+    body {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, .serif {
+      font-family: "Newsreader", "Georgia", serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    a { color: var(--pine); text-underline-offset: 3px; }
+    a:hover { color: var(--seal); }
+
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
+
+    /* —— Nav —— */
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: var(--nav-h);
+      background: rgba(244, 240, 232, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav.top .inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand .mark {
+      font-family: "Newsreader", serif;
+      font-style: italic;
+      font-size: 1.2rem;
+    }
+
+    .brand .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--seal);
+      display: inline-block;
+      position: relative;
+      top: -1px;
+    }
+
+    .sumario {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      mask-image: linear-gradient(to right, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, #000 92%, transparent);
+    }
+
+    .sumario::-webkit-scrollbar { display: none; }
+
+    .sumario a {
+      flex: 0 0 auto;
+      text-decoration: none;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .sumario a:hover,
+    .sumario a:focus-visible {
+      background: var(--paper-2);
+      color: var(--ink);
+    }
+
+    /* —— Hero —— */
+    header.hero {
+      padding: 72px 0 56px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--seal);
+      margin-bottom: 18px;
+    }
+
+    header.hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 500;
+      max-width: 18ch;
+      margin-bottom: 20px;
+    }
+
+    header.hero .lede {
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      max-width: 62ch;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 28px;
+      margin-top: 32px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .meta-row strong { color: var(--ink); font-weight: 600; }
+
+    /* —— Sections —— */
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section h2 {
+      font-size: clamp(1.7rem, 3vw, 2.2rem);
+      margin-bottom: 8px;
+    }
+
+    .section-lead {
+      color: var(--ink-soft);
+      max-width: 68ch;
+      margin-bottom: 32px;
+    }
+
+    .prose p + p { margin-top: 1em; }
+    .prose p { max-width: 72ch; }
+    .prose ul, .prose ol { margin: 1em 0 0 1.2em; max-width: 72ch; }
+    .prose li + li { margin-top: 0.45em; }
+
+    /* —— Cards / grids —— */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 22px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .card p, .card li { font-size: 0.95rem; color: var(--ink-soft); }
+    .card ul { margin: 0.6em 0 0 1.1em; }
+    .card li + li { margin-top: 0.35em; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--pine);
+      background: var(--pine-soft);
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .tag.seal {
+      color: var(--seal);
+      background: var(--seal-soft);
+    }
+
+    /* —— News items —— */
+    .news {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .news-item {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .news-item header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px 14px;
+      margin-bottom: 10px;
+    }
+
+    .news-item time {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--seal);
+    }
+
+    .news-item h3 {
+      font-size: 1.35rem;
+      flex: 1 1 240px;
+    }
+
+    .news-item p { color: var(--ink-soft); max-width: 78ch; }
+    .news-item p + p { margin-top: 0.8em; }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 14px;
+      font-size: 0.9rem;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--paper-2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    /* —— Fontes de dados —— */
+    .fonte {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fonte:last-child { border-bottom: 0; }
+
+    .fonte dt {
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .fonte dd { color: var(--ink-soft); font-size: 0.95rem; }
+
+    .callout {
+      margin-top: 28px;
+      padding: 20px 22px;
+      background: var(--pine);
+      color: #f4f0e8;
+      border-radius: var(--radius);
+    }
+
+    .callout strong { color: #fff; }
+    .callout p { max-width: 70ch; }
+
+    /* —— Papéis —— */
+    .golden {
+      margin: 0 0 28px;
+      padding: 18px 22px;
+      background: var(--seal-soft);
+      border: 1px solid #e4c9c0;
+      border-radius: var(--radius);
+    }
+
+    .golden strong { color: var(--seal); }
+
+    /* —— Data diagram —— */
+    .diagram {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .group {
+      border-radius: var(--radius);
+      padding: 22px;
+      border: 1px solid var(--line);
+    }
+
+    .group.limpo {
+      background: linear-gradient(180deg, #eef5f3 0%, var(--card) 48%);
+    }
+
+    .group.valor {
+      background: linear-gradient(180deg, #f7efe4 0%, var(--card) 48%);
+    }
+
+    .group .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .group.limpo .label { color: var(--pine); }
+    .group.valor .label { color: #8a5a12; }
+
+    .group h3 { font-size: 1.35rem; margin-bottom: 14px; }
+
+    .block {
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .block:first-of-type { border-top: 1px solid var(--line); }
+
+    .block h4 {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      margin-bottom: 4px;
+    }
+
+    .block p { font-size: 0.88rem; color: var(--ink-soft); }
+
+    /* —— PoC —— */
+    #poc .placeholder {
+      margin-top: 8px;
+      padding: 36px 24px;
+      text-align: center;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--card),
+        var(--card) 10px,
+        #f7f3ea 10px,
+        #f7f3ea 20px
+      );
+      border: 2px dashed var(--line-strong);
+      border-radius: var(--radius);
+    }
+
+    #poc .placeholder strong {
+      display: block;
+      font-family: "Newsreader", serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    #poc .placeholder p { color: var(--muted); }
+
+    /* —— Glossary —— */
+    .glossary {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0 32px;
+    }
+
+    .glossary div {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .glossary dt {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .glossary dd { color: var(--ink-soft); font-size: 0.95rem; }
+
+    /* —— Footer —— */
+    footer {
+      padding: 36px 0 48px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    footer .update {
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    footer .disclaimer { max-width: 72ch; }
+
+    /* —— Responsive —— */
+    @media (max-width: 860px) {
+      .grid-2, .grid-3, .diagram { grid-template-columns: 1fr; }
+      .glossary { grid-template-columns: 1fr 1fr; }
+      .fonte { grid-template-columns: 1fr; gap: 4px; }
+      .wrap { width: min(var(--max), calc(100% - 32px)); }
+    }
+
+    @media (max-width: 640px) {
+      header.hero { padding: 48px 0 40px; }
+      section { padding: 52px 0; }
+      .glossary { grid-template-columns: 1fr; }
+      .brand .mark { font-size: 1.05rem; }
+      nav.top .inner { gap: 12px; }
+    }
+
+
+    /* —— Tabs —— */
+    nav.top { height: auto; }
+    nav.top .inner {
+      height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 0 0 4px;
+    }
+    .nav-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 52px;
+    }
+    .tabs {
+      display: inline-flex;
+      padding: 3px;
+      background: var(--paper-2);
+      border-radius: 999px;
+      gap: 2px;
+      flex: 0 0 auto;
+    }
+    .tabs a {
+      text-decoration: none;
+      color: var(--ink-soft);
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      line-height: 1.2;
+    }
+    .tabs a:hover,
+    .tabs a:focus-visible {
+      color: var(--ink);
+    }
+    html[data-tab="aprendizado"] .tabs a[data-tab="aprendizado"],
+    html[data-tab="projeto"] .tabs a[data-tab="projeto"],
+    html[data-tab="bases"] .tabs a[data-tab="bases"] {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+    html[data-tab="projeto"] .sumario[data-for="aprendizado"],
+    html[data-tab="projeto"] .sumario[data-for="bases"],
+    html[data-tab="aprendizado"] .sumario[data-for="projeto"],
+    html[data-tab="aprendizado"] .sumario[data-for="bases"],
+    html[data-tab="bases"] .sumario[data-for="aprendizado"],
+    html[data-tab="bases"] .sumario[data-for="projeto"],
+    html:not([data-tab]) .sumario[data-for="projeto"],
+    html:not([data-tab]) .sumario[data-for="bases"] {
+      display: none;
+    }
+    html[data-tab="projeto"] #panel-aprendizado,
+    html[data-tab="projeto"] #panel-bases,
+    html[data-tab="aprendizado"] #panel-projeto,
+    html[data-tab="aprendizado"] #panel-bases,
+    html[data-tab="bases"] #panel-aprendizado,
+    html[data-tab="bases"] #panel-projeto,
+    html:not([data-tab]) #panel-projeto,
+    html:not([data-tab]) #panel-bases {
+      display: none;
+    }
+
+    /* —— Ranking (POC) —— */
+    .ranking {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .rank {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 4px 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 22px 18px;
+      box-shadow: var(--shadow);
+    }
+    .rank .n {
+      font-family: "Newsreader", serif;
+      font-size: 1.7rem;
+      font-weight: 500;
+      color: var(--seal);
+      line-height: 1;
+      padding-top: 4px;
+    }
+    .rank.best {
+      border-color: #9bb8b3;
+      background: linear-gradient(180deg, #eef5f3 0%, var(--card) 42%);
+    }
+    .rank.best .n { color: var(--pine); }
+    .rank header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px 14px;
+      margin-bottom: 6px;
+    }
+    .rank h3 { font-size: 1.25rem; }
+    .rank p { color: var(--ink-soft); font-size: 0.95rem; }
+    .rank p + p { margin-top: 0.7em; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0 0;
+    }
+    .chip {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      background: var(--paper-2);
+      border-radius: 999px;
+      padding: 3px 9px;
+    }
+    .reco {
+      margin-top: 24px;
+      padding: 20px 22px;
+      background: var(--pine);
+      color: #f4f0e8;
+      border-radius: var(--radius);
+    }
+    .reco strong { color: #fff; }
+    .reco p { max-width: 72ch; }
+    .reco a { color: #d7ece8; }
+    .reco a:hover { color: #fff; }
+
+    /* —— Roadmap —— */
+    .phases {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .phase {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      gap: 8px 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      box-shadow: var(--shadow);
+    }
+    .phase .phase-meta { padding-top: 2px; }
+    .phase .phase-label {
+      font-family: "Newsreader", serif;
+      font-size: 1.15rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+    .badge.on { color: #8a5a12; background: #f7efe4; }
+    .badge.next { color: var(--seal); background: var(--seal-soft); }
+    .badge.wait { color: var(--muted); background: var(--paper-2); }
+    .phase h3 { font-size: 1.2rem; margin-bottom: 6px; }
+    .phase p { font-size: 0.95rem; color: var(--ink-soft); }
+
+    /* —— Schema table —— */
+    .schema-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    table.schema {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      min-width: 640px;
+    }
+    table.schema th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 12px 16px;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--line);
+    }
+    table.schema td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      color: var(--ink-soft);
+    }
+    table.schema tr:last-child td { border-bottom: 0; }
+    table.schema td:first-child {
+      color: var(--ink);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    table.schema .grp {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+    table.schema .grp.limpo { color: var(--pine); }
+    table.schema .grp.valor { color: #8a5a12; }
+
+    /* —— Status board —— */
+    .status-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .status-col {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px 12px;
+      box-shadow: var(--shadow);
+    }
+    .status-col h3 {
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+    }
+    .status-col.done { border-top: 3px solid var(--pine); }
+    .status-col.next { border-top: 3px solid var(--gold); }
+    .status-col.todo { border-top: 3px solid var(--line-strong); }
+    .status-col ul {
+      list-style: none;
+      margin: 10px 0 0;
+      padding: 0;
+    }
+    .status-col li {
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+      font-size: 0.94rem;
+      color: var(--ink-soft);
+    }
+
+    /* —— Risks —— */
+    .risks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .risks .card h3 { font-size: 1.15rem; }
+
+    @media (max-width: 700px) {
+      table.schema { min-width: 0; }
+      table.schema thead { display: none; }
+      table.schema, table.schema tbody, table.schema tr, table.schema td {
+        display: block;
+        width: 100%;
+      }
+      table.schema tr {
+        padding: 16px 16px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      table.schema tr:last-child { border-bottom: 0; }
+      table.schema td {
+        padding: 6px 0 4px;
+        border-bottom: 0;
+        white-space: normal;
+      }
+      table.schema td:first-child {
+        padding-top: 0;
+        margin-bottom: 4px;
+      }
+      table.schema td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .phase { grid-template-columns: 1fr; gap: 4px; }
+      .status-board, .risks { grid-template-columns: 1fr; }
+      .rank { grid-template-columns: 40px 1fr; }
+    }
+    @media (max-width: 640px) {
+      :root { --nav-h: 118px; }
+      .nav-row { min-height: 48px; gap: 10px; }
+      .tabs a { padding: 5px 11px; font-size: 0.8rem; }
+      .sumario a { padding: 5px 8px; font-size: 0.78rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  
+    /* —— Bases explorer —— */
+    .base-grid, .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    @media (min-width: 900px) {
+      .base-grid { grid-template-columns: repeat(3, 1fr); }
+      .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .base-card .src, .base-card .limite { font-size: 0.86rem; color: var(--muted); margin-top: 0.4em; }
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .kpi-label { font-size: 0.8rem; color: var(--muted); }
+    .kpi-value { font-family: Newsreader, Georgia, serif; font-size: 1.35rem; margin-top: 4px; }
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    @media (min-width: 800px) { .charts { grid-template-columns: 1fr 1fr; } }
+    .chart {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .chart img { width: 100%; height: auto; display: block; border-radius: 8px; background: #fff; }
+    .chart figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 8px; }
+    .explorer {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 12px;
+      margin-top: 8px;
+    }
+    .expl-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .expl-tab {
+      border: 1px solid var(--line);
+      background: var(--paper-2);
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .expl-tab[aria-selected="true"] {
+      background: var(--pine);
+      border-color: var(--pine);
+      color: #fff;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    @media (min-width: 800px) {
+      .filters { grid-template-columns: 1.4fr 1.2fr 1fr auto auto; align-items: end; }
+      .filters.wide { grid-template-columns: 1.2fr 1fr 1fr 1fr auto auto; }
+    }
+    .filters label { display: flex; flex-direction: column; gap: 4px; font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+    .filters input, .filters select {
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .filters .actions { display: flex; gap: 8px; align-items: end; }
+    .btn {
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--pine);
+      background: var(--pine);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn.ghost { background: transparent; color: var(--pine); }
+    .result-meta { font-size: 0.9rem; color: var(--ink-soft); margin: 4px 0 10px; }
+    .table-scroll { overflow-x: auto; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    table.data th, table.data td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    table.data th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .pager { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 4px; }
+    .pager .pg {
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border: 1px solid var(--line-strong);
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .pager .pg:disabled { opacity: 0.45; cursor: default; }
+    .pager-meta { color: var(--muted); font-size: 0.86rem; }
+    .empty-msg { color: var(--muted); padding: 16px 0; }
+    @media (max-width: 700px) {
+      table.data thead { display: none; }
+      table.data tr { display: block; padding: 10px 0; border-bottom: 1px solid var(--line); }
+      table.data td { display: block; border: 0; padding: 2px 0; }
+      table.data td::before { content: attr(data-label) " · "; color: var(--muted); font-size: 0.75rem; }
+      table.data td.num { text-align: left; }
+    }
+</style>
+  <script>
+    document.documentElement.dataset.tab = /^#bases/.test(location.hash) ? "bases" : /^#projeto/.test(location.hash) ? "projeto" : "aprendizado";
+  </script>
+</head>
+<body>
+  <nav class="top" aria-label="Navegação">
+    <div class="wrap inner">
+      <div class="nav-row">
+        <a class="brand" href="#aprendizado">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="mark">Precatórios</span>
+        </a>
+        <div class="tabs" role="tablist" aria-label="Seções do site">
+          <a href="#aprendizado" role="tab" id="tab-aprendizado" data-tab="aprendizado" aria-controls="panel-aprendizado" aria-selected="true">Aprendizado</a>
+          <a href="#projeto" role="tab" id="tab-projeto" data-tab="projeto" aria-controls="panel-projeto" aria-selected="false">Projeto</a>
+          <a href="#bases" role="tab" id="tab-bases" data-tab="bases" aria-controls="panel-bases" aria-selected="false">Bases</a>
+        </div>
+      </div>
+      <div class="sumario" data-for="aprendizado" aria-label="Sumário do aprendizado">
+        <a href="#o-que-e">O que é</a>
+        <a href="#novidades">Novidades</a>
+        <a href="#onde-estao">Onde estão os dados</a>
+        <a href="#tres-papeis">Três papéis</a>
+        <a href="#dados-necessarios">O que precisa ter</a>
+        <a href="#poc">Prova de conceito</a>
+        <a href="#glossario">Glossário</a>
+      </div>
+      <div class="sumario" data-for="projeto" aria-label="Sumário do projeto">
+        <a href="#projeto-visao">Visão</a>
+        <a href="#projeto-estrutura">Estrutura</a>
+        <a href="#projeto-roadmap">Roadmap</a>
+        <a href="#projeto-modelo">Modelo de dados</a>
+        <a href="#projeto-riscos">Riscos</a>
+        <a href="#projeto-status">Status</a>
+      </div>
+      <div class="sumario" data-for="bases" aria-label="Sumário das bases">
+        <a href="#bases-fontes">Fontes</a>
+        <a href="#bases-eda">Análise</a>
+        <a href="#bases-consulta">Consulta</a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="panel-aprendizado" role="tabpanel" aria-labelledby="tab-aprendizado">
+  <header class="hero" id="topo">
+    <div class="wrap">
+      <p class="kicker">Briefing de mercado · novembro de 2026</p>
+      <h1>O que é um precatório e como entrar nesse mercado</h1>
+      <p class="lede">Tudo o que aprendemos até aqui: o que é o crédito, as regras novas do CNJ e do STF, onde os dados estão hoje, quais informações são indispensáveis e como separar compra, intermediação e tecnologia — sem misturar papéis no mesmo crédito.</p>
+      <div class="meta-row">
+        <span>Para <strong>Jhonata Emerick</strong></span>
+        <span>Foco: comprar, intermediar e construir tecnologia</span>
+        <span>Atualizado em 12/11/2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="o-que-e">
+      <div class="wrap">
+        <h2>O que é um precatório</h2>
+        <p class="section-lead">Uma ordem de pagamento do Judiciário — não um título qualquer, e também não um pagamento imediato.</p>
+        <div class="prose">
+          <p>Precatório é a ordem de pagamento que o Judiciário expede quando o poder público — União, estados, municípios ou algumas estatais — é condenado de forma definitiva e precisa quitar a dívida. O artigo 100 da Constituição determina que esse valor entre no orçamento e seja pago na ordem cronológica.</p>
+          <p>Dívidas menores saem por outro caminho: a RPV (Requisição de Pequeno Valor), que é paga mais rápido. Como a espera do precatório pode levar anos, muita gente vende o crédito com deságio a fundos e investidores.</p>
+        </div>
+        <div class="grid-2" style="margin-top: 28px;">
+          <article class="card">
+            <span class="tag">Natureza</span>
+            <h3>Alimentar ou comum</h3>
+            <p>O crédito pode ser de natureza alimentar (salários, pensões, indenizações alimentares e afins) ou comum. Essa classificação entra na ordem de pagamento e muda o perfil de risco e de prazo do precatório.</p>
+          </article>
+          <article class="card">
+            <span class="tag">Fila</span>
+            <h3>Prioridade para quem espera mais</h3>
+            <p>Pessoas físicas idosas ou com doença grave têm prioridade na fila. Isso precisa estar no cadastro do credor: altera a posição esperada de pagamento e, portanto, o valor justo do crédito.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="novidades">
+      <div class="wrap">
+        <h2>Novidades de novembro de 2026</h2>
+        <p class="section-lead">Em poucos dias, o CNJ redesenhou a cessão de precatórios e o STF travou duas frentes relevantes: a Tabela SUS e o regime de pagamento da Cedae.</p>
+
+        <div class="news">
+          <article class="news-item">
+            <header>
+              <time datetime="2026-11-10">10/11/2026</time>
+              <h3>CNJ aprova novas regras para a venda de precatórios</h3>
+            </header>
+            <p>O Conselho Nacional de Justiça aprovou por unanimidade, na 18ª Sessão Ordinária, uma resolução sobre cessão de créditos de precatórios. Para a titularidade mudar e o comprador receber, a operação precisa de escritura pública, registro eletrônico em entidade registradora, comunicação à Central Nacional de Cessões de Créditos de Precatórios e homologação judicial. Sem isso, não muda a titularidade nem há pagamento ao cessionário.</p>
+            <p>A Central será administrada pelo CNJ e vinculada ao SisPreq. A escritura terá de mostrar o valor atualizado, o preço negociado, o deságio, os custos e o valor líquido para quem vende. Há cautelas extras quando o credor é pessoa física não profissional.</p>
+            <p>A resolução proíbe a cessão ao advogado do credor, ao escritório e a empresas ligadas. Intermediários só podem receber remuneração fixa, informada previamente — sem percentual sobre o crédito.</p>
+            <p class="note">A regra entra em vigor 30 dias após a publicação. O registro eletrônico e a homologação exclusiva pela central ainda dependem de um ato conjunto do CNJ com o Banco Central, que não saiu. A Central Nacional ainda não está operando, e o texto final da resolução ainda será publicado.</p>
+            <div class="links">
+              <a href="https://www.cnj.jus.br/nova-resolucao-do-cnj-cria-central-de-controle-e-protege-credores-de-precatorios/" target="_blank" rel="noopener">Nota do CNJ</a>
+              <a href="https://g1.globo.com/politica/noticia/2026/11/10/cnj-aprova-novas-regras-para-venda-de-precatorios-e-cria-central-nacional-para-tentar-rastrear-operacoes.ghtml" target="_blank" rel="noopener">Cobertura no G1</a>
+            </div>
+          </article>
+
+          <article class="news-item">
+            <header>
+              <time datetime="2026-11-03">3/11/2026</time>
+              <h3>SisPreq integrado ao mercado financeiro</h3>
+            </header>
+            <p>O CNJ, sob a presidência do ministro Edson Fachin, assinou acordos com o Colégio Notarial do Brasil e com a B3, a Cerc e a Núclea para desenvolver o Sistema Nacional de Precatórios (SisPreq) e integrá-lo às plataformas do mercado financeiro.</p>
+            <div class="links">
+              <a href="https://www.cnj.jus.br/judiciario-e-mercado-financeiro-se-unem-para-modernizar-gestao-de-precatorios/" target="_blank" rel="noopener">Nota do CNJ</a>
+            </div>
+          </article>
+
+          <article class="news-item">
+            <header>
+              <time datetime="2026-11-11">11/11/2026</time>
+              <h3>STF suspende os casos da Tabela SUS</h3>
+            </header>
+            <p>O ministro Gilmar Mendes, no RE 1612904, suspendeu em todo o país os processos sobre valores pagos pelo SUS a hospitais privados (revisão da Tabela SUS). A decisão inclui a expedição e o levantamento de precatórios e RPVs ligados a esses casos.</p>
+            <p>São 7.738 processos. A União gastou mais de R$ 731 milhões em 2023 e 2024 para 94 autores. O risco potencial supera R$ 243 bilhões. Há preocupação com cessões feitas com deságio a instituições financeiras — um lembrete de que o assunto do processo pode travar o crédito depois da compra.</p>
+            <div class="links">
+              <a href="https://noticias.stf.jus.br/postsnoticias/stf-suspende-processos-e-bloqueia-precatorios-de-valores-pagos-pelo-sus-a-hospitais-privados/" target="_blank" rel="noopener">Notícia do STF</a>
+            </div>
+          </article>
+
+          <article class="news-item">
+            <header>
+              <time datetime="2026-11-03">ADPF 1090 · até 3/11/2026</time>
+              <h3>Cedae entra no regime de precatórios</h3>
+            </header>
+            <p>Na sessão virtual encerrada em 3/11/2026, o STF, com relatoria do ministro Zanin, decidiu que a companhia de saneamento do Rio (Cedae) fica submetida ao regime de precatórios e que suas contas não podem ser bloqueadas para o pagamento dessas dívidas judiciais.</p>
+            <div class="links">
+              <a href="https://noticias.stf.jus.br/postsnoticias/companhia-de-saneamento-do-rj-deve-pagar-dividas-judiciais-por-precatorios-decide-stf/" target="_blank" rel="noopener">Notícia do STF</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="onde-estao">
+      <div class="wrap">
+        <h2>Onde estão os dados</h2>
+        <p class="section-lead">Não existe ainda uma base nacional única. Os dados estão espalhados pelos tribunais, pelo Datajud, pelos orçamentos e pelos autos. A Central Nacional de Cessões ainda não opera.</p>
+
+        <dl>
+          <div class="fonte">
+            <dt>TJs</dt>
+            <dd>Precatórios de estados e municípios. Cada Tribunal de Justiça publica uma página de precatórios ou consulta, em geral com a lista cronológica por ente devedor. Alguns permitem baixar em planilha; outros só consultam processo a processo.</dd>
+          </div>
+          <div class="fonte">
+            <dt>TRF1 a TRF6 e CJF</dt>
+            <dd>Precatórios da União e do INSS. O Conselho da Justiça Federal divulga os lotes pagos e a proposta de pagamento de cada ano.</dd>
+          </div>
+          <div class="fonte">
+            <dt>TRTs</dt>
+            <dd>Precatórios trabalhistas contra o poder público, nos Tribunais Regionais do Trabalho.</dd>
+          </div>
+          <div class="fonte">
+            <dt>API pública do Datajud (CNJ)</dt>
+            <dd>Metadados e andamento do processo de origem — classe, assunto, fase, movimentações. Cobre todos os tribunais, mas não traz valor nem posição na fila.</dd>
+          </div>
+          <div class="fonte">
+            <dt>LOA e portais de transparência</dt>
+            <dd>Mostram quanto cada ente reservou no orçamento para pagar precatórios, o que ajuda a medir o risco de atraso.</dd>
+          </div>
+          <div class="fonte">
+            <dt>Os autos</dt>
+            <dd>É nos autos que se confirma, hoje, o valor atualizado, quem é o titular e se há penhora, bloqueio ou cessão anterior. Depois, parte disso deve estar na Central do CNJ.</dd>
+          </div>
+        </dl>
+
+        <div class="callout">
+          <p><strong>Aí está a oportunidade.</strong> Cada tribunal publica num formato diferente. Juntar essas fontes num lugar só — e cruzá-las com andamento, orçamento e ônus — é o que ainda ninguém oferece de forma única.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tres-papeis">
+      <div class="wrap">
+        <h2>Três papéis, três empresas</h2>
+        <p class="section-lead">Mesmo que você queira atuar nos três lados — comprar, intermediar e construir a tecnologia — a estrutura precisa estar separada.</p>
+
+        <p class="golden">Regra de ouro: <strong>nunca atuar em dois papéis no mesmo crédito.</strong> Três CNPJs diferentes. E, antes de montar a compradora e a intermediária, vale validar a estrutura com um advogado: o texto final da resolução ainda será publicado e pode detalhar regras sobre partes ligadas.</p>
+
+        <div class="grid-3">
+          <article class="card">
+            <span class="tag">1 · Capital</span>
+            <h3>Empresa compradora</h3>
+            <p>Uma empresa ou um fundo (como um FIDC) que compra precatórios com deságio e recebe quando o ente público paga. É nela que ficam o caixa, o risco e os investidores.</p>
+          </article>
+          <article class="card">
+            <span class="tag">2 · Relacionamento</span>
+            <h3>Empresa intermediária</h3>
+            <p>Conecta credores a compradores e cobra taxa fixa, informada antes — como a regra nova exige, sem percentual. Se levar um credor para a própria compradora, isso parece conflito de interesses, do tipo que o CNJ quer fiscalizar. Por isso, ou ela atende só compradores de terceiros, ou o vínculo fica explícito na escritura e a cobrança ao credor continua só com taxa fixa.</p>
+          </article>
+          <article class="card">
+            <span class="tag seal">3 · Começar por aqui</span>
+            <h3>Empresa de tecnologia</h3>
+            <p>Vende o sistema — busca nos tribunais, análise de risco, gestão das cessões — para outros compradores, intermediários e escritórios. Não toca em nenhum crédito, então é a parte mais limpa e escalável. Alimenta as outras duas com dados, cobrando por contrato, como faria com qualquer cliente.</p>
+          </article>
+        </div>
+
+        <div class="prose" style="margin-top: 28px;">
+          <p>A recomendação é começar pela tecnologia: ela gera o fluxo de oportunidades de que as outras duas precisam e não depende de capital. Se você não for o advogado do credor, a regra nova até ajuda a compradora, porque tira a concorrência dos escritórios na aquisição do crédito.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="dados-necessarios">
+      <div class="wrap">
+        <h2>Os dados que todo papel precisa ter</h2>
+        <p class="section-lead">Em qualquer um dos três papéis, a base é a mesma. O que muda é só o que você faz com ela. Quatro blocos dizem se o crédito é bom e limpo. Os três últimos dizem quanto ele vale e quando paga.</p>
+
+        <div class="diagram" role="img" aria-label="Dois grupos de dados: à esquerda, o que indica se o crédito é bom e limpo; à direita, o que indica quanto vale e quando paga.">
+          <div class="group limpo">
+            <p class="label">Grupo 1</p>
+            <h3>O crédito é bom e limpo?</h3>
+            <div class="block">
+              <h4>Dados do precatório</h4>
+              <p>Número do precatório e do processo de origem, tribunal, ente devedor, natureza (alimentar ou comum), valor de face, data-base, ano do orçamento, posição na fila cronológica e situação (pendente, parcelado ou pago).</p>
+            </div>
+            <div class="block">
+              <h4>Dados do processo</h4>
+              <p>Fase, movimentações, trânsito em julgado, recursos pendentes e se o assunto está suspenso por tema do STF — como a Tabela SUS. Vem do Datajud e dos autos.</p>
+            </div>
+            <div class="block">
+              <h4>Dados do credor</h4>
+              <p>Titular atual, CPF ou CNPJ, se é pessoa física idosa ou com doença grave (prioridade na fila), advogado constituído e honorários destacados.</p>
+            </div>
+            <div class="block">
+              <h4>Ônus sobre o crédito</h4>
+              <p>Cessões anteriores, penhoras, bloqueios e compensações com dívida tributária. Hoje isso está nos autos; depois deve estar na Central do CNJ.</p>
+            </div>
+          </div>
+
+          <div class="group valor">
+            <p class="label">Grupo 2</p>
+            <h3>Quanto vale e quando paga?</h3>
+            <div class="block">
+              <h4>Dados do devedor</h4>
+              <p>Orçamento reservado para precatórios na LOA, valores pagos nos últimos anos, estoque total da dívida e regime de pagamento (em dia ou regime especial). Com isso se estima quando o precatório vai ser pago de verdade.</p>
+            </div>
+            <div class="block">
+              <h4>Cálculo</h4>
+              <p>Índice de correção (hoje a regra é a Selic), juros, impostos retidos na fonte e valor líquido. Com o prazo estimado, isso dá o deságio justo e a taxa de retorno (TIR).</p>
+            </div>
+            <div class="block">
+              <h4>Mercado</h4>
+              <p>Deságios praticados por tribunal e por ente, e quem está comprando. É o dado mais difícil de conseguir hoje. As escrituras da regra nova devem começar a revelar esse mercado.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="poc">
+      <div class="wrap">
+        <h2>Prova de conceito: o que deu para puxar</h2>
+        <p class="section-lead">Teste feito em 12/11/2026, por curl, nas fontes que tínhamos em vista — TJSP, TRFs, CJF e a API pública do Datajud — e também nos dados abertos de precatórios do SIOP/MPO. Abaixo, o ranking do que é mais fácil de puxar hoje.</p>
+
+        <div class="ranking">
+          <article class="rank best">
+            <div class="n" aria-hidden="true">1</div>
+            <div>
+              <header>
+                <span class="tag">Mais fácil</span>
+                <h3>SIOP / MPO — dados abertos</h3>
+              </header>
+              <p>O painel de dados abertos do Ministério do Planejamento e Orçamento publica CSV por exercício (<span class="serif">expedidos_2008</span> a <span class="serif">expedidos_2027</span>). No exercício de 2026 há 164.012 precatórios: Justiça Federal 143.007, Estadual 15.426, Trabalho 4.469, STJ 1.078 e STF 32.</p>
+              <p>Os campos incluem exercício, tribunal, datas, unidade orçamentária / ente, tipo de causa, valor original e valor atualizado. Não vêm número do precatório, do processo nem do credor. Serve bem para dimensionar o mercado, não para analisar um crédito específico.</p>
+              <div class="links">
+                <a href="https://www.gov.br/planejamento/pt-br/assuntos/orcamento/precatorios-content/painel-precatorios/dados-abertos" target="_blank" rel="noopener">Dados abertos do SIOP/MPO</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="rank">
+            <div class="n" aria-hidden="true">2</div>
+            <div>
+              <header>
+                <h3>TRF2 e TRF4 — planilhas sem login</h3>
+              </header>
+              <p>Os dois tribunais oferecem CSV ou XLSX sem login e sem captcha. As listas de precatórios já pagos trazem ordem cronológica, natureza, número do precatório, CPF ou CNPJ parcial, valores e datas. No TRF2, a lista de 2024 tem cerca de 15.964 linhas; no TRF4, o conjunto de 2022 a 2025 tem 210.486 linhas. Há também mapas da dívida: 156 entidades no TRF2 e 285 no TRF4.</p>
+              <p>A limitação: os arquivos fáceis de baixar são de precatórios já pagos. A fila pendente do TRF2 tem captcha; a do TRF4 é um formulário.</p>
+              <div class="links">
+                <a href="https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs" target="_blank" rel="noopener">Precatórios e RPVs do TRF2</a>
+                <a href="https://consulta.trf4.jus.br/trf4/controlador.php?acao=pagina_precatorios" target="_blank" rel="noopener">Página de precatórios do TRF4</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="rank">
+            <div class="n" aria-hidden="true">3</div>
+            <div>
+              <header>
+                <h3>TRF5 — mapa em planilha, lista em PDF</h3>
+              </header>
+              <p>O mapa da dívida sai em XLS com facilidade (499 entidades). Já a lista item a item está em um PDF de 1.746 páginas, menos prático para automatizar.</p>
+              <div class="links">
+                <a href="https://rpvprecatorio.trf5.jus.br/mapa" target="_blank" rel="noopener">Mapa de precatórios do TRF5</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="rank">
+            <div class="n" aria-hidden="true">4</div>
+            <div>
+              <header>
+                <h3>API pública do Datajud</h3>
+              </header>
+              <p>Responde pela classe 1265 (Precatório). No TRF3, por exemplo, retornou 6.114 processos. Não traz valor, credor nem posição na fila — só o andamento. A consulta ao TJSP deu timeout / 504.</p>
+            </div>
+          </article>
+
+          <article class="rank">
+            <div class="n" aria-hidden="true">5</div>
+            <div>
+              <header>
+                <h3>CJF</h3>
+              </header>
+              <p>Há um painel em Power BI, mas não encontramos um arquivo para baixar.</p>
+            </div>
+          </article>
+
+          <article class="rank">
+            <div class="n" aria-hidden="true">6</div>
+            <div>
+              <header>
+                <h3>TJSP DEPRE — o mais difícil de automatizar</h3>
+              </header>
+              <p>A lista geral sai em PDF, via formulário com captcha. Entre as fontes testadas, é a pior para puxar automaticamente.</p>
+              <div class="links">
+                <a href="https://portal.tjsp.jus.br/Precatorios/Precatorios/ListaGeral" target="_blank" rel="noopener">Lista geral de precatórios do TJSP</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="rank">
+            <div class="n" aria-hidden="true">7</div>
+            <div>
+              <header>
+                <h3>TRF1, TRF3, TRF6 e dados.gov.br</h3>
+              </header>
+              <p>O TRF1 só permite consulta caso a caso. TRF3 e TRF6 não foram verificados — houve falha de conexão. A presença desses dados em dados.gov.br não foi confirmada.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="reco">
+          <p><strong>Recomendação.</strong> A prova de conceito deve começar por TRF2, TRF4 e SIOP. O Datajud entra para enriquecer o andamento dos processos. O TJSP fica para um momento seguinte. O próximo passo está no <a href="#projeto-status">quadro de status do projeto</a>: montar o pipeline com essas três fontes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="glossario">
+      <div class="wrap">
+        <h2>Glossário</h2>
+        <p class="section-lead">Os termos que aparecem ao longo deste briefing, em linguagem direta.</p>
+        <dl class="glossary">
+          <div>
+            <dt>Deságio</dt>
+            <dd>O desconto com que o credor vende o precatório, em troca de receber agora em vez de esperar o pagamento pelo ente público.</dd>
+          </div>
+          <div>
+            <dt>Cessão</dt>
+            <dd>A transferência do crédito a outra pessoa ou empresa. Pela regra nova, precisa de escritura pública, registro eletrônico, comunicação à Central e homologação judicial.</dd>
+          </div>
+          <div>
+            <dt>RPV</dt>
+            <dd>Requisição de Pequeno Valor. Caminho de pagamento para dívidas menores, em geral mais rápido do que o precatório.</dd>
+          </div>
+          <div>
+            <dt>Ente devedor</dt>
+            <dd>Quem deve pagar: União, estado, município ou, em alguns casos, uma estatal submetida ao regime de precatórios.</dd>
+          </div>
+          <div>
+            <dt>LOA</dt>
+            <dd>Lei Orçamentária Anual. É nela que o ente reserva o dinheiro para pagar precatórios naquele ano.</dd>
+          </div>
+          <div>
+            <dt>SisPreq</dt>
+            <dd>Sistema Nacional de Precatórios, em desenvolvimento pelo CNJ, com integração prevista às plataformas do mercado financeiro e vínculo com a Central Nacional de Cessões.</dd>
+          </div>
+          <div>
+            <dt>FIDC</dt>
+            <dd>Fundo de Investimento em Direitos Creditórios. Uma forma de estruturar a empresa compradora, reunindo capital de investidores para adquirir os créditos.</dd>
+          </div>
+          <div>
+            <dt>Homologação</dt>
+            <dd>O crivo judicial da cessão. Sem ela — e sem os demais requisitos da resolução — não muda a titularidade nem há pagamento ao comprador.</dd>
+          </div>
+          <div>
+            <dt>Natureza alimentar</dt>
+            <dd>Classificação do crédito ligada a verbas como salários, pensões e indenizações alimentares, em contraste com a natureza comum. Influi na ordem de pagamento.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <div id="panel-projeto" role="tabpanel" aria-labelledby="tab-projeto">
+    <header class="hero" id="projeto">
+      <div class="wrap">
+        <p class="kicker">Projeto · novembro de 2026</p>
+        <h1>Uma plataforma para o mercado de precatórios</h1>
+        <p class="lede">Unificar os dados que hoje estão espalhados, aproveitar as regras novas do CNJ e a futura Central / SisPreq, e só então operar intermediação e compra — em empresas separadas, começando pela tecnologia.</p>
+        <div class="meta-row">
+          <span>Para <strong>Jhonata Emerick</strong></span>
+          <span>Três papéis, três CNPJs</span>
+          <span>Atualizado em 12/11/2026</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="projeto-visao">
+        <div class="wrap">
+          <h2>Visão</h2>
+          <p class="section-lead">O produto é uma plataforma que junta, num só lugar, os dados de precatórios que hoje vivem espalhados.</p>
+          <div class="prose">
+            <p>As fontes continuam sendo os Tribunais de Justiça, os TRFs e o CJF, os TRTs, a API pública do Datajud e as leis orçamentárias (LOA), além dos dados abertos do SIOP/MPO. A oportunidade está em normalizar esses formatos diferentes e cruzá-los — lista cronológica, andamento do processo, orçamento do devedor e ônus do crédito.</p>
+            <p>As regras novas do CNJ para a cessão e a futura Central Nacional de Cessões, vinculada ao SisPreq, mudam o jeito de comprar e de intermediar. A plataforma precisa nascer já alinhada a isso: escritura pública, registro eletrônico, comunicação à central e homologação judicial. Enquanto a central não opera, o sistema se apoia nas fontes que já existem e deixa o encaixe com a central preparado.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="projeto-estrutura">
+        <div class="wrap">
+          <h2>Estrutura: três CNPJs</h2>
+          <p class="section-lead">Mesmo querendo atuar nos três lados, a estrutura precisa estar separada — e a ordem de construção também.</p>
+          <p class="golden">Regra de ouro: <strong>nunca atuar em dois papéis no mesmo crédito.</strong> Três empresas diferentes. Antes de abrir a intermediária e a compradora, validar a estrutura com um advogado: o texto final da resolução ainda será publicado e pode detalhar regras sobre partes ligadas.</p>
+          <div class="grid-3">
+            <article class="card">
+              <span class="tag seal">1 · Começar por aqui</span>
+              <h3>Tecnologia</h3>
+              <p>É a primeira empresa a existir. Vende busca, análise de risco e gestão de cessões para compradores, intermediários e escritórios. Não toca em nenhum crédito. Alimenta as outras duas por contrato, como faria com qualquer cliente. É a parte mais limpa e a que não depende de capital.</p>
+            </article>
+            <article class="card">
+              <span class="tag">2 · Depois</span>
+              <h3>Intermediária</h3>
+              <p>Conecta credores a compradores e cobra taxa fixa, informada antes — sem percentual, como a resolução exige. Se levar um credor à compradora do mesmo grupo, o vínculo precisa ficar explícito na escritura, ou ela atende só compradores de terceiros.</p>
+            </article>
+            <article class="card">
+              <span class="tag">3 · Por último</span>
+              <h3>Compradora / FIDC</h3>
+              <p>Empresa ou fundo que compra com deságio e recebe quando o ente público paga. É nela que ficam o caixa, o risco e os investidores. Só entra depois da validação jurídica e com a base de dados já funcionando.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projeto-roadmap">
+        <div class="wrap">
+          <h2>Roadmap</h2>
+          <p class="section-lead">Cinco fases, da prova de conceito à operação. Só se avança para intermediação e compra depois da base, do produto e da validação jurídica.</p>
+          <div class="phases">
+            <article class="phase">
+              <div class="phase-meta">
+                <span class="phase-label">Fase 0</span>
+                <span class="badge on">Em andamento</span>
+              </div>
+              <div>
+                <h3>Prova de conceito</h3>
+                <p>Escolher a fonte mais fácil, coletar uma amostra e normalizar os campos. O teste de fontes foi concluído em 12/11/2026: a recomendação é começar por TRF2, TRF4 e SIOP. O próximo passo desta fase é montar o pipeline com essas três fontes.</p>
+              </div>
+            </article>
+            <article class="phase">
+              <div class="phase-meta">
+                <span class="phase-label">Fase 1</span>
+                <span class="badge wait">A fazer</span>
+              </div>
+              <div>
+                <h3>Base unificada</h3>
+                <p>Ampliar a coleta para vários tribunais e enriquecer cada crédito com o andamento do Datajud e com o orçamento da LOA do ente devedor.</p>
+              </div>
+            </article>
+            <article class="phase">
+              <div class="phase-meta">
+                <span class="phase-label">Fase 2</span>
+                <span class="badge wait">A fazer</span>
+              </div>
+              <div>
+                <h3>Motor de análise</h3>
+                <p>Score de risco, estimativa de prazo de pagamento, cálculo do valor líquido e do deságio justo.</p>
+              </div>
+            </article>
+            <article class="phase">
+              <div class="phase-meta">
+                <span class="phase-label">Fase 3</span>
+                <span class="badge wait">A fazer</span>
+              </div>
+              <div>
+                <h3>Produto</h3>
+                <p>Painel e busca para compradores, intermediários e escritórios. Gestão de cessões alinhada à resolução: escritura pública, registro eletrônico, comunicação à Central e homologação judicial.</p>
+              </div>
+            </article>
+            <article class="phase">
+              <div class="phase-meta">
+                <span class="phase-label">Fase 4</span>
+                <span class="badge wait">A fazer</span>
+              </div>
+              <div>
+                <h3>Operações</h3>
+                <p>Intermediação e compra, somente após a validação jurídica da estrutura e com a regra de ouro em vigor: nunca dois papéis no mesmo crédito.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projeto-modelo">
+        <div class="wrap">
+          <h2>Modelo de dados</h2>
+          <p class="section-lead">Os sete blocos de sempre. Os quatro primeiros dizem se o crédito é bom e limpo; os três últimos, quanto vale e quando paga.</p>
+          <div class="schema-wrap">
+            <table class="schema">
+              <thead>
+                <tr>
+                  <th>Bloco</th>
+                  <th>Campos</th>
+                  <th>Para que serve</th>
+                  <th>Onde está hoje</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Precatório<br><span class="grp limpo">Grupo 1</span></td>
+                  <td data-label="Campos">Número do precatório e do processo de origem, tribunal, ente devedor, natureza (alimentar ou comum), valor de face, data-base, ano do orçamento, posição na fila cronológica e situação (pendente, parcelado ou pago).</td>
+                  <td data-label="Para que serve">Dizer se o crédito é identificável, em que fila está e em que situação.</td>
+                  <td data-label="Onde está hoje">Sites dos TJs, TRFs, CJF e TRTs. Os arquivos de pagos do TRF2 e do TRF4 já trazem parte disso. O SIOP ajuda a dimensionar o mercado, mas não traz número do precatório, do processo nem do credor.</td>
+                </tr>
+                <tr>
+                  <td>Processo<br><span class="grp limpo">Grupo 1</span></td>
+                  <td data-label="Campos">Fase, movimentações, trânsito em julgado, recursos pendentes e se o assunto está suspenso por tema do STF.</td>
+                  <td data-label="Para que serve">Evitar crédito travado — como nos casos da Tabela SUS.</td>
+                  <td data-label="Onde está hoje">API pública do Datajud e os autos.</td>
+                </tr>
+                <tr>
+                  <td>Credor<br><span class="grp limpo">Grupo 1</span></td>
+                  <td data-label="Campos">Titular atual, CPF ou CNPJ, prioridade (idoso ou doença grave), advogado constituído e honorários destacados.</td>
+                  <td data-label="Para que serve">Confirmar titularidade e prioridade na fila. Dados de pessoa física pedem cuidado com a LGPD.</td>
+                  <td data-label="Onde está hoje">Os autos. Nos arquivos de pagos do TRF2 e do TRF4, o CPF ou CNPJ aparece de forma parcial.</td>
+                </tr>
+                <tr>
+                  <td>Ônus<br><span class="grp limpo">Grupo 1</span></td>
+                  <td data-label="Campos">Cessões anteriores, penhoras, bloqueios e compensações com dívida tributária.</td>
+                  <td data-label="Para que serve">Saber se o crédito está limpo e se a titularidade pode ser transferida.</td>
+                  <td data-label="Onde está hoje">Os autos. Depois deve estar na Central Nacional de Cessões, quando ela estiver operando.</td>
+                </tr>
+                <tr>
+                  <td>Devedor<br><span class="grp valor">Grupo 2</span></td>
+                  <td data-label="Campos">Orçamento reservado na LOA, pagamentos históricos, estoque total da dívida e regime (em dia ou especial).</td>
+                  <td data-label="Para que serve">Estimar quando o precatório será pago de verdade.</td>
+                  <td data-label="Onde está hoje">LOA e portais de transparência. Mapas da dívida do TRF2 (156 entidades), do TRF4 (285) e do TRF5 (499).</td>
+                </tr>
+                <tr>
+                  <td>Cálculo<br><span class="grp valor">Grupo 2</span></td>
+                  <td data-label="Campos">Correção (hoje a regra é a Selic), juros, impostos retidos na fonte, valor líquido, deságio justo e taxa de retorno (TIR).</td>
+                  <td data-label="Para que serve">Chegar ao preço justo do crédito, dado o prazo estimado.</td>
+                  <td data-label="Onde está hoje">Calculado a partir dos outros blocos. Ainda não é um dado publicado pronto.</td>
+                </tr>
+                <tr>
+                  <td>Mercado<br><span class="grp valor">Grupo 2</span></td>
+                  <td data-label="Campos">Deságios praticados por tribunal e por ente, e quem está comprando.</td>
+                  <td data-label="Para que serve">Comparar a oferta com o que o mercado está pagando.</td>
+                  <td data-label="Onde está hoje">É o bloco mais difícil de obter hoje. As escrituras da regra nova devem começar a revelar esse mercado.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="projeto-riscos">
+        <div class="wrap">
+          <h2>Riscos e cuidados</h2>
+          <p class="section-lead">Quatro pontos que precisam estar no desenho do produto e na operação, desde agora.</p>
+          <div class="risks">
+            <article class="card">
+              <span class="tag seal">Jurídico</span>
+              <h3>Temas suspensos pelo STF</h3>
+              <p>Um crédito pode parecer limpo e mesmo assim parar. No RE 1612904, o ministro Gilmar Mendes suspendeu em todo o país os processos da Tabela SUS, inclusive a expedição e o levantamento de precatórios e RPVs. O motor de análise precisa cruzar o assunto do processo com temas suspensos antes de qualquer oferta.</p>
+            </article>
+            <article class="card">
+              <span class="tag seal">Governança</span>
+              <h3>Conflito de interesses</h3>
+              <p>A regra de ouro existe por isso: nunca dois papéis no mesmo crédito. A resolução também proíbe cessão ao advogado do credor, ao escritório e a empresas ligadas. Se a intermediária e a compradora forem do mesmo grupo, o vínculo tem de ficar explícito, e a taxa cobrada do credor continua só fixa.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Regulação</span>
+              <h3>A resolução ainda não está em vigor por completo</h3>
+              <p>A vigência é 30 dias após a publicação. O registro eletrônico e a homologação exclusiva pela central ainda dependem de um ato conjunto do CNJ com o Banco Central, que não saiu. O texto final da resolução ainda será publicado. O produto deve acompanhar esse calendário, não antecipá-lo.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Dados</span>
+              <h3>LGPD e credores pessoa física</h3>
+              <p>Nome, CPF, prioridade por idade ou doença grave e dados de saúde são informações pessoais. A base vai tratá-las. Isso exige base legal, minimização, acesso controlado e cuidado especial com os arquivos que já trazem CPF ou CNPJ — ainda que parcial, como nos pagos do TRF2 e do TRF4.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projeto-status">
+        <div class="wrap">
+          <h2>Quadro de status</h2>
+          <p class="section-lead">O que já foi feito, o que vem agora e o que fica para as fases seguintes.</p>
+          <div class="status-board">
+            <div class="status-col done">
+              <h3>Feito</h3>
+              <ul>
+                <li>Pesquisa das novidades de novembro de 2026 (CNJ, SisPreq, Tabela SUS e Cedae).</li>
+                <li>Site de aprendizado, com o briefing, o glossário e as fontes.</li>
+                <li>Teste de fontes para a POC (12/11/2026, via curl).</li>
+                <li>Base unificada SIOP + TRF2 + TRF4 + TRF5 e aba Bases no site, com busca e download.</li>
+              </ul>
+            </div>
+            <div class="status-col next">
+              <h3>Próximo passo</h3>
+              <ul>
+                <li>Enriquecer a fila pendente (hoje as listas fáceis são de precatórios já pagos) e cruzar credor com o SIOP.</li>
+              </ul>
+            </div>
+            <div class="status-col todo">
+              <h3>A fazer</h3>
+              <ul>
+                <li>Fase 1 — base unificada, com vários tribunais, Datajud e LOA.</li>
+                <li>Fase 2 — motor de análise (risco, prazo, valor líquido e deságio justo).</li>
+                <li>Fase 3 — produto: painel, busca e gestão de cessões alinhada à resolução.</li>
+                <li>Fase 4 — operações de intermediação e compra, após validação jurídica.</li>
+                <li>Validar a estrutura dos três CNPJs com um advogado, quando o texto final da resolução for publicado.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <div id="panel-bases" role="tabpanel" aria-labelledby="tab-bases">
+    <header class="hero" id="bases">
+      <div class="wrap">
+        <p class="kicker">Bases · prova de conceito · 12/11/2026</p>
+        <h1>Consulta às bases públicas de precatórios</h1>
+        <p class="lede">SIOP de 2026, listas de pagos do TRF2 e do TRF4, e os mapas da dívida do TRF2, TRF4 e TRF5. Busque, filtre e baixe os recortes. Os CPF e CNPJ de beneficiários aparecem só na forma parcial já publicada pelos tribunais.</p>
+        <div class="meta-row">
+          <span>Testado em <strong>12/11/2026</strong> (America/Sao_Paulo)</span>
+          <span>164 mil precatórios do SIOP · R$ 71,9 bilhões atualizados</span>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section id="bases-fontes">
+        <div class="wrap">
+          <h2>As fontes nesta versão</h2>
+          <p class="section-lead">Cada cartão traz a origem oficial, a data do teste e o que o arquivo não cobre.</p>
+          <div class="base-grid" id="bases-cards"></div>
+        </div>
+      </section>
+      <section id="bases-eda">
+        <div class="wrap">
+          <h2>Análise exploratória do SIOP 2026</h2>
+          <p class="section-lead">O precatório típico vale cerca de R$ 159 mil, mas 1% dos créditos concentra metade do valor. O volume está no previdenciário do INSS; o valor, nas causas gerais contra a União.</p>
+          <div class="kpi-grid" id="bases-kpis"></div>
+          <div class="charts" id="bases-charts"></div>
+        </div>
+      </section>
+      <section id="bases-consulta">
+        <div class="wrap">
+          <h2>Consultar e baixar</h2>
+          <p class="section-lead">Os filtros valem também para o arquivo CSV do download.</p>
+          <div class="explorer">
+            <div class="expl-tabs" role="tablist" aria-label="Bases para consulta">
+              <button type="button" class="expl-tab" data-expl="siop" aria-selected="true">SIOP 2026</button>
+              <button type="button" class="expl-tab" data-expl="pagos" aria-selected="false">Pagos TRF2/TRF4</button>
+              <button type="button" class="expl-tab" data-expl="mapas" aria-selected="false">Mapas da dívida</button>
+              <button type="button" class="expl-tab" data-expl="extra" aria-selected="false">TRF2 extra 2026</button>
+            </div>
+
+            <div class="expl-panel" id="expl-siop">
+              <form id="form-siop" class="filters wide">
+                <label>Busca
+                  <input type="search" name="q" placeholder="Chave, UO, causa ou tribunal">
+                </label>
+                <label>Tribunal
+                  <select name="tribunal" id="siop-tribunal"><option value="">Todos os tribunais</option></select>
+                </label>
+                <label>Classe
+                  <select name="nfgc" id="siop-nfgc"><option value="">Todas as classes</option></select>
+                </label>
+                <label>Unidade orçamentária
+                  <select name="uo" id="siop-uo"><option value="">Todas as UOs (principais)</option></select>
+                </label>
+                <label>Valor mínimo (R$)
+                  <input type="number" name="min_valor" min="0" step="1000" placeholder="0">
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">Filtrar</button>
+                  <button class="btn ghost" type="reset">Limpar</button>
+                  <a class="btn ghost" id="dl-siop" href="/api/download/siop.csv">Baixar CSV</a>
+                </div>
+              </form>
+              <p class="result-meta" id="meta-siop">Carregando…</p>
+              <div id="table-siop"></div>
+              <div class="pager" id="pager-siop"></div>
+            </div>
+
+            <div class="expl-panel" id="expl-pagos" hidden>
+              <form id="form-pagos" class="filters">
+                <label>Busca
+                  <input type="search" name="q" placeholder="Nº do precatório, CPF/CNPJ parcial ou base legal">
+                </label>
+                <label>Tribunal
+                  <select name="tribunal">
+                    <option value="">TRF2 e TRF4</option>
+                    <option value="TRF2">TRF2</option>
+                    <option value="TRF4">TRF4</option>
+                  </select>
+                </label>
+                <label>Proposta
+                  <input type="number" name="proposta" min="2022" max="2026" placeholder="Ano">
+                </label>
+                <label>Valor mínimo pago (R$)
+                  <input type="number" name="min_valor" min="0" step="1000" placeholder="0">
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">Filtrar</button>
+                  <button class="btn ghost" type="reset">Limpar</button>
+                  <a class="btn ghost" id="dl-pagos" href="/api/download/trf_pagos.csv">Baixar CSV</a>
+                </div>
+              </form>
+              <p class="result-meta" id="meta-pagos">Carregando…</p>
+              <div id="table-pagos"></div>
+              <div class="pager" id="pager-pagos"></div>
+            </div>
+
+            <div class="expl-panel" id="expl-mapas" hidden>
+              <form id="form-mapas" class="filters">
+                <label>Busca
+                  <input type="search" name="q" placeholder="Nome do ente ou CNPJ">
+                </label>
+                <label>Tribunal
+                  <select name="tribunal">
+                    <option value="">TRF2, TRF4 e TRF5</option>
+                    <option value="TRF2">TRF2</option>
+                    <option value="TRF4">TRF4</option>
+                    <option value="TRF5">TRF5</option>
+                  </select>
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">Filtrar</button>
+                  <button class="btn ghost" type="reset">Limpar</button>
+                  <a class="btn ghost" id="dl-mapas" href="/api/download/trf_mapas.csv">Baixar CSV</a>
+                </div>
+              </form>
+              <p class="result-meta" id="meta-mapas">Carregando…</p>
+              <div id="table-mapas"></div>
+              <div class="pager" id="pager-mapas"></div>
+            </div>
+
+            <div class="expl-panel" id="expl-extra" hidden>
+              <form id="form-extra" class="filters">
+                <label>Busca
+                  <input type="search" name="q" placeholder="Ente, precatório ou natureza">
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">Filtrar</button>
+                  <button class="btn ghost" type="reset">Limpar</button>
+                </div>
+              </form>
+              <p class="result-meta" id="meta-extra">Carregando…</p>
+              <div id="table-extra"></div>
+              <div class="pager" id="pager-extra"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <p class="update">Atualizado em 12/11/2026</p>
+      <p class="disclaimer">Este texto é um briefing informal, reunido a partir do que apuramos até esta data. Não é aconselhamento jurídico, financeiro ou de investimento. Antes de estruturar empresas, comprar créditos ou intermediar cessões, consulte um advogado e aguarde o texto final da resolução do CNJ e o ato conjunto com o Banco Central.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var TABS = ["aprendizado", "projeto", "bases"];
+      var PROJETO = {
+        projeto: 1,
+        "projeto-visao": 1,
+        "projeto-estrutura": 1,
+        "projeto-roadmap": 1,
+        "projeto-modelo": 1,
+        "projeto-riscos": 1,
+        "projeto-status": 1
+      };
+      var BASES = {
+        bases: 1,
+        "bases-fontes": 1,
+        "bases-eda": 1,
+        "bases-consulta": 1
+      };
+
+      function currentId() {
+        return (location.hash || "").replace(/^#/, "");
+      }
+
+      function tabFromId(id) {
+        if (BASES[id] || (id && id.indexOf("bases") === 0)) return "bases";
+        if (PROJETO[id] || (id && id.indexOf("projeto") === 0)) return "projeto";
+        return "aprendizado";
+      }
+
+      function apply(scroll) {
+        var id = currentId();
+        var tab = tabFromId(id);
+        document.documentElement.dataset.tab = tab;
+
+        var tabs = document.querySelectorAll(".tabs [role='tab']");
+        for (var i = 0; i < tabs.length; i++) {
+          var on = tabs[i].getAttribute("data-tab") === tab;
+          tabs[i].setAttribute("aria-selected", on ? "true" : "false");
+          tabs[i].tabIndex = on ? 0 : -1;
+        }
+
+        if (!scroll) return;
+        var isRoot = !id || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo";
+        if (isRoot) {
+          window.scrollTo(0, 0);
+          return;
+        }
+        var target = document.getElementById(id);
+        if (target) target.scrollIntoView();
+      }
+
+      document.documentElement.dataset.tab = tabFromId(currentId());
+
+      window.addEventListener("hashchange", function () { apply(true); });
+      document.addEventListener("DOMContentLoaded", function () {
+        var root = document.documentElement;
+        var prev = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        apply(true);
+        root.style.scrollBehavior = prev;
+      });
+
+      var brand = document.querySelector("a.brand");
+      if (brand) {
+        brand.addEventListener("click", function (e) {
+          e.preventDefault();
+          var tab = document.documentElement.dataset.tab || "aprendizado";
+          var dest = tab === "projeto" || tab === "bases" ? tab : "aprendizado";
+          if (currentId() !== dest) location.hash = dest;
+          window.scrollTo(0, 0);
+        });
+      }
+
+      var tablist = document.querySelector(".tabs[role='tablist']");
+      if (tablist) {
+        tablist.addEventListener("keydown", function (e) {
+          if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+          e.preventDefault();
+          var cur = document.documentElement.dataset.tab || "aprendizado";
+          var i = TABS.indexOf(cur);
+          if (i < 0) i = 0;
+          var next = e.key === "ArrowRight" ? TABS[(i + 1) % TABS.length] : TABS[(i + TABS.length - 1) % TABS.length];
+          location.hash = next;
+        });
+      }
+    })();
+  </script>
+  <script src="/bases.js"></script>
+</body>
+</html>
