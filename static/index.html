@@ -774,6 +774,55 @@
       .sumario a { padding: 5px 8px; font-size: 0.78rem; }
     }
 
+
+    /* —— Frente 1 (plano de negócio) —— */
+    .frente-intro { max-width: 72ch; }
+    .frente-intro p + p { margin-top: 0.9em; }
+    .frente-block { margin-top: 36px; }
+    .frente-block h3 {
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+    .frente-block > p { color: var(--ink-soft); max-width: 72ch; margin-bottom: 16px; }
+    ol.steps {
+      list-style: none;
+      counter-reset: passo;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+    ol.steps li {
+      counter-increment: passo;
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+    }
+    ol.steps li::before {
+      content: counter(passo);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 1.35rem;
+      color: var(--seal);
+      line-height: 1.2;
+    }
+    ol.steps strong { color: var(--ink); }
+    ol.steps span { color: var(--ink-soft); font-size: 0.95rem; }
+    .semaforo { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .semaforo .card { border-top-width: 3px; }
+    .semaforo .go { border-top-color: var(--pine); }
+    .semaforo .hold { border-top-color: var(--gold); }
+    .semaforo .stop { border-top-color: var(--seal); }
+    @media (max-width: 700px) {
+      .semaforo { grid-template-columns: 1fr; }
+      ol.steps li { grid-template-columns: 1.8rem 1fr; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
     }
@@ -942,6 +991,7 @@
       <div class="sumario" data-for="projeto" aria-label="Sumário do projeto">
         <a href="#projeto-visao">Visão</a>
         <a href="#projeto-estrutura">Estrutura</a>
+        <a href="#projeto-frente1">Frente 1</a>
         <a href="#projeto-roadmap">Roadmap</a>
         <a href="#projeto-modelo">Modelo de dados</a>
         <a href="#projeto-riscos">Riscos</a>
@@ -1451,6 +1501,269 @@
         </div>
       </section>
 
+
+      <section id="projeto-frente1">
+        <div class="wrap">
+          <h2>Frente 1: Regularização de cessões antigas e pré-precatórios</h2>
+          <p class="section-lead">A primeira oferta comercial da empresa de tecnologia: ajudar quem já comprou ou intermediou créditos a entrar na regra nova, antes que o pagamento vá para o titular judicial.</p>
+
+          <div class="prose frente-intro">
+            <p>O plenário do CNJ aprovou, em 10/11/2026, o Ato Normativo 0008577-83.2026.2.00.0000, sobre cessão de precatórios e RPVs. A resolução <strong>ainda não foi publicada</strong>. A vigência prevista é de 30 dias após a publicação. O texto que podemos ler hoje é a minuta de 27/10/2026. Os artigos citados abaixo são dessa minuta e podem mudar no texto final.</p>
+          </div>
+          <p class="note"><strong>Ainda não confirmado no texto oficial.</strong> Reportagem do JOTA menciona um prazo de 10 dias, após a vigência, para juntar nos autos os contratos particulares de cessões já feitas. Isso não está confirmado na minuta que lemos. Não venda esse prazo como regra, nem monte operação em cima dele, até o texto final sair no Diário de Justiça. A emenda Badaró alterou o art. 64 da minuta para preservar cessões anteriores; o que isso exige na prática (só juntada, escritura nova, ou os dois) também só fica claro no texto publicado e na orientação do tribunal.</p>
+          <div class="links">
+            <a href="https://www.cnj.jus.br/wp-content/uploads/2026/10/voto-ato-8577-83.pdf" target="_blank" rel="noopener">Minuta de 27/10/2026 (PDF do CNJ)</a>
+          </div>
+
+          <div class="frente-block">
+            <h3>O problema e a janela</h3>
+            <p>Há um estoque de cessões feitas no modelo antigo — contrato particular, às vezes antes mesmo da apresentação do precatório. A minuta trata esses dois momentos de forma diferente, e o risco concreto é o pagamento ir para a pessoa errada.</p>
+            <div class="grid-2">
+              <article class="card">
+                <span class="tag">Antes da apresentação</span>
+                <h3>Pré-precatório</h3>
+                <p>Pela minuta (arts. 19 e 20), o negócio feito antes da apresentação do ofício precatório não produz efeito perante o tribunal nem o ente devedor. Precisa ser informado nos autos em até cinco dias. Sem isso, o crédito continua em nome do titular judicial.</p>
+              </article>
+              <article class="card">
+                <span class="tag seal">Depois da apresentação</span>
+                <h3>Cessão do precatório</h3>
+                <p>Depois da apresentação, a minuta (art. 6) pede o rito completo: escritura pública, comunicação notarial, registro eletrônico, comunicação à Central, comunicação ao devedor e homologação. Se faltar esse caminho, o art. 24 manda pagar ao titular judicial. A escritura precisa trazer preço, deságio e quadro-resumo (art. 8). Intermediário só pode cobrar taxa fixa, informada antes (art. 53).</p>
+              </article>
+            </div>
+            <p style="margin-top:16px;color:var(--ink-soft);max-width:72ch;">A janela é o intervalo entre a publicação e a vigência, e as primeiras semanas da regra nova — quando fundos, compradores e escritórios vão precisar saber quais créditos da carteira estão em risco. Não é um produto eterno: é um serviço de transição, com calendário amarrado à publicação. A empresa de tecnologia entra aqui; petição nos autos é ato do advogado parceiro.</p>
+          </div>
+
+          <div class="frente-block">
+            <h3>Público-alvo</h3>
+            <p>Quem já tem estoque de cessões ou pré-precatórios e vai ter de regularizar, não o credor originário que ainda vai vender.</p>
+            <div class="grid-2">
+              <article class="card">
+                <span class="tag">Carteira</span>
+                <h3>Fundos, FIDCs e securitizadoras</h3>
+                <p>Têm volume, documentação irregular em lote e pressão de cotista ou auditoria. São o melhor ponto de partida: uma carteira justifica o diagnóstico.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Carteira</span>
+                <h3>Compradores profissionais</h3>
+                <p>Cessionários que compraram por contrato particular e precisam saber o que ainda vale perante o tribunal e o devedor.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Canal</span>
+                <h3>Escritórios que intermediaram</h3>
+                <p>Conhecem os contratos antigos e os clientes. Podem ser canal — ou clientes, se tiverem de regularizar a própria intermediação à luz da taxa fixa.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Ponta</span>
+                <h3>Cessionários pessoa física</h3>
+                <p>Entram depois, em lote encaminhado por escritório ou por um pacote simples. Não é o primeiro alvo: o custo de atender um crédito isolado é alto.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>O que oferecemos</h3>
+            <p>Serviço da empresa de tecnologia, com advogado parceiro para o que for ato privativo da advocacia. Não compramos o crédito nesta frente e não protocolamos petição em nome próprio.</p>
+            <div class="grid-2">
+              <article class="card">
+                <span class="tag">1</span>
+                <h3>Diagnóstico da carteira</h3>
+                <p>Leitura da planilha e dos contratos: cada crédito é classificado (pré-apresentação ou já expedido, instrumento usado, o que falta no rito da minuta).</p>
+              </article>
+              <article class="card">
+                <span class="tag">2</span>
+                <h3>Auditoria da cadeia de cessões</h3>
+                <p>Quem cedeu a quem, em que data, com que documento, se há cessão sucessiva, penhora ou honorários destacados — e se a titularidade de hoje fecha com o que está no tribunal.</p>
+              </article>
+              <article class="card">
+                <span class="tag seal">3</span>
+                <h3>Dossiê e minuta de petição de juntada</h3>
+                <p>O Radar monta o dossiê e uma minuta. A petição só entra nos autos se um <strong>advogado parceiro</strong>, constituído pelo cliente, assinar e protocolar. Isso não é negociável.</p>
+              </article>
+              <article class="card">
+                <span class="tag">4</span>
+                <h3>Checklist e quadro-resumo da escritura</h3>
+                <p>Lista do que a minuta pede no art. 6 e os campos do art. 8 (preço, deságio, quadro-resumo), para o cliente levar ao tabelião com o recado certo.</p>
+              </article>
+              <article class="card">
+                <span class="tag">5</span>
+                <h3>Acompanhamento até a homologação</h3>
+                <p>Prazos, comunicações (notarial, Central, devedor) e status da homologação, quando esses passos existirem no texto final e na prática do tribunal. Enquanto a Central não opera, o acompanhamento se apoia no que o tribunal já aceita.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>Modelo de preço (hipótese)</h3>
+            <p>Não há aqui ticket de mercado inventado. A hipótese, a validar com os primeiros clientes e com o advogado, é cobrar valor fechado — nunca percentual sobre o precatório.</p>
+            <div class="grid-3">
+              <article class="card">
+                <span class="tag">Por operação</span>
+                <h3>Taxa fixa por crédito</h3>
+                <p>Um valor fechado para diagnosticar e montar o dossiê de cada precatório. Serve para carteira pequena ou para cessionário avulso encaminhado por escritório.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Por lote</span>
+                <h3>Pacote por carteira</h3>
+                <p>Preço único para um lote, conforme o número de créditos e a complexidade da cadeia (cessão única ou sucessiva, com ou sem ônus). É o formato natural para fundo e comprador profissional.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Recorrente</span>
+                <h3>Acompanhamento fechado</h3>
+                <p>Um valor também fechado para acompanhar até a homologação. Sem êxito em percentual do crédito: além de difícil de justificar, encosta na lógica que a minuta reserva à taxa do intermediário (art. 53).</p>
+              </article>
+            </div>
+            <p class="note">Os valores em reais só saem depois de medir o custo real da primeira carteira-piloto (horas de análise, cruzamento, revisão do advogado parceiro). Até lá, o comercial fala em formato de preço, não em tabela.</p>
+          </div>
+
+          <div class="frente-block">
+            <h3>Processo operacional</h3>
+            <p>Um caminho único, repetível, da planilha até o status final. O cliente autoriza o tratamento dos dados antes de qualquer upload.</p>
+            <ol class="steps">
+              <li><div><strong>Receber a carteira.</strong> <span>Planilha (CSV) e cópia dos contratos, escrituras ou instrumentos particulares, com termo de tratamento de dados.</span></div></li>
+              <li><div><strong>Identificar cada crédito.</strong> <span>Cruzar número, ente, tribunal e valor com as bases do Radar: fila pendente do TRF4, pagos do TRF2 e do TRF4, SIOP e, quando houver, Datajud.</span></div></li>
+              <li><div><strong>Classificar o momento.</strong> <span>Pré-apresentação ou já expedido; cessão antiga ou já formalizada; o que a minuta exigiria em cada caso.</span></div></li>
+              <li><div><strong>Auditar a cadeia.</strong> <span>Montar a linha do tempo das cessões, conferir titularidade e anotar ônus (penhora, honorários, cessão sucessiva).</span></div></li>
+              <li><div><strong>Semáforo de risco.</strong> <span>Verde, amarelo ou vermelho por crédito, com o motivo e o próximo passo objetivo.</span></div></li>
+              <li><div><strong>Dossiê, checklist e quadro-resumo.</strong> <span>Pacote que o cliente e o advogado parceiro levam à juntada e, se for o caso, ao tabelião.</span></div></li>
+              <li><div><strong>Minuta de petição, protocolo pelo advogado.</strong> <span>O Radar entrega a minuta. Só o advogado parceiro, constituído pelo cliente, assina e protocola.</span></div></li>
+              <li><div><strong>Acompanhar até a homologação.</strong> <span>Prazos, comunicações e status, com alerta se algo vencer. Entrega do relatório final ao cliente.</span></div></li>
+            </ol>
+          </div>
+
+          <div class="frente-block">
+            <h3>O que o Radar precisa ter</h3>
+            <p>É o mínimo para esta frente funcionar de verdade — além da consulta que já existe. Nada disso entra no ar antes da publicação ser acompanhada de perto.</p>
+            <div class="grid-2">
+              <article class="card">
+                <h3>Upload de carteira em CSV</h3>
+                <p>Modelo fixo de colunas (número, tribunal, ente, valor, data do contrato, cadeia de cessões) e crítica na entrada: linha ilegível não entra no cruzamento.</p>
+              </article>
+              <article class="card">
+                <h3>Cruzamento com as bases</h3>
+                <p>Fila pendente do TRF4 (ordem e valor à frente), pagos do TRF2 e do TRF4, SIOP e Datajud para o andamento do processo de origem. Onde a base não tiver o número, o status fica “não localizado”, nunca inventado.</p>
+              </article>
+              <article class="card">
+                <h3>Status do crédito</h3>
+                <p>Pendente, pago, expedido, não localizado, ou já com escritura/homologação — o que der para afirmar com a fonte.</p>
+              </article>
+              <article class="card">
+                <h3>Semáforo de regularização</h3>
+                <p>Verde (rito aparente completo ou cessão ainda não exigida), amarelo (faltam peças, prazo em aberto) e vermelho (risco de pagamento ao titular judicial, cadeia rompida, tema suspenso).</p>
+              </article>
+              <article class="card">
+                <h3>Gerador de checklist e dossiê</h3>
+                <p>PDF ou pasta por crédito: documentos recebidos, quadro-resumo da escritura, minuta de juntada e pendências. Sem petição “pronta para protocolar” sem a revisão do advogado.</p>
+              </article>
+              <article class="card">
+                <h3>Prazos e alertas</h3>
+                <p>Cinco dias da minuta para informar cessão pré-apresentação nos autos. Os demais prazos — inclusive o de 10 dias citado pelo JOTA — só entram no produto quando estiverem no texto publicado.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>Semáforo, na prática</h3>
+            <div class="semaforo">
+              <article class="card go">
+                <span class="tag">Verde</span>
+                <h3>Caminho aparente</h3>
+                <p>Crédito identificado, cadeia simples, instrumento alinhado ao momento (pré ou pós) e sem ônus visível. Segue para checklist, não para “já está homologado” — isso só o tribunal confirma.</p>
+              </article>
+              <article class="card hold">
+                <span class="tag">Amarelo</span>
+                <h3>Falta peça ou prazo</h3>
+                <p>Contrato particular sem escritura, juntada pendente, quadro-resumo incompleto, ou cessão pré-apresentação ainda não informada nos autos.</p>
+              </article>
+              <article class="card stop">
+                <span class="tag seal">Vermelho</span>
+                <h3>Risco de pagar a quem não comprou</h3>
+                <p>Cadeia rompida, titularidade divergente, ônus não resolvido, tema suspenso (como a Tabela SUS) ou precatório já pago a outra pessoa nas listas do tribunal.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>Riscos e limites legais</h3>
+            <div class="risks">
+              <article class="card">
+                <span class="tag seal">OAB</span>
+                <h3>Não exercer advocacia</h3>
+                <p>Diagnosticar, cruzar dados e redigir minuta operacional não substitui advogado. Petição, substabelecimento e atuação nos autos são do advogado parceiro, constituído pelo cliente. O comercial da Frente 1 não promete “regularizar no tribunal” como se o Radar fosse escritório.</p>
+              </article>
+              <article class="card">
+                <span class="tag seal">LGPD</span>
+                <h3>Carteira é dado pessoal</h3>
+                <p>Contratos e planilhas trazem nome, CPF, valores e, às vezes, dados de saúde (prioridade). Exige base legal, contrato com o cliente, minimização, acesso restrito e prazo de retenção. Nada de usar a carteira-piloto como case com nome de credor.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Regulação</span>
+                <h3>A norma ainda não foi publicada</h3>
+                <p>Trabalhamos com a minuta. O texto final, a data de vigência e a transição do art. 64 só valem depois da publicação. Qualquer prazo extra (como o de 10 dias reportado pelo JOTA) fica fora do produto até haver fonte oficial.</p>
+              </article>
+              <article class="card">
+                <span class="tag">Governança</span>
+                <h3>Um papel por crédito</h3>
+                <p>Nesta frente a empresa de tecnologia presta serviço. Não compra o crédito e não intermedia a cessão do mesmo item. A regra de ouro dos três CNPJs vale da primeira carteira em diante.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>Plano de 30, 60 e 90 dias</h3>
+            <p>O relógio de verdade é a publicação no Diário de Justiça, não o calendário abaixo. Se a resolução atrasar, o plano atrasará com ela — e tudo bem.</p>
+            <div class="phases">
+              <article class="phase">
+                <div class="phase-meta">
+                  <span class="phase-label">30 dias</span>
+                  <span class="badge next">Agora</span>
+                </div>
+                <div>
+                  <h3>Preparar, sem antecipar a vigência</h3>
+                  <p>Acompanhar a publicação do texto final. Fechar um checklist provisório, marcado como “sujeito à minuta”. Montar o modelo de CSV e o termo de tratamento de dados. Listar advogados parceiros. Escrever um one-pager comercial honesto, sem prazo extraoficial. Buscar uma ou duas carteiras-piloto para diagnóstico manual — ainda que o produto não esteja pronto.</p>
+                </div>
+              </article>
+              <article class="phase">
+                <div class="phase-meta">
+                  <span class="phase-label">60 dias</span>
+                  <span class="badge wait">Em seguida</span>
+                </div>
+                <div>
+                  <h3>Ajustar ao texto final e operar o piloto</h3>
+                  <p>Quando a resolução sair, reescrever o checklist. Entregar o upload de CSV e o cruzamento com a fila do TRF4, os pagos e o SIOP. Ligar o semáforo v1. Fechar o preço da primeira carteira com custo real medido. Se a publicação não tiver saído, o piloto continua manual e o software espera.</p>
+                </div>
+              </article>
+              <article class="phase">
+                <div class="phase-meta">
+                  <span class="phase-label">90 dias</span>
+                  <span class="badge wait">Depois</span>
+                </div>
+                <div>
+                  <h3>Repetir o pacote</h3>
+                  <p>Gerador de dossiê e checklist, alertas só com prazos do texto publicado, enriquecimento pelo Datajud, e um segundo lote. Relato do piloto sem expor dado pessoal. Só então decidir se a frente escala ou se permanece como serviço assistido.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>Como chegar aos primeiros clientes</h3>
+            <div class="prose">
+              <p>Não esperamos um “mercado de bilhões” para começar. O caminho mais curto é quem já tem o problema na mesa.</p>
+              <ul>
+                <li>Ir primeiro aos escritórios que já intermediaram cessões e aos compradores ou FIDCs com carteira antiga — eles sentem o risco do art. 24 da minuta.</li>
+                <li>Oferecer um diagnóstico-piloto de um lote pequeno, com preço fechado, termo de dados e a ressalva de que a norma ainda pode mudar.</li>
+                <li>Usar o advogado parceiro como canal, não como funcionário: ele protocola, nós preparamos o dossiê.</li>
+                <li>Na semana da publicação, voltar a essas conversas com o checklist já ajustado ao texto final. Sem prometer a janela de 10 dias até ela estar no Diário de Justiça.</li>
+                <li>Recusar carteira em que a empresa, ou alguém do mesmo grupo, também queira comprar ou intermediar o mesmo crédito.</li>
+              </ul>
+            </div>
+            <div class="callout">
+              <p><strong>O primeiro cliente não precisa do produto pronto.</strong> Precisa de uma leitura honesta da carteira, de um advogado para protocolar o que for necessário e de alguém que não invente prazo nem tamanho de mercado. O software vem para repetir isso na segunda carteira.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="projeto-roadmap">
         <div class="wrap">
           <h2>Roadmap</h2>
@@ -1621,6 +1934,7 @@
               <h3>Próximo passo</h3>
               <ul>
                 <li>Enriquecer a fila pendente do TRF4 com o processo de origem (Datajud), tentar a fila pendente do TRF2 (captcha) e cruzar com o SIOP.</li>
+                <li>Validar o plano da Frente 1 com um advogado quando o texto final da resolução for publicado, e buscar uma carteira-piloto.</li>
               </ul>
             </div>
             <div class="status-col todo">
@@ -1836,6 +2150,7 @@
         projeto: 1,
         "projeto-visao": 1,
         "projeto-estrutura": 1,
+        "projeto-frente1": 1,
         "projeto-roadmap": 1,
         "projeto-modelo": 1,
         "projeto-riscos": 1,
