@@ -93,6 +93,11 @@
           (r.cpf_cnpj_parcial ? "<span>CPF/CNPJ <strong>" + esc(r.cpf_cnpj_parcial) + "</strong></span>" : "") +
         "</div>" +
         fila +
+        (r.status === "pendente" && r.fonte === "trf4_pendentes" && r.numero_precatorio
+          ? "<p class='cc-actions'><a class='btn ghost btn-precificar' href='#precificacao?numero=" +
+            encodeURIComponent(r.numero_precatorio) +
+            "'>Precificar <span class='badge-v0'>v0</span></a></p>"
+          : "") +
       "</article>";
     }).join("") + "</div>";
   }
@@ -160,7 +165,16 @@
     else if (sel && sort === "valor" && order === "asc") sel.value = "valor_asc";
   }
 
+  function isConsultaTab() {
+    var hash = (location.hash || "").replace(/^#/, "").split("?")[0];
+    var tab = document.documentElement.dataset.tab;
+    if (tab && tab !== "consulta") return false;
+    if (hash && hash !== "consulta") return false;
+    return true;
+  }
+
   function writeHash() {
+    if (!isConsultaTab()) return;
     var o = currentFilters();
     var u = new URLSearchParams();
     Object.keys(o).forEach(function (k) {
@@ -173,7 +187,7 @@
 
   function init() {
     if (!$("#panel-consulta")) return;
-    applyParamsToForm();
+    if (isConsultaTab()) applyParamsToForm();
     var filt = $(".consulta-filters");
     if (filt && window.matchMedia && window.matchMedia("(min-width: 800px)").matches) {
       filt.open = true;
@@ -196,8 +210,10 @@
       if (el.id === "consulta-sort") return;
       el.addEventListener("change", function () { state.page = 1; loadConsulta(); });
     });
-    writeHash();
-    loadConsulta();
+    if (isConsultaTab()) {
+      writeHash();
+      loadConsulta();
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

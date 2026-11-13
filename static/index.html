@@ -526,18 +526,27 @@
     html[data-tab="consulta"] #panel-aprendizado,
     html[data-tab="consulta"] #panel-projeto,
     html[data-tab="consulta"] #panel-bases,
+    html[data-tab="consulta"] #panel-precificacao,
     html[data-tab="projeto"] #panel-consulta,
     html[data-tab="projeto"] #panel-aprendizado,
     html[data-tab="projeto"] #panel-bases,
+    html[data-tab="projeto"] #panel-precificacao,
     html[data-tab="aprendizado"] #panel-consulta,
     html[data-tab="aprendizado"] #panel-projeto,
     html[data-tab="aprendizado"] #panel-bases,
+    html[data-tab="aprendizado"] #panel-precificacao,
     html[data-tab="bases"] #panel-consulta,
     html[data-tab="bases"] #panel-aprendizado,
     html[data-tab="bases"] #panel-projeto,
+    html[data-tab="bases"] #panel-precificacao,
+    html[data-tab="precificacao"] #panel-consulta,
+    html[data-tab="precificacao"] #panel-aprendizado,
+    html[data-tab="precificacao"] #panel-projeto,
+    html[data-tab="precificacao"] #panel-bases,
     html:not([data-tab]) #panel-aprendizado,
     html:not([data-tab]) #panel-projeto,
-    html:not([data-tab]) #panel-bases {
+    html:not([data-tab]) #panel-bases,
+    html:not([data-tab]) #panel-precificacao {
       display: none;
     }
 
@@ -960,8 +969,9 @@
     }
 </style>
   <link rel="stylesheet" href="/consulta.css">
+  <link rel="stylesheet" href="/precificacao.css">
   <script>
-    document.documentElement.dataset.tab = /^#bases/.test(location.hash) ? "bases" : /^#projeto/.test(location.hash) ? "projeto" : /^#aprendizado/.test(location.hash) ? "aprendizado" : "consulta";
+    document.documentElement.dataset.tab = /^#precificacao/.test(location.hash) ? "precificacao" : /^#bases/.test(location.hash) ? "bases" : /^#projeto/.test(location.hash) ? "projeto" : /^#aprendizado/.test(location.hash) ? "aprendizado" : "consulta";
   </script>
 </head>
 <body>
@@ -974,6 +984,7 @@
         </a>
         <div class="tabs" role="tablist" aria-label="Seções do site">
           <a href="#consulta" role="tab" id="tab-consulta" data-tab="consulta" aria-controls="panel-consulta" aria-selected="true">Consulta</a>
+          <a href="#precificacao" role="tab" id="tab-precificacao" data-tab="precificacao" aria-controls="panel-precificacao" aria-selected="false">Precificação <span class="badge-v0">v0</span></a>
           <a href="#aprendizado" role="tab" id="tab-aprendizado" data-tab="aprendizado" aria-controls="panel-aprendizado" aria-selected="false">Aprendizado</a>
           <a href="#projeto" role="tab" id="tab-projeto" data-tab="projeto" aria-controls="panel-projeto" aria-selected="false">Projeto</a>
           <a href="#bases" role="tab" id="tab-bases" data-tab="bases" aria-controls="panel-bases" aria-selected="false">Bases</a>
@@ -1093,7 +1104,92 @@
     </main>
   </div>
 
-  <div id="panel-aprendizado" role="tabpanel" aria-labelledby="tab-aprendizado">
+  
+  <div id="panel-precificacao" role="tabpanel" aria-labelledby="tab-precificacao">
+    <div class="v0-banner" role="note">
+      <div class="wrap">
+        <span class="badge-v0">v0</span>
+        <p><strong>Calculadora experimental.</strong> Não é laudo, não é parecer e não é recomendação de investimento. Os números lidos das bases vêm com a fonte à vista; taxas, probabilidade e retorno exigido são hipóteses suas, a validar. Nada nesta tela substitui análise jurídica ou financeira.</p>
+      </div>
+    </div>
+    <header class="hero precif-hero" id="precificacao">
+      <div class="wrap">
+        <p class="kicker">Precificação <span class="badge-v0">v0</span> · experimental · hipóteses a validar</p>
+        <h1>Estimar um preço e uma faixa de deságio</h1>
+        <p class="lede">A fórmula é explícita: o preço é o valor no pagamento, reduzido por uma probabilidade de não pagamento ou atraso, descontado pela taxa de retorno exigida no prazo T. O deságio é 1 menos esse preço sobre o valor atual de hoje. T, quando a fonte permite, é o valor à frente na fila dividido pelo pagamento anual do devedor no mapa da dívida — e você pode trocá-lo.</p>
+        <form id="form-precif-busca" class="precif-search">
+          <label class="sr-only" for="precif-numero">Número do precatório</label>
+          <input id="precif-numero" type="search" name="numero" placeholder="Número do precatório na fila pendente do TRF4" autocomplete="off">
+          <button class="btn" type="submit">Carregar</button>
+        </form>
+        <p class="result-meta" id="precif-status">Informe um número da fila pendente do TRF4 ou preencha os campos à mão.</p>
+      </div>
+    </header>
+    <main class="precif-body">
+      <div class="wrap">
+        <div id="precif-credito" class="precif-credito" hidden></div>
+        <div id="precif-avisos" class="precif-aviso" hidden></div>
+
+        <form id="form-precif" class="precif-params" autocomplete="off">
+          <h2>Parâmetros <span class="badge-v0">v0</span></h2>
+          <p class="section-lead">Os campos com “hipótese” não vêm das bases. Altere à vontade; o resultado muda na hora.</p>
+          <div class="precif-grid">
+            <label>Valor atual hoje (R$)
+              <input id="precif-valor" type="number" step="0.01" min="0" inputmode="decimal">
+              <span class="hint">Vem da fila pendente do TRF4 quando o crédito é carregado. Editável.</span>
+            </label>
+            <label>Valor à frente na fila (R$)
+              <input id="precif-frente" type="number" step="0.01" min="0" inputmode="decimal">
+              <span class="hint">Soma dos créditos à frente na mesma lista e no mesmo ente, quando há fila.</span>
+            </label>
+            <label>Pagamento anual do devedor (R$)
+              <input id="precif-pagamento" type="number" step="0.01" min="0" inputmode="decimal">
+              <span class="hint">Só preenchido automaticamente quando o nome do ente casa com o mapa da dívida (campo pago_no_ano). Caso contrário, informe você.</span>
+            </label>
+            <label>T — prazo até o pagamento (anos)
+              <input id="precif-t" type="number" step="0.0001" min="0" inputmode="decimal">
+              <span class="hint">Padrão: da fonte indicada acima (prazo orçamentário federal ou valor à frente ÷ pagamento anual no mapa). Você pode informar outro T.</span>
+              <span class="precif-check"><input type="checkbox" id="precif-t-manual"> Usar este T, sem recalcular pelo pagamento anual</span>
+            </label>
+            <label>Taxa de correção anual c (%)
+              <input id="precif-correcao" type="number" step="0.01" inputmode="decimal" value="0">
+              <span class="hint">Hipótese inicial: 0% a.a. (sem correção). Não é a Selic oficial. Informe a taxa que você quer usar.</span>
+            </label>
+            <label>IR no pagamento (%)
+              <input id="precif-ir" type="number" step="0.01" min="0" max="99" inputmode="decimal" value="0">
+              <span class="hint">Hipótese, opcional. Percentual sobre o valor já corrigido.</span>
+            </label>
+            <label>Honorários no pagamento (%)
+              <input id="precif-honorarios" type="number" step="0.01" min="0" max="99" inputmode="decimal" value="0">
+              <span class="hint">Hipótese, opcional. Soma-se ao IR para chegar ao valor no pagamento.</span>
+            </label>
+            <label>p — probabilidade de não pagamento ou atraso (%)
+              <input id="precif-p" type="number" step="0.01" min="0" max="100" inputmode="decimal" value="15">
+              <span class="hint">Hipótese. Os presets abaixo são ilustrativos desta v0, não um score do ente.</span>
+              <span class="precif-presets">
+                <button type="button" data-p="5">Baixo · 5%</button>
+                <button type="button" data-p="15" aria-pressed="true">Médio · 15%</button>
+                <button type="button" data-p="35">Alto · 35%</button>
+              </span>
+            </label>
+            <label>r — retorno exigido a.a. (%)
+              <input id="precif-r" type="number" step="0.01" inputmode="decimal" value="10">
+              <span class="hint">Hipótese inicial: 10% a.a. Não é taxa de mercado medida.</span>
+            </label>
+          </div>
+        </form>
+
+        <p id="precif-erro" class="precif-erro" hidden></p>
+        <div id="precif-resultados" hidden>
+          <div id="precif-faixa" class="precif-faixa"></div>
+          <div id="precif-cenarios" class="precif-cenarios"></div>
+          <div id="precif-breakdown" class="precif-formula"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<div id="panel-aprendizado" role="tabpanel" aria-labelledby="tab-aprendizado">
   <header class="hero" id="topo">
     <div class="wrap">
       <p class="kicker">Briefing de mercado · novembro de 2026</p>
@@ -2410,7 +2506,7 @@
 
   <script>
     (function () {
-      var TABS = ["consulta", "aprendizado", "projeto", "bases"];
+      var TABS = ["consulta", "precificacao", "aprendizado", "projeto", "bases"];
       var PROJETO = {
         projeto: 1,
         "projeto-visao": 1,
@@ -2430,10 +2526,12 @@
       };
 
       function currentId() {
-        return (location.hash || "").replace(/^#/, "");
+        return (location.hash || "").replace(/^#/, "").split("?")[0];
       }
 
       function tabFromId(id) {
+        id = (id || "").split("?")[0];
+        if (id === "precificacao" || (id && id.indexOf("precificacao") === 0)) return "precificacao";
         if (BASES[id] || (id && id.indexOf("bases") === 0)) return "bases";
         if (PROJETO[id] || (id && id.indexOf("projeto") === 0)) return "projeto";
         if (id === "aprendizado" || (id && id.indexOf("aprendizado") === 0) || id === "o-que-e" || id === "novidades" || id === "onde-estao" || id === "tres-papeis" || id === "dados-necessarios" || id === "poc" || id === "glossario" || id === "topo") return "aprendizado";
@@ -2453,7 +2551,7 @@
         }
 
         if (!scroll) return;
-        var isRoot = !id || id === "consulta" || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo";
+        var isRoot = !id || id === "consulta" || id === "precificacao" || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo";
         if (isRoot) {
           window.scrollTo(0, 0);
           return;
@@ -2478,7 +2576,7 @@
         brand.addEventListener("click", function (e) {
           e.preventDefault();
           var tab = document.documentElement.dataset.tab || "consulta";
-          var dest = tab === "projeto" || tab === "bases" || tab === "aprendizado" ? tab : "consulta";
+          var dest = tab === "projeto" || tab === "bases" || tab === "aprendizado" || tab === "precificacao" ? tab : "consulta";
           if (currentId() !== dest) location.hash = dest;
           window.scrollTo(0, 0);
         });
@@ -2500,5 +2598,6 @@
   </script>
   <script src="/bases.js"></script>
   <script src="/consulta.js"></script>
+  <script src="/precificacao.js"></script>
 </body>
 </html>

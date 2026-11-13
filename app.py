@@ -18,6 +18,7 @@ from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import consulta as consulta_mod
+import precificar as precificar_mod
 
 ROOT = Path(__file__).resolve().parent
 PACKED_DB = ROOT / "data" / "precatorios.sqlite.gz"
@@ -168,6 +169,7 @@ app = FastAPI(
 )
 app.mount("/eda", StaticFiles(directory=str(STATIC / "eda")), name="eda")
 consulta_mod.register(app, lambda: DB_PATH, lambda: PENDENTES_DB)
+precificar_mod.register(app, lambda: DB_PATH, lambda: PENDENTES_DB)
 
 
 def json_safe(val: Any) -> Any:

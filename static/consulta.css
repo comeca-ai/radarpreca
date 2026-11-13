@@ -251,6 +251,7 @@ html:not([data-tab]) .sumario { display: none; }
 html[data-tab="consulta"] #panel-aprendizado,
 html[data-tab="consulta"] #panel-projeto,
 html[data-tab="consulta"] #panel-bases,
+html[data-tab="consulta"] #panel-precificacao,
 html[data-tab="aprendizado"] #panel-consulta,
 html[data-tab="projeto"] #panel-consulta,
 html[data-tab="bases"] #panel-consulta,
