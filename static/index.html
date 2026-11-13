@@ -826,6 +826,69 @@
       .tabs { flex-wrap: wrap; border-radius: 16px; }
     }
 
+
+    /* —— Duas portas (Preca e Balcão Preca) —— */
+    .marca-card .dominio {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    .marca-card .slogan {
+      font-family: "Newsreader", Georgia, serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin: 0 0 14px;
+    }
+    .mapa-portas { margin-top: 8px; }
+    table.mapa-portas {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    table.mapa-portas th, table.mapa-portas td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    table.mapa-portas th {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--paper-2);
+    }
+    table.mapa-portas tr:last-child td { border-bottom: 0; }
+    table.mapa-portas td:first-child { font-weight: 600; color: var(--ink); }
+    table.mapa-portas td:nth-child(2) { white-space: nowrap; color: var(--ink); font-weight: 500; }
+    table.mapa-portas th:nth-child(1) { width: 32%; }
+    table.mapa-portas th:nth-child(2) { width: 16%; }
+    table.mapa-portas td { color: var(--ink-soft); font-size: 0.95rem; }
+    @media (max-width: 700px) {
+      table.mapa-portas, table.mapa-portas tbody, table.mapa-portas tr, table.mapa-portas td, table.mapa-portas th {
+        display: block;
+        width: 100%;
+      }
+      table.mapa-portas thead { display: none; }
+      table.mapa-portas td { border-bottom: 0; padding: 4px 16px; }
+      table.mapa-portas tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+      table.mapa-portas tr:last-child { border-bottom: 0; }
+      table.mapa-portas td[data-label]::before {
+        content: attr(data-label) " · ";
+        color: var(--muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+    }
+
     /* —— Frente 1 (plano de negócio) —— */
     .frente-intro { max-width: 72ch; }
     .frente-intro p + p { margin-top: 0.9em; }
@@ -1061,6 +1124,7 @@
       </div>
       <div class="sumario" data-for="projeto" aria-label="Sumário do projeto">
         <a href="#projeto-visao">Visão</a>
+        <a href="#projeto-marcas">Duas portas</a>
         <a href="#projeto-contexto">Contexto</a>
         <a href="#projeto-frente1">1 Regularização</a>
         <a href="#projeto-frente2">2 Assinatura</a>
@@ -1910,6 +1974,108 @@
             </article>
           </div>
           </div>
+        </div>
+      </section>
+
+      <section id="projeto-marcas">
+        <div class="wrap">
+          <h2>Duas portas: Preca e Balcão Preca</h2>
+          <p class="section-lead">A mesma plataforma, duas entradas. O credor chega pela Preca; o profissional opera no Balcão Preca — o mercado de balcão entre regulados, alinhado à Central de cessões da resolução do CNJ.</p>
+
+          <div class="grid-2">
+            <article class="card marca-card">
+              <span class="tag seal">Para credores</span>
+              <h3>Preca</h3>
+              <p class="dominio">tenhopreca.com.br · alude a “tenho pressa”</p>
+              <p class="slogan">“Seu crédito tem data. A gente mostra qual.”<br>“Tem pressa? Tem Preca.”</p>
+              <p>Para pessoas físicas e empresas que têm precatório a receber e querem entender o crédito antes de vender — em linguagem simples, com foco em confiança e em se proteger de deságio abusivo.</p>
+              <ul>
+                <li>Consulta do crédito nas bases que já estão no ar.</li>
+                <li>Estimativa de quanto vale, com a <a href="#precificacao">Precificação v0</a>.</li>
+                <li>Laudo de precificação, quando a <a href="#projeto-frente3">Frente 3</a> sair do recorte ilustrativo.</li>
+                <li>Conexão com compradores regulados, pelo Balcão Preca — não um marketplace informal.</li>
+              </ul>
+            </article>
+            <article class="card marca-card">
+              <span class="tag">Para profissionais</span>
+              <h3>Balcão Preca</h3>
+              <p class="dominio">balcaopreca.com.br · mercado de balcão</p>
+              <p class="slogan">Ambiente entre regulados, preparado para a Central de cessões.</p>
+              <p>Para fundos, FIDCs, cessionários, escritórios de advocacia e compradores que já operam cessão e precisam de dados, regularização e um rito alinhado à resolução do CNJ.</p>
+              <ul>
+                <li><a href="#projeto-frente2">Frente 2</a> — assinatura do Radar, para precificar e acompanhar a fila.</li>
+                <li><a href="#projeto-frente1">Frente 1</a> — regularização de cessões antigas e pré-precatórios.</li>
+                <li><a href="#projeto-frente3">Frente 3</a> — laudos em lote, com o mesmo modelo da Precificação v0.</li>
+                <li><a href="#projeto-frente4">Frente 4</a> — intermediação com taxa fixa, informada antes.</li>
+                <li><a href="#projeto-frente5">Frente 5</a> — compra própria, no CNPJ comprador, por último.</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="frente-block">
+            <h3>Onde cada frente entra</h3>
+            <p>As cinco frentes de receita já descritas neste Projeto se distribuem pelas duas portas. O laudo aparece nas duas: um crédito na Preca; lote, no Balcão.</p>
+            <div class="schema-wrap">
+              <table class="mapa-portas">
+                <thead>
+                  <tr>
+                    <th>Oferta</th>
+                    <th>Porta</th>
+                    <th>O que o usuário encontra</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Consulta e Precificação v0</td>
+                    <td data-label="Porta">Preca</td>
+                    <td data-label="O que encontra">O credor acha o crédito e vê uma faixa de preço, com as hipóteses à vista.</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#projeto-frente3">Frente 3</a> · laudo de um crédito</td>
+                    <td data-label="Porta">Preca</td>
+                    <td data-label="O que encontra">O mesmo modelo da v0, em formato de laudo — ainda em construção.</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#projeto-frente2">Frente 2</a> · assinatura Radar</td>
+                    <td data-label="Porta">Balcão Preca</td>
+                    <td data-label="O que encontra">Radar recorrente para quem precifica e decide comprar. Publicado como plano.</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#projeto-frente1">Frente 1</a> · regularização</td>
+                    <td data-label="Porta">Balcão Preca</td>
+                    <td data-label="O que encontra">Cessões antigas e pré-precatórios, antes que o pagamento vá ao titular judicial. Publicado como plano.</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#projeto-frente3">Frente 3</a> · laudos em lote</td>
+                    <td data-label="Porta">Balcão Preca</td>
+                    <td data-label="O que encontra">O laudo aplicado a uma carteira, depois da calibração das hipóteses.</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#projeto-frente4">Frente 4</a> · intermediação</td>
+                    <td data-label="Porta">Balcão Preca</td>
+                    <td data-label="O que encontra">Taxa fixa, informada antes. Ainda é ideia; depende da validação jurídica.</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#projeto-frente5">Frente 5</a> · compra própria</td>
+                    <td data-label="Porta">Balcão Preca</td>
+                    <td data-label="O que encontra">O CNPJ comprador ou o FIDC, por último. Ainda é ideia.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="frente-block">
+            <h3>O fluxo entre as portas</h3>
+            <p>O credor não precisa entrar no Balcão, e o profissional não disputa o mandato do credor na Preca. As duas portas se encontram no crédito, não na mesma tela.</p>
+            <ol class="steps">
+              <li><div><strong>O credor chega pela Preca.</strong> <span>Consulta o precatório, vê a estimativa da Precificação v0 e, quando houver, leva um laudo. A linguagem é direta: data, valor e o que ainda é hipótese.</span></div></li>
+              <li><div><strong>O crédito é oferecido no Balcão.</strong> <span>Com o recorte de preço à vista, o crédito pode ser apresentado aos profissionais regulados — fundos, cessionários e escritórios que já operam cessão.</span></div></li>
+              <li><div><strong>A cessão segue a resolução.</strong> <span>Escritura, registro eletrônico, comunicação à Central e homologação, no rito da minuta. Sem esse caminho, o pagamento permanece com o titular judicial.</span></div></li>
+            </ol>
+          </div>
+
+          <p class="note">Os domínios sugeridos, tenhopreca.com.br e balcaopreca.com.br, estavam livres no registro.br em 13/11/2026 (America/Sao_Paulo). Ainda não foram registrados.</p>
         </div>
       </section>
 
@@ -2773,6 +2939,7 @@
         projeto: 1,
         "projeto-visao": 1,
         "projeto-estrutura": 1,
+        "projeto-marcas": 1,
         "projeto-contexto": 1,
         "projeto-frentes": 1,
         "projeto-frente1": 1,
