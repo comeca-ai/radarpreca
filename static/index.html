@@ -1182,7 +1182,7 @@
                 <h3>TRF2 e TRF4 — planilhas sem login</h3>
               </header>
               <p>Os dois tribunais oferecem CSV ou XLSX sem login e sem captcha. As listas de precatórios já pagos trazem ordem cronológica, natureza, número do precatório, CPF ou CNPJ parcial, valores e datas. No TRF2, a lista de 2024 tem cerca de 15.964 linhas; no TRF4, o conjunto de 2022 a 2025 tem 210.486 linhas. Há também mapas da dívida: 156 entidades no TRF2 e 285 no TRF4.</p>
-              <p>A limitação: os arquivos fáceis de baixar são de precatórios já pagos. A fila pendente do TRF2 tem captcha; a do TRF4 é um formulário.</p>
+              <p>A fila pendente do TRF4 sai do formulário de ordem cronológica (POST <span class="serif">rdoTipo=O|E|EE</span>, CSV na mesma sessão, sem captcha) e já está nesta prova de conceito: 62.993 linhas, R$ 8,73 bilhões. A fila pendente do TRF2 segue com captcha.</p>
               <div class="links">
                 <a href="https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs" target="_blank" rel="noopener">Precatórios e RPVs do TRF2</a>
                 <a href="https://consulta.trf4.jus.br/trf4/controlador.php?acao=pagina_precatorios" target="_blank" rel="noopener">Página de precatórios do TRF4</a>
@@ -1514,12 +1514,13 @@
                 <li>Site de aprendizado, com o briefing, o glossário e as fontes.</li>
                 <li>Teste de fontes para a POC (12/11/2026, via curl).</li>
                 <li>Base unificada SIOP + TRF2 + TRF4 + TRF5 e aba Bases no site, com busca e download.</li>
+                <li>Fila pendente do TRF4 (ordem cronológica por ente, listas O, E e EE).</li>
               </ul>
             </div>
             <div class="status-col next">
               <h3>Próximo passo</h3>
               <ul>
-                <li>Enriquecer a fila pendente (hoje as listas fáceis são de precatórios já pagos) e cruzar credor com o SIOP.</li>
+                <li>Enriquecer a fila pendente do TRF4 com o processo de origem (Datajud), tentar a fila pendente do TRF2 (captcha) e cruzar com o SIOP.</li>
               </ul>
             </div>
             <div class="status-col todo">
@@ -1544,10 +1545,10 @@
       <div class="wrap">
         <p class="kicker">Bases · prova de conceito · 12/11/2026</p>
         <h1>Consulta às bases públicas de precatórios</h1>
-        <p class="lede">SIOP de 2026, listas de pagos do TRF2 e do TRF4, e os mapas da dívida do TRF2, TRF4 e TRF5. Busque, filtre e baixe os recortes. Os CPF e CNPJ de beneficiários aparecem só na forma parcial já publicada pelos tribunais.</p>
+        <p class="lede">SIOP de 2026, a fila pendente do TRF4, listas de pagos do TRF2 e do TRF4, e os mapas da dívida do TRF2, TRF4 e TRF5. Busque, filtre e baixe os recortes. Os CPF e CNPJ de beneficiários aparecem só na forma parcial já publicada pelos tribunais.</p>
         <div class="meta-row">
           <span>Testado em <strong>12/11/2026</strong> (America/Sao_Paulo)</span>
-          <span>164 mil precatórios do SIOP · R$ 71,9 bilhões atualizados</span>
+          <span>Fila pendente do TRF4: 62.993 linhas · R$ 8,73 bilhões</span>
         </div>
       </div>
     </header>
@@ -1574,6 +1575,7 @@
           <div class="explorer">
             <div class="expl-tabs" role="tablist" aria-label="Bases para consulta">
               <button type="button" class="expl-tab" data-expl="siop" aria-selected="true">SIOP 2026</button>
+              <button type="button" class="expl-tab" data-expl="pendentes" aria-selected="false">Pendentes TRF4</button>
               <button type="button" class="expl-tab" data-expl="pagos" aria-selected="false">Pagos TRF2/TRF4</button>
               <button type="button" class="expl-tab" data-expl="mapas" aria-selected="false">Mapas da dívida</button>
               <button type="button" class="expl-tab" data-expl="extra" aria-selected="false">TRF2 extra 2026</button>
@@ -1605,6 +1607,46 @@
               <p class="result-meta" id="meta-siop">Carregando…</p>
               <div id="table-siop"></div>
               <div class="pager" id="pager-siop"></div>
+            </div>
+
+            <div class="expl-panel" id="expl-pendentes" hidden>
+              <form id="form-pendentes" class="filters">
+                <label>Busca
+                  <input type="search" name="q" placeholder="Nº do precatório, ente, base legal ou CPF/CNPJ parcial">
+                </label>
+                <label>Ente devedor
+                  <input type="search" name="ente" placeholder="União, estado, município…">
+                </label>
+                <label>Natureza
+                  <select name="natureza">
+                    <option value="">Todas</option>
+                    <option value="alimentar">Alimentar</option>
+                    <option value="comum">Comum</option>
+                  </select>
+                </label>
+                <label>Lista
+                  <select name="tipo_lista">
+                    <option value="">Todas (O, E e EE)</option>
+                    <option value="O">O — Fazenda Pública Federal</option>
+                    <option value="E">E — extraorçamentário, regime geral</option>
+                    <option value="EE">EE — extraorçamentário, regime especial</option>
+                  </select>
+                </label>
+                <label>Proposta
+                  <input type="number" name="ano_orcamento" min="2006" max="2027" placeholder="Ano">
+                </label>
+                <label>Valor mínimo (R$)
+                  <input type="number" name="min_valor" min="0" step="1000" placeholder="0">
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">Filtrar</button>
+                  <button class="btn ghost" type="reset">Limpar</button>
+                  <a class="btn ghost" id="dl-pendentes" href="/api/download/trf4_pendentes.csv">Baixar CSV</a>
+                </div>
+              </form>
+              <p class="result-meta" id="meta-pendentes">Carregando…</p>
+              <div id="table-pendentes"></div>
+              <div class="pager" id="pager-pendentes"></div>
             </div>
 
             <div class="expl-panel" id="expl-pagos" hidden>

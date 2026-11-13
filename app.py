@@ -19,10 +19,12 @@ from fastapi.staticfiles import StaticFiles
 
 ROOT = Path(__file__).resolve().parent
 PACKED_DB = ROOT / "data" / "precatorios.sqlite.gz"
+PENDENTES_PACKED = ROOT / "data" / "trf4_pendentes.csv.gz"
 MANIFEST_PATH = ROOT / "data" / "manifest.json"
 STATS_PATH = ROOT / "data" / "stats.json"
 STATIC = ROOT / "static"
 DB_PATH = Path(os.environ.get("DB_PATH", "/tmp/radar-precatorio/precatorios.sqlite"))
+PENDENTES_DB = Path(os.environ.get("PENDENTES_DB", "/tmp/radar-precatorio/trf4_pendentes.sqlite"))
 
 PAGE_DEFAULT = 25
 PAGE_MAX = 100
@@ -51,9 +53,107 @@ def connect() -> sqlite3.Connection:
     return con
 
 
+PENDENTES_COLUMNS = [
+    "tribunal", "ente_devedor", "numero_precatorio", "processo_origem",
+    "ano_orcamento", "ordem", "natureza", "valor", "data_apresentacao",
+    "situacao", "fonte_url", "coletado_em", "tipo_lista", "regime",
+    "prioridade", "base_legal", "cpf_cnpj_parcial", "uf", "parcelado",
+    "atualizado_ate", "valor_expedido",
+]
+
+
+def ensure_pendentes() -> Path:
+    PENDENTES_DB.parent.mkdir(parents=True, exist_ok=True)
+    if not PENDENTES_PACKED.exists():
+        raise RuntimeError(f"Base pendente do TRF4 não encontrada: {PENDENTES_PACKED}")
+    marker = PENDENTES_DB.with_suffix(".sqlite.source")
+    src_mtime = str(PENDENTES_PACKED.stat().st_mtime_ns)
+    if PENDENTES_DB.exists() and PENDENTES_DB.stat().st_size > 100_000 and marker.exists():
+        if marker.read_text(encoding="utf-8").strip() == src_mtime:
+            return PENDENTES_DB
+    tmp = PENDENTES_DB.with_suffix(".sqlite.partial")
+    if tmp.exists():
+        tmp.unlink()
+    con = sqlite3.connect(tmp)
+    try:
+        con.execute(
+            """
+            CREATE TABLE trf4_pendentes (
+                tribunal TEXT,
+                ente_devedor TEXT,
+                numero_precatorio TEXT,
+                processo_origem TEXT,
+                ano_orcamento INTEGER,
+                ordem INTEGER,
+                natureza TEXT,
+                valor REAL,
+                data_apresentacao TEXT,
+                situacao TEXT,
+                fonte_url TEXT,
+                coletado_em TEXT,
+                tipo_lista TEXT,
+                regime TEXT,
+                prioridade TEXT,
+                base_legal TEXT,
+                cpf_cnpj_parcial TEXT,
+                uf TEXT,
+                parcelado TEXT,
+                atualizado_ate TEXT,
+                valor_expedido REAL
+            )
+            """
+        )
+        with gzip.open(PENDENTES_PACKED, "rt", encoding="utf-8") as fh:
+            reader = csv.DictReader(fh)
+            batch = []
+            for rec in reader:
+                row = []
+                for col in PENDENTES_COLUMNS:
+                    val = rec.get(col, "")
+                    if col in {"ano_orcamento", "ordem", "valor", "valor_expedido"}:
+                        if val is None or val == "":
+                            val = None
+                        else:
+                            val = int(float(val)) if col in {"ano_orcamento", "ordem"} else float(val)
+                    row.append(val)
+                batch.append(row)
+                if len(batch) >= 2000:
+                    con.executemany(
+                        f"INSERT INTO trf4_pendentes ({', '.join(PENDENTES_COLUMNS)}) "
+                        f"VALUES ({', '.join('?' * len(PENDENTES_COLUMNS))})",
+                        batch,
+                    )
+                    batch.clear()
+            if batch:
+                con.executemany(
+                    f"INSERT INTO trf4_pendentes ({', '.join(PENDENTES_COLUMNS)}) "
+                    f"VALUES ({', '.join('?' * len(PENDENTES_COLUMNS))})",
+                    batch,
+                )
+        con.execute("CREATE INDEX idx_trf4p_ente ON trf4_pendentes(ente_devedor)")
+        con.execute("CREATE INDEX idx_trf4p_natureza ON trf4_pendentes(natureza)")
+        con.execute("CREATE INDEX idx_trf4p_tipo ON trf4_pendentes(tipo_lista)")
+        con.execute("CREATE INDEX idx_trf4p_num ON trf4_pendentes(numero_precatorio)")
+        con.execute("CREATE INDEX idx_trf4p_ordem ON trf4_pendentes(tipo_lista, ente_devedor, ordem)")
+        con.commit()
+    finally:
+        con.close()
+    tmp.replace(PENDENTES_DB)
+    marker.write_text(src_mtime, encoding="utf-8")
+    return PENDENTES_DB
+
+
+def connect_pendentes() -> sqlite3.Connection:
+    con = sqlite3.connect(f"file:{PENDENTES_DB}?mode=ro", uri=True, check_same_thread=False)
+    con.row_factory = sqlite3.Row
+    con.execute("PRAGMA query_only=ON")
+    return con
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ensure_db()
+    ensure_pendentes()
     yield
 
 
@@ -94,10 +194,20 @@ def home():
 def health():
     ok = DB_PATH.exists()
     n = None
+    pendentes = None
     if ok:
         with closing(connect()) as con:
             n = con.execute("SELECT COUNT(*) FROM siop").fetchone()[0]
-    return {"ok": ok, "db": str(DB_PATH.name), "siop": n, "testado_em": "12/11/2026"}
+    if PENDENTES_DB.exists():
+        with closing(connect_pendentes()) as con:
+            pendentes = con.execute("SELECT COUNT(*) FROM trf4_pendentes").fetchone()[0]
+    return {
+        "ok": ok and pendentes is not None,
+        "db": str(DB_PATH.name),
+        "siop": n,
+        "trf4_pendentes": pendentes,
+        "testado_em": "12/11/2026",
+    }
 
 
 @app.get("/api/bases")
@@ -342,6 +452,79 @@ def api_trf_extra(
     }
 
 
+def pendentes_where(
+    q: str | None,
+    ente: str | None,
+    natureza: str | None,
+    tipo_lista: str | None,
+    ano_orcamento: int | None,
+    min_valor: float | None,
+) -> tuple[str, list[Any]]:
+    clauses: list[str] = []
+    params: list[Any] = []
+    if ente:
+        clauses.append("ente_devedor LIKE ?")
+        params.append(like(ente))
+    if natureza:
+        clauses.append("natureza = ?")
+        params.append(natureza.strip().lower())
+    if tipo_lista:
+        clauses.append("tipo_lista = ?")
+        params.append(tipo_lista.strip().upper())
+    if ano_orcamento is not None:
+        clauses.append("ano_orcamento = ?")
+        params.append(ano_orcamento)
+    if min_valor is not None:
+        clauses.append("valor >= ?")
+        params.append(min_valor)
+    if q:
+        clauses.append(
+            "(numero_precatorio LIKE ? OR ente_devedor LIKE ? OR base_legal LIKE ? "
+            "OR prioridade LIKE ? OR cpf_cnpj_parcial LIKE ?)"
+        )
+        pat = like(q)
+        params.extend([pat] * 5)
+    where = (" WHERE " + " AND ".join(clauses)) if clauses else ""
+    return where, params
+
+
+@app.get("/api/trf4/pendentes")
+def api_trf4_pendentes(
+    q: str | None = None,
+    ente: str | None = None,
+    natureza: str | None = None,
+    tipo_lista: str | None = None,
+    ano_orcamento: int | None = None,
+    min_valor: float | None = None,
+    page: int = 1,
+    page_size: int = PAGE_DEFAULT,
+):
+    page, page_size = clamp_page(page, page_size)
+    where, params = pendentes_where(q, ente, natureza, tipo_lista, ano_orcamento, min_valor)
+    offset = (page - 1) * page_size
+    with closing(connect_pendentes()) as con:
+        total = con.execute(f"SELECT COUNT(*) FROM trf4_pendentes {where}", params).fetchone()[0]
+        soma = con.execute(
+            f"SELECT COALESCE(SUM(valor),0) FROM trf4_pendentes {where}", params
+        ).fetchone()[0]
+        rows = con.execute(
+            f"""SELECT {", ".join(PENDENTES_COLUMNS)}
+                FROM trf4_pendentes {where}
+                ORDER BY CASE tipo_lista WHEN 'O' THEN 0 WHEN 'E' THEN 1 ELSE 2 END,
+                         ente_devedor, ordem
+                LIMIT ? OFFSET ?""",
+            [*params, page_size, offset],
+        ).fetchall()
+    return {
+        "total": total,
+        "page": page,
+        "page_size": page_size,
+        "pages": (total + page_size - 1) // page_size if page_size else 0,
+        "soma_valor": soma,
+        "rows": rows_to_dicts(rows),
+    }
+
+
 def stream_csv(filename: str, headers: list[str], iterator):
     def gen():
         buf = io.StringIO()
@@ -437,6 +620,38 @@ def download_pagos(tribunal: str | None = None, proposta: int | None = None, q: 
             con.close()
 
     return stream_csv("trf_pagos.csv", headers, iterator())
+
+
+@app.get("/api/download/trf4_pendentes.csv")
+def download_trf4_pendentes(
+    q: str | None = None,
+    ente: str | None = None,
+    natureza: str | None = None,
+    tipo_lista: str | None = None,
+    ano_orcamento: int | None = None,
+    min_valor: float | None = None,
+):
+    headers = list(PENDENTES_COLUMNS)
+    where, params = pendentes_where(q, ente, natureza, tipo_lista, ano_orcamento, min_valor)
+    con = connect_pendentes()
+
+    def iterator():
+        try:
+            cur = con.execute(
+                f"""SELECT {", ".join(headers)} FROM trf4_pendentes {where}
+                    ORDER BY CASE tipo_lista WHEN 'O' THEN 0 WHEN 'E' THEN 1 ELSE 2 END,
+                             ente_devedor, ordem""",
+                params,
+            )
+            while True:
+                chunk = cur.fetchmany(1000)
+                if not chunk:
+                    break
+                yield from chunk
+        finally:
+            con.close()
+
+    return stream_csv("trf4_pendentes.csv", headers, iterator())
 
 
 @app.get("/api/download/trf_mapas.csv")

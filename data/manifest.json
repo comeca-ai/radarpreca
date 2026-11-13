@@ -45,6 +45,18 @@
       "limites": "Arquivo de precatórios já pagos. CPF/CNPJ do beneficiário vem parcial na origem."
     },
     {
+      "id": "trf4_pendentes",
+      "nome": "TRF4 — fila pendente na ordem cronológica (12/11/2026)",
+      "tabela": "trf4_pendentes",
+      "registros": 62993,
+      "soma_valor": 8732690205.97,
+      "fonte": "Tribunal Regional Federal da 4ª Região",
+      "url": "https://www.trf4.jus.br/trf4/controlador.php?acao=consulta_precatorios_ordem_cronologica_externa",
+      "arquivo_origem": "precatorios_ordem_cronologica_{O,E,EE}_20261112.csv",
+      "testado_em": "12/11/2026",
+      "limites": "A lista da Fazenda Pública Federal (62.147 linhas) não discrimina INSS, União ou autarquia. Cobre precatórios recebidos no TRF4 a partir de 03/04/2023. Não traz processo de origem. CPF/CNPJ só aparece, parcial, na lista federal. Um mesmo precatório pode ocupar mais de uma linha (parcela de 180 salários mínimos e honorários)."
+    },
+    {
       "id": "trf2_extra",
       "nome": "TRF2 — pagos extraorçamentários (exercício 2026)",
       "tabela": "trf2_extra",

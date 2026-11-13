@@ -81,7 +81,7 @@
     });
   }
 
-  var state = { siop: 1, pagos: 1, mapas: 1, extra: 1 };
+  var state = { siop: 1, pendentes: 1, pagos: 1, mapas: 1, extra: 1 };
 
   function loadBases() {
     return fetch("/api/bases").then(function (r) { return r.json(); }).then(function (data) {
@@ -157,6 +157,30 @@
       pager(pg, data.page, data.pages, data.total, function (p) { state.siop = p; loadSiop(); });
       $("#dl-siop").href = "/api/download/siop.csv?" + qs(currentFilters(form));
     }).catch(function () { meta.textContent = "Não foi possível carregar a base SIOP."; });
+  }
+
+  function loadPendentes() {
+    var form = $("#form-pendentes");
+    var params = currentFilters(form);
+    params.page = state.pendentes;
+    params.page_size = 25;
+    var meta = $("#meta-pendentes");
+    meta.textContent = "Carregando…";
+    fetch("/api/trf4/pendentes?" + qs(params)).then(function (r) { return r.json(); }).then(function (data) {
+      meta.textContent = num(data.total) + " precatórios pendentes · " + money(data.soma_valor);
+      renderTable($("#table-pendentes"), [
+        { key: "ordem", label: "Ordem" },
+        { key: "ente_devedor", label: "Ente devedor" },
+        { key: "numero_precatorio", label: "Precatório" },
+        { key: "ano_orcamento", label: "Proposta" },
+        { key: "natureza", label: "Natureza" },
+        { key: "tipo_lista", label: "Lista" },
+        { key: "data_apresentacao", label: "Autuação" },
+        { key: "valor", label: "Valor", money: true }
+      ], data.rows);
+      pager($("#pager-pendentes"), data.page, data.pages, data.total, function (p) { state.pendentes = p; loadPendentes(); });
+      $("#dl-pendentes").href = "/api/download/trf4_pendentes.csv?" + qs(currentFilters(form));
+    }).catch(function () { meta.textContent = "Não foi possível carregar a fila pendente do TRF4."; });
   }
 
   function loadPagos() {
@@ -260,10 +284,12 @@
       fillSelect($("#siop-nfgc"), f.nfgc, "Todas as classes");
       fillSelect($("#siop-uo"), f.uos, "Todas as UOs (principais)");
     }).finally(function () { loadSiop(); });
+    loadPendentes();
     loadPagos();
     loadMapas();
     loadExtra();
     bindForm("#form-siop", loadSiop, "siop");
+    bindForm("#form-pendentes", loadPendentes, "pendentes");
     bindForm("#form-pagos", loadPagos, "pagos");
     bindForm("#form-mapas", loadMapas, "mapas");
     bindForm("#form-extra", loadExtra, "extra");
