@@ -298,6 +298,19 @@
     });
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
+  function boot() {
+    if (typeof window.radarWhenLoggedIn === "function") {
+      window.radarWhenLoggedIn(init);
+      return;
+    }
+    window.addEventListener("radar-auth", function once(e) {
+      if (e.detail && e.detail.user) {
+        window.removeEventListener("radar-auth", once);
+        init();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();

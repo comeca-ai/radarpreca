@@ -13,10 +13,12 @@ from contextlib import asynccontextmanager, closing
 from pathlib import Path
 from typing import Any, Iterable
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 
+import auth
 import consulta as consulta_mod
 import precificar as precificar_mod
 
@@ -159,17 +161,38 @@ async def lifespan(app: FastAPI):
     consulta_mod.ensure_indexes(DB_PATH)
     ensure_pendentes()
     consulta_mod.ensure_fila(PENDENTES_DB)
+    auth.ensure_users_db()
     yield
 
 
 app = FastAPI(
-    title="Radar Precatório",
-    version="0.2.0",
+    title="Preca",
+    version="0.3.0",
     lifespan=lifespan,
 )
+app.middleware("http")(auth.auth_middleware)
 app.mount("/eda", StaticFiles(directory=str(STATIC / "eda")), name="eda")
 consulta_mod.register(app, lambda: DB_PATH, lambda: PENDENTES_DB)
 precificar_mod.register(app, lambda: DB_PATH, lambda: PENDENTES_DB)
+
+
+class LoginBody(BaseModel):
+    email: str
+    senha: str = Field(default="")
+    password: str = Field(default="")
+
+    def secret(self) -> str:
+        return self.senha or self.password
+
+
+class NovoUsuarioBody(BaseModel):
+    email: str
+    senha: str
+    role: str = "user"
+
+
+def _sessao(user: auth.User) -> dict:
+    return {"email": user.email, "role": user.role, "plano": "Preca"}
 
 
 def json_safe(val: Any) -> Any:
@@ -195,6 +218,43 @@ def like(term: str) -> str:
 @app.get("/")
 def home():
     return FileResponse(STATIC / "index.html")
+
+
+@app.post("/api/login")
+def login(request: Request, body: LoginBody):
+    user = auth.authenticate(body.email, body.secret())
+    if not user:
+        return JSONResponse({"detail": "E-mail ou senha incorretos."}, status_code=401)
+    resp = JSONResponse(_sessao(user))
+    auth.set_session_cookie(resp, request, user)
+    return resp
+
+
+@app.post("/api/logout")
+def logout():
+    resp = JSONResponse({"ok": True})
+    auth.clear_session_cookie(resp)
+    return resp
+
+
+@app.get("/api/me")
+def me(request: Request):
+    user = auth.current_user(request)
+    if not user:
+        return JSONResponse({"detail": "Não autenticado."}, status_code=401)
+    return _sessao(user)
+
+
+@app.post("/api/admin/usuarios")
+def admin_criar_usuario(request: Request, body: NovoUsuarioBody):
+    ator = auth.current_user(request)
+    if not ator or ator.role != "admin":
+        return JSONResponse({"detail": "Não autorizado."}, status_code=403)
+    try:
+        criado = auth.create_user(body.email, body.senha, role=body.role)
+    except ValueError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=400)
+    return {"email": criado.email, "role": criado.role}
 
 
 @app.get("/api/health")

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Radar Precatório: consulte precatórios nas bases públicas do SIOP, TRF2 e TRF4 — fila pendente, pagos e expedidos.">
-  <title>Radar Precatório — consulta de precatórios</title>
+  <meta name="description" content="Preca — seu crédito tem data. A gente mostra qual. Consulte precatórios nas bases públicas do SIOP, TRF2 e TRF4.">
+  <title>Preca — seu crédito tem data</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
@@ -1012,13 +1012,20 @@
 </style>
   <link rel="stylesheet" href="/consulta.css">
   <link rel="stylesheet" href="/precificacao.css">
+  <link rel="stylesheet" href="/login.css">
   <script>
     document.documentElement.dataset.tab = (function (h) {
-      if (/^#precificacao/.test(h)) return "precificacao";
-      if (/^#bases/.test(h)) return "bases";
-      if (/^#projeto/.test(h)) return "projeto";
-      if (/^#(aprendizado|o-que-e|novidades|resolucao-cessao|onde-estao|tres-papeis|dados-necessarios|poc|glossario|topo)\b/.test(h)) return "aprendizado";
-      return "consulta";
+      var tab;
+      if (/^#login\b/.test(h)) tab = "login";
+      else if (/^#precificacao/.test(h)) tab = "precificacao";
+      else if (/^#bases/.test(h)) tab = "bases";
+      else if (/^#projeto/.test(h)) tab = "projeto";
+      else if (/^#(aprendizado|o-que-e|novidades|resolucao-cessao|onde-estao|tres-papeis|dados-necessarios|poc|glossario|topo)\b/.test(h)) tab = "aprendizado";
+      else tab = "consulta";
+      if (tab === "consulta" || tab === "precificacao" || tab === "bases") {
+        document.documentElement.dataset.authPending = "1";
+      }
+      return tab;
     })(location.hash);
   </script>
 </head>
@@ -1028,7 +1035,7 @@
       <div class="nav-row">
         <a class="brand" href="#consulta">
           <span class="dot" aria-hidden="true"></span>
-          <span class="mark">Precatórios</span>
+          <span class="mark">Preca</span>
         </a>
         <div class="tabs" role="tablist" aria-label="Seções do site">
           <a href="#consulta" role="tab" id="tab-consulta" data-tab="consulta" aria-controls="panel-consulta" aria-selected="true">Consulta</a>
@@ -1036,6 +1043,10 @@
           <a href="#bases" role="tab" id="tab-bases" data-tab="bases" aria-controls="panel-bases" aria-selected="false">Bases</a>
           <a href="#aprendizado" role="tab" id="tab-aprendizado" data-tab="aprendizado" aria-controls="panel-aprendizado" aria-selected="false">Aprendizado</a>
           <a href="#projeto" role="tab" id="tab-projeto" data-tab="projeto" aria-controls="panel-projeto" aria-selected="false">Projeto</a>
+        </div>
+        <div class="auth-slot" hidden>
+          <span class="auth-email" id="auth-email"></span>
+          <button type="button" id="btn-sair">Sair</button>
         </div>
       </div>
       <div class="sumario" data-for="aprendizado" aria-label="Sumário do aprendizado">
@@ -1067,6 +1078,33 @@
     </div>
   </nav>
 
+
+  <div id="panel-login" role="tabpanel" aria-label="Entrar">
+    <header class="hero login-hero" id="login">
+      <div class="wrap">
+        <p class="kicker">Preca</p>
+        <h1>Seu crédito tem data. A gente mostra qual.</h1>
+        <p class="lede">Consulta, Precificação e Bases pedem login. O Aprendizado e o Projeto continuam abertos, sem cadastro.</p>
+      </div>
+    </header>
+    <main>
+      <div class="wrap">
+        <form id="form-login" class="card login-card" method="post" action="/api/login" autocomplete="on">
+          <h2>Entrar</h2>
+          <p class="login-lead">Use o e-mail e a senha da sua conta Preca. Não há cadastro público neste momento.</p>
+          <p id="login-erro" class="login-erro" hidden role="alert"></p>
+          <label>E-mail
+            <input type="email" name="email" id="login-email" required autocomplete="username" inputmode="email">
+          </label>
+          <label>Senha
+            <input type="password" name="senha" id="login-senha" required autocomplete="current-password" minlength="8">
+          </label>
+          <button type="submit" class="btn">Entrar</button>
+          <p class="login-note">Sem acesso? O Aprendizado e o Projeto estão livres pelas abas acima.</p>
+        </form>
+      </div>
+    </main>
+  </div>
 
   <div id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta">
     <header class="hero consulta-hero" id="consulta">
@@ -2723,7 +2761,7 @@
 
   <footer>
     <div class="wrap">
-      <p class="update">Atualizado em 13/11/2026</p>
+      <p class="update">Preca · www.preca.com.br · atualizado em 13/11/2026</p>
       <p class="disclaimer">Este texto é um briefing informal, reunido a partir do que apuramos até esta data. Não é aconselhamento jurídico, financeiro ou de investimento. Antes de estruturar empresas, comprar créditos ou intermediar cessões, consulte um advogado e aguarde o texto final da resolução do CNJ e o ato conjunto com o Banco Central.</p>
     </div>
   </footer>
@@ -2764,6 +2802,7 @@
         if (id === "precificacao" || (id && id.indexOf("precificacao") === 0)) return "precificacao";
         if (BASES[id] || (id && id.indexOf("bases") === 0)) return "bases";
         if (PROJETO[id] || (id && id.indexOf("projeto") === 0)) return "projeto";
+        if (id === "login") return "login";
         if (id === "aprendizado" || (id && id.indexOf("aprendizado") === 0) || id === "o-que-e" || id === "novidades" || id === "resolucao-cessao" || id === "onde-estao" || id === "tres-papeis" || id === "dados-necessarios" || id === "poc" || id === "glossario" || id === "topo") return "aprendizado";
         return "consulta";
       }
@@ -2771,6 +2810,9 @@
       function apply(scroll) {
         var id = currentId();
         var tab = tabFromId(id);
+        if (typeof window.radarGuardTab === "function") {
+          tab = window.radarGuardTab(tab, id) || tab;
+        }
         document.documentElement.dataset.tab = tab;
 
         var tabs = document.querySelectorAll(".tabs [role='tab']");
@@ -2781,7 +2823,7 @@
         }
 
         if (!scroll) return;
-        var isRoot = !id || id === "consulta" || id === "precificacao" || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo";
+        var isRoot = !id || id === "consulta" || id === "precificacao" || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo" || id === "login";
         if (isRoot) {
           window.scrollTo(0, 0);
           return;
@@ -2790,6 +2832,8 @@
         if (target) target.scrollIntoView();
       }
 
+      window.radarTabFromId = tabFromId;
+      window.radarApply = apply;
       document.documentElement.dataset.tab = tabFromId(currentId());
 
       window.addEventListener("hashchange", function () { apply(true); });
@@ -2806,7 +2850,7 @@
         brand.addEventListener("click", function (e) {
           e.preventDefault();
           var tab = document.documentElement.dataset.tab || "consulta";
-          var dest = tab === "projeto" || tab === "bases" || tab === "aprendizado" || tab === "precificacao" ? tab : "consulta";
+          var dest = tab === "projeto" || tab === "bases" || tab === "aprendizado" || tab === "precificacao" || tab === "login" ? tab : "consulta";
           if (currentId() !== dest) location.hash = dest;
           window.scrollTo(0, 0);
         });
@@ -2826,6 +2870,7 @@
       }
     })();
   </script>
+  <script src="/login.js"></script>
   <script src="/bases.js"></script>
   <script src="/consulta.js"></script>
   <script src="/precificacao.js"></script>

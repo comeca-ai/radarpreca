@@ -210,12 +210,31 @@
       if (el.id === "consulta-sort") return;
       el.addEventListener("change", function () { state.page = 1; loadConsulta(); });
     });
+    window.addEventListener("hashchange", function () {
+      if (!isConsultaTab()) return;
+      applyParamsToForm();
+      writeHash();
+      loadConsulta();
+    });
     if (isConsultaTab()) {
       writeHash();
       loadConsulta();
     }
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
+  function boot() {
+    if (typeof window.radarWhenLoggedIn === "function") {
+      window.radarWhenLoggedIn(init);
+      return;
+    }
+    window.addEventListener("radar-auth", function once(e) {
+      if (e.detail && e.detail.user) {
+        window.removeEventListener("radar-auth", once);
+        init();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();
