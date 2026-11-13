@@ -17,6 +17,8 @@ from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
+import consulta as consulta_mod
+
 ROOT = Path(__file__).resolve().parent
 PACKED_DB = ROOT / "data" / "precatorios.sqlite.gz"
 PENDENTES_PACKED = ROOT / "data" / "trf4_pendentes.csv.gz"
@@ -153,16 +155,19 @@ def connect_pendentes() -> sqlite3.Connection:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ensure_db()
+    consulta_mod.ensure_indexes(DB_PATH)
     ensure_pendentes()
+    consulta_mod.ensure_fila(PENDENTES_DB)
     yield
 
 
 app = FastAPI(
     title="Radar Precatório",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=lifespan,
 )
 app.mount("/eda", StaticFiles(directory=str(STATIC / "eda")), name="eda")
+consulta_mod.register(app, lambda: DB_PATH, lambda: PENDENTES_DB)
 
 
 def json_safe(val: Any) -> Any:

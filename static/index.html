@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Radar Precatório: briefing, projeto e consulta às bases públicas do SIOP, TRF2, TRF4 e TRF5.">
-  <title>Radar Precatório — aprendizado, projeto e bases</title>
+  <meta name="description" content="Radar Precatório: consulte precatórios nas bases públicas do SIOP, TRF2 e TRF4 — fila pendente, pagos e expedidos.">
+  <title>Radar Precatório — consulta de precatórios</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
@@ -509,22 +509,33 @@
       color: var(--ink);
       box-shadow: var(--shadow);
     }
+    html[data-tab="consulta"] .sumario[data-for="aprendizado"],
+    html[data-tab="consulta"] .sumario[data-for="projeto"],
+    html[data-tab="consulta"] .sumario[data-for="bases"],
     html[data-tab="projeto"] .sumario[data-for="aprendizado"],
     html[data-tab="projeto"] .sumario[data-for="bases"],
     html[data-tab="aprendizado"] .sumario[data-for="projeto"],
     html[data-tab="aprendizado"] .sumario[data-for="bases"],
     html[data-tab="bases"] .sumario[data-for="aprendizado"],
     html[data-tab="bases"] .sumario[data-for="projeto"],
+    html:not([data-tab]) .sumario[data-for="aprendizado"],
     html:not([data-tab]) .sumario[data-for="projeto"],
     html:not([data-tab]) .sumario[data-for="bases"] {
       display: none;
     }
+    html[data-tab="consulta"] #panel-aprendizado,
+    html[data-tab="consulta"] #panel-projeto,
+    html[data-tab="consulta"] #panel-bases,
+    html[data-tab="projeto"] #panel-consulta,
     html[data-tab="projeto"] #panel-aprendizado,
     html[data-tab="projeto"] #panel-bases,
+    html[data-tab="aprendizado"] #panel-consulta,
     html[data-tab="aprendizado"] #panel-projeto,
     html[data-tab="aprendizado"] #panel-bases,
+    html[data-tab="bases"] #panel-consulta,
     html[data-tab="bases"] #panel-aprendizado,
     html[data-tab="bases"] #panel-projeto,
+    html:not([data-tab]) #panel-aprendizado,
     html:not([data-tab]) #panel-projeto,
     html:not([data-tab]) #panel-bases {
       display: none;
@@ -899,20 +910,22 @@
       table.data td.num { text-align: left; }
     }
 </style>
+  <link rel="stylesheet" href="/consulta.css">
   <script>
-    document.documentElement.dataset.tab = /^#bases/.test(location.hash) ? "bases" : /^#projeto/.test(location.hash) ? "projeto" : "aprendizado";
+    document.documentElement.dataset.tab = /^#bases/.test(location.hash) ? "bases" : /^#projeto/.test(location.hash) ? "projeto" : /^#aprendizado/.test(location.hash) ? "aprendizado" : "consulta";
   </script>
 </head>
 <body>
   <nav class="top" aria-label="Navegação">
     <div class="wrap inner">
       <div class="nav-row">
-        <a class="brand" href="#aprendizado">
+        <a class="brand" href="#consulta">
           <span class="dot" aria-hidden="true"></span>
           <span class="mark">Precatórios</span>
         </a>
         <div class="tabs" role="tablist" aria-label="Seções do site">
-          <a href="#aprendizado" role="tab" id="tab-aprendizado" data-tab="aprendizado" aria-controls="panel-aprendizado" aria-selected="true">Aprendizado</a>
+          <a href="#consulta" role="tab" id="tab-consulta" data-tab="consulta" aria-controls="panel-consulta" aria-selected="true">Consulta</a>
+          <a href="#aprendizado" role="tab" id="tab-aprendizado" data-tab="aprendizado" aria-controls="panel-aprendizado" aria-selected="false">Aprendizado</a>
           <a href="#projeto" role="tab" id="tab-projeto" data-tab="projeto" aria-controls="panel-projeto" aria-selected="false">Projeto</a>
           <a href="#bases" role="tab" id="tab-bases" data-tab="bases" aria-controls="panel-bases" aria-selected="false">Bases</a>
         </div>
@@ -941,6 +954,93 @@
       </div>
     </div>
   </nav>
+
+
+  <div id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta">
+    <header class="hero consulta-hero" id="consulta">
+      <div class="wrap">
+        <p class="kicker">Consulta · bases públicas · novembro de 2026</p>
+        <h1>Buscar um precatório</h1>
+        <p class="lede">Pesquise pelo número do precatório, pelo nome do ente devedor ou por um CPF/CNPJ parcial já publicado. Os resultados vêm da fila pendente do TRF4, das listas de pagos do TRF2 e do TRF4 e dos expedidos do SIOP.</p>
+        <form id="form-consulta">
+          <div class="consulta-search">
+            <label class="sr-only" for="consulta-q">Busca</label>
+            <input id="consulta-q" type="search" name="q" placeholder="Número, ente devedor ou CPF/CNPJ parcial" autocomplete="off">
+            <button class="btn" type="submit">Buscar</button>
+          </div>
+          <details class="consulta-filters">
+            <summary>Filtros</summary>
+            <div class="filters">
+              <label>Fonte
+                <select name="fonte">
+                  <option value="">Todas as fontes</option>
+                  <option value="trf4_pendentes">TRF4 pendentes</option>
+                  <option value="pagos">Pagos TRF2/TRF4</option>
+                  <option value="siop">SIOP expedidos</option>
+                </select>
+              </label>
+              <label>Tribunal
+                <select name="tribunal">
+                  <option value="">Todos</option>
+                  <option value="TRF2">TRF2</option>
+                  <option value="TRF4">TRF4</option>
+                </select>
+              </label>
+              <label>Ente devedor
+                <input type="search" name="ente" placeholder="Estado, município, UO…">
+              </label>
+              <label>Natureza
+                <select name="natureza">
+                  <option value="">Todas</option>
+                  <option value="alimentar">Alimentar</option>
+                  <option value="comum">Comum</option>
+                </select>
+              </label>
+              <label>Situação
+                <select name="status">
+                  <option value="">Todas</option>
+                  <option value="pendente">Pendente</option>
+                  <option value="pago">Pago</option>
+                  <option value="expedido">Expedido (SIOP)</option>
+                </select>
+              </label>
+              <label>Ano do orçamento
+                <input type="number" name="ano_orcamento" min="2006" max="2027" placeholder="Ano">
+              </label>
+              <label>Valor mínimo (R$)
+                <input type="number" name="min_valor" min="0" step="1000" placeholder="0">
+              </label>
+              <label>Valor máximo (R$)
+                <input type="number" name="max_valor" min="0" step="1000" placeholder="">
+              </label>
+              <div class="actions" style="display:flex;gap:8px;align-items:end;">
+                <button class="btn ghost" type="reset">Limpar</button>
+              </div>
+            </div>
+          </details>
+        </form>
+      </div>
+    </header>
+    <main>
+      <section class="consulta-results" id="consulta-resultados">
+        <div class="wrap">
+          <div class="consulta-toolbar">
+            <p id="meta-consulta">Carregando…</p>
+            <label>Ordenar
+              <select id="consulta-sort">
+                <option value="valor">Maior valor</option>
+                <option value="valor_asc">Menor valor</option>
+                <option value="posicao">Posição na fila</option>
+              </select>
+            </label>
+          </div>
+          <div id="cards-consulta"></div>
+          <div class="pager" id="pager-consulta"></div>
+          <p class="consulta-note">As bases atuais não trazem o nome do credor. O CPF ou CNPJ, quando existe, aparece só na forma parcial já publicada pelo tribunal. A lista de pagos do TRF2 e do TRF4 não informa o ente devedor item a item. O SIOP não tem número do precatório nem natureza alimentar ou comum — por isso some do resultado quando esses filtros estão ativos. Posição na fila e créditos à frente valem só para os pendentes do TRF4, na fila do respectivo ente.</p>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <div id="panel-aprendizado" role="tabpanel" aria-labelledby="tab-aprendizado">
   <header class="hero" id="topo">
@@ -1731,7 +1831,7 @@
 
   <script>
     (function () {
-      var TABS = ["aprendizado", "projeto", "bases"];
+      var TABS = ["consulta", "aprendizado", "projeto", "bases"];
       var PROJETO = {
         projeto: 1,
         "projeto-visao": 1,
@@ -1755,7 +1855,8 @@
       function tabFromId(id) {
         if (BASES[id] || (id && id.indexOf("bases") === 0)) return "bases";
         if (PROJETO[id] || (id && id.indexOf("projeto") === 0)) return "projeto";
-        return "aprendizado";
+        if (id === "aprendizado" || (id && id.indexOf("aprendizado") === 0) || id === "o-que-e" || id === "novidades" || id === "onde-estao" || id === "tres-papeis" || id === "dados-necessarios" || id === "poc" || id === "glossario" || id === "topo") return "aprendizado";
+        return "consulta";
       }
 
       function apply(scroll) {
@@ -1771,7 +1872,7 @@
         }
 
         if (!scroll) return;
-        var isRoot = !id || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo";
+        var isRoot = !id || id === "consulta" || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo";
         if (isRoot) {
           window.scrollTo(0, 0);
           return;
@@ -1795,8 +1896,8 @@
       if (brand) {
         brand.addEventListener("click", function (e) {
           e.preventDefault();
-          var tab = document.documentElement.dataset.tab || "aprendizado";
-          var dest = tab === "projeto" || tab === "bases" ? tab : "aprendizado";
+          var tab = document.documentElement.dataset.tab || "consulta";
+          var dest = tab === "projeto" || tab === "bases" || tab === "aprendizado" ? tab : "consulta";
           if (currentId() !== dest) location.hash = dest;
           window.scrollTo(0, 0);
         });
@@ -1807,7 +1908,7 @@
         tablist.addEventListener("keydown", function (e) {
           if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
           e.preventDefault();
-          var cur = document.documentElement.dataset.tab || "aprendizado";
+          var cur = document.documentElement.dataset.tab || "consulta";
           var i = TABS.indexOf(cur);
           if (i < 0) i = 0;
           var next = e.key === "ArrowRight" ? TABS[(i + 1) % TABS.length] : TABS[(i + TABS.length - 1) % TABS.length];
@@ -1817,5 +1918,6 @@
     })();
   </script>
   <script src="/bases.js"></script>
+  <script src="/consulta.js"></script>
 </body>
 </html>

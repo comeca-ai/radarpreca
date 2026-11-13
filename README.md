@@ -15,7 +15,8 @@ Na primeira subida o app descompacta `data/precatorios.sqlite.gz` para `/tmp/rad
 
 ## Endpoints
 
-- `GET /` — site (abas Aprendizado, Projeto e Bases)
+- `GET /` — site (abas Consulta, Aprendizado, Projeto e Bases)
+- `GET /api/consulta?q=&fonte=&tribunal=&ente=&natureza=&status=&ano_orcamento=&min_valor=&max_valor=&sort=valor|posicao&order=asc|desc&page=`
 - `GET /api/health`
 - `GET /api/bases` — fontes, datas e limites
 - `GET /api/stats` — resumo da análise do SIOP
