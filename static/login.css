@@ -1,26 +1,7 @@
 /* —— Login e sessão —— */
 #panel-login { display: none; }
 
-html[data-tab="login"] #panel-login { display: block; }
-html[data-tab="login"] #panel-consulta,
-html[data-tab="login"] #panel-precificacao,
-html[data-tab="login"] #panel-bases,
-html[data-tab="login"] #panel-aprendizado,
-html[data-tab="login"] #panel-projeto {
-  display: none !important;
-}
-html[data-tab="login"] .sumario { display: none !important; }
-html[data-tab="login"] .tabs a[aria-selected="true"] {
-  background: transparent;
-  color: var(--ink-soft);
-  box-shadow: none;
-}
-
-html[data-auth-pending] #panel-consulta,
-html[data-auth-pending] #panel-precificacao,
-html[data-auth-pending] #panel-bases {
-  display: none !important;
-}
+/* Visibilidade das views: ver preca.css */
 
 .auth-slot {
   display: none;

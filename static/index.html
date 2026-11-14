@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Preca — seu crédito tem data. A gente mostra qual. Consulte precatórios nas bases públicas do SIOP, TRF2 e TRF4.">
+  <meta name="description" content="Preca — seu crédito tem data. A gente mostra qual. Para credores: encontre seu precatório e veja uma estimativa de quanto vale. Para profissionais: o Balcão Preca, com radar da fila e bases públicas.">
   <title>Preca — seu crédito tem data</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2712%27 fill=%27%239c3b1b%27/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
@@ -502,53 +503,7 @@
     .tabs a:focus-visible {
       color: var(--ink);
     }
-    html[data-tab="aprendizado"] .tabs a[data-tab="aprendizado"],
-    html[data-tab="projeto"] .tabs a[data-tab="projeto"],
-    html[data-tab="bases"] .tabs a[data-tab="bases"] {
-      background: var(--card);
-      color: var(--ink);
-      box-shadow: var(--shadow);
-    }
-    html[data-tab="consulta"] .sumario[data-for="aprendizado"],
-    html[data-tab="consulta"] .sumario[data-for="projeto"],
-    html[data-tab="consulta"] .sumario[data-for="bases"],
-    html[data-tab="projeto"] .sumario[data-for="aprendizado"],
-    html[data-tab="projeto"] .sumario[data-for="bases"],
-    html[data-tab="aprendizado"] .sumario[data-for="projeto"],
-    html[data-tab="aprendizado"] .sumario[data-for="bases"],
-    html[data-tab="bases"] .sumario[data-for="aprendizado"],
-    html[data-tab="bases"] .sumario[data-for="projeto"],
-    html:not([data-tab]) .sumario[data-for="aprendizado"],
-    html:not([data-tab]) .sumario[data-for="projeto"],
-    html:not([data-tab]) .sumario[data-for="bases"] {
-      display: none;
-    }
-    html[data-tab="consulta"] #panel-aprendizado,
-    html[data-tab="consulta"] #panel-projeto,
-    html[data-tab="consulta"] #panel-bases,
-    html[data-tab="consulta"] #panel-precificacao,
-    html[data-tab="projeto"] #panel-consulta,
-    html[data-tab="projeto"] #panel-aprendizado,
-    html[data-tab="projeto"] #panel-bases,
-    html[data-tab="projeto"] #panel-precificacao,
-    html[data-tab="aprendizado"] #panel-consulta,
-    html[data-tab="aprendizado"] #panel-projeto,
-    html[data-tab="aprendizado"] #panel-bases,
-    html[data-tab="aprendizado"] #panel-precificacao,
-    html[data-tab="bases"] #panel-consulta,
-    html[data-tab="bases"] #panel-aprendizado,
-    html[data-tab="bases"] #panel-projeto,
-    html[data-tab="bases"] #panel-precificacao,
-    html[data-tab="precificacao"] #panel-consulta,
-    html[data-tab="precificacao"] #panel-aprendizado,
-    html[data-tab="precificacao"] #panel-projeto,
-    html[data-tab="precificacao"] #panel-bases,
-    html:not([data-tab]) #panel-aprendizado,
-    html:not([data-tab]) #panel-projeto,
-    html:not([data-tab]) #panel-bases,
-    html:not([data-tab]) #panel-precificacao {
-      display: none;
-    }
+    /* Visibilidade das views: ver preca.css */
 
     /* —— Ranking (POC) —— */
     .ranking {
@@ -1076,53 +1031,101 @@
   <link rel="stylesheet" href="/consulta.css">
   <link rel="stylesheet" href="/precificacao.css">
   <link rel="stylesheet" href="/login.css">
+  <link rel="stylesheet" href="/preca.css">
   <script>
-    document.documentElement.dataset.tab = (function (h) {
-      var tab;
-      if (/^#login\b/.test(h)) tab = "login";
-      else if (/^#precificacao/.test(h)) tab = "precificacao";
-      else if (/^#bases/.test(h)) tab = "bases";
-      else if (/^#projeto/.test(h)) tab = "projeto";
-      else if (/^#(aprendizado|o-que-e|novidades|resolucao-cessao|onde-estao|tres-papeis|dados-necessarios|poc|glossario|topo)\b/.test(h)) tab = "aprendizado";
-      else tab = "consulta";
-      if (tab === "consulta" || tab === "precificacao" || tab === "bases") {
-        document.documentElement.dataset.authPending = "1";
+    /* Roteador de views da Preca. Mapeia âncoras novas e antigas para uma view. */
+    (function () {
+      var AREA = {
+        inicio: "inicio", login: "login", preca: "preca",
+        consulta: "balcao", bases: "balcao", lote: "balcao", regularizacao: "balcao",
+        conhecimento: "conhecimento", projeto: "projeto"
+      };
+      var CONHEC = { aprendizado: 1, conhecimento: 1, topo: 1, "o-que-e": 1, novidades: 1, "resolucao-cessao": 1, "onde-estao": 1, glossario: 1 };
+      var PROJ = { "tres-papeis": 1, "dados-necessarios": 1, poc: 1 };
+      var ALIAS = { balcao: "consulta", "balcao-radar": "consulta", "balcao-bases": "bases" };
+      function viewFromId(id) {
+        id = (id || "").split("?")[0];
+        if (!id || id === "inicio" || id.indexOf("inicio-") === 0) return "inicio";
+        if (id === "login") return "login";
+        if (ALIAS[id]) return ALIAS[id];
+        if (id === "preca" || id.indexOf("preca-") === 0 || id.indexOf("precificacao") === 0 || id.indexOf("precif-") === 0) return "preca";
+        if (id.indexOf("consulta") === 0) return "consulta";
+        if (id.indexOf("bases") === 0) return "bases";
+        if (id === "balcao-lote") return "lote";
+        if (id === "balcao-regularizacao") return "regularizacao";
+        if (id.indexOf("projeto") === 0 || PROJ[id]) return "projeto";
+        if (CONHEC[id] || id.indexOf("aprendizado") === 0 || id.indexOf("conhecimento") === 0) return "conhecimento";
+        if (typeof document !== "undefined" && document.getElementById) {
+          var el = document.getElementById(id);
+          var v = el && el.closest && el.closest(".view");
+          if (v && v.getAttribute("data-view")) return v.getAttribute("data-view");
+        }
+        return "inicio";
       }
-      return tab;
-    })(location.hash);
+      function normalizeHash() {
+        var raw = (location.hash || "").replace(/^#/, "");
+        var base = raw.split("?")[0];
+        if (ALIAS[base]) {
+          var rest = raw.slice(base.length);
+          history.replaceState(null, "", "#" + ALIAS[base] + rest);
+        }
+      }
+      window.precaRoute = { AREA: AREA, viewFromId: viewFromId, normalizeHash: normalizeHash };
+      normalizeHash();
+      var view = viewFromId(location.hash.replace(/^#/, ""));
+      var root = document.documentElement;
+      root.dataset.tab = view;
+      root.dataset.area = AREA[view] || "inicio";
+      if (AREA[view] === "balcao") root.dataset.authPending = "1";
+    })();
   </script>
 </head>
 <body>
-  <nav class="top" aria-label="Navegação">
-    <div class="wrap inner">
-      <div class="nav-row">
-        <a class="brand" href="#consulta">
+  <div class="root-anchors" aria-hidden="true"><span id="inicio"></span><span id="login"></span><span id="preca"></span><span id="consulta"></span><span id="bases"></span><span id="balcao-lote"></span><span id="balcao-regularizacao"></span><span id="conhecimento"></span><span id="aprendizado"></span><span id="topo"></span><span id="projeto"></span></div>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="bar">
+        <a class="brand" href="#inicio" aria-label="Preca, início">
           <span class="dot" aria-hidden="true"></span>
           <span class="mark">Preca</span>
+          <span class="brand-area balcao">Balcão</span>
+          <span class="brand-area projeto">Interno</span>
         </a>
-        <div class="tabs" role="tablist" aria-label="Seções do site">
-          <a href="#consulta" role="tab" id="tab-consulta" data-tab="consulta" aria-controls="panel-consulta" aria-selected="true">Consulta</a>
-          <a href="#precificacao" role="tab" id="tab-precificacao" data-tab="precificacao" aria-controls="panel-precificacao" aria-selected="false">Precificação <span class="badge-v0">v0</span></a>
-          <a href="#bases" role="tab" id="tab-bases" data-tab="bases" aria-controls="panel-bases" aria-selected="false">Bases</a>
-          <a href="#aprendizado" role="tab" id="tab-aprendizado" data-tab="aprendizado" aria-controls="panel-aprendizado" aria-selected="false">Aprendizado</a>
-          <a href="#projeto" role="tab" id="tab-projeto" data-tab="projeto" aria-controls="panel-projeto" aria-selected="false">Projeto</a>
-        </div>
-        <div class="auth-slot" hidden>
-          <span class="auth-email" id="auth-email"></span>
-          <button type="button" id="btn-sair">Sair</button>
+        <nav class="site-nav" aria-label="Principal">
+          <a href="#inicio" data-tab="inicio" data-area="inicio">Início</a>
+          <a href="#preca" data-tab="preca" data-area="preca">Tenho um precatório</a>
+          <a href="#consulta" data-tab="consulta" data-area="balcao">Balcão <span class="lock" aria-label="exige login">· login</span></a>
+          <a href="#conhecimento" data-tab="conhecimento" data-area="conhecimento">Conhecimento</a>
+        </nav>
+        <div class="header-actions">
+          <a class="btn-entrar" href="#login" data-next="consulta">Entrar</a>
+          <div class="auth-slot" hidden>
+            <span class="auth-email" id="auth-email"></span>
+            <button type="button" id="btn-sair">Sair</button>
+          </div>
         </div>
       </div>
-      <div class="sumario" data-for="aprendizado" aria-label="Sumário do aprendizado">
+      <nav class="subnav" data-for="preca" aria-label="Passos da Preca">
+        <span class="sub-label">Passos</span>
+        <a href="#preca-encontrar">1 · Encontrar meu crédito</a>
+        <a href="#preca-valor">2 · Quanto vale</a>
+        <a href="#preca-o-que-fazer">3 · O que fazer</a>
+      </nav>
+      <nav class="subnav" data-for="balcao" aria-label="Seções do Balcão">
+        <a href="#consulta" data-sub="consulta">Radar da fila</a>
+        <a href="#bases" data-sub="bases">Bases e downloads</a>
+        <a href="#balcao-lote" data-sub="lote">Precificação em lote</a>
+        <a href="#balcao-regularizacao" data-sub="regularizacao">Regularização</a>
+      </nav>
+      <nav class="subnav" data-for="conhecimento" aria-label="Sumário do conhecimento">
         <a href="#o-que-e">O que é</a>
-        <a href="#novidades">Novidades</a>
         <a href="#resolucao-cessao">Resolução CNJ</a>
+        <a href="#novidades">Novidades</a>
         <a href="#onde-estao">Onde estão os dados</a>
-        <a href="#tres-papeis">Três papéis</a>
-        <a href="#dados-necessarios">O que precisa ter</a>
-        <a href="#poc">Prova de conceito</a>
         <a href="#glossario">Glossário</a>
-      </div>
-      <div class="sumario" data-for="projeto" aria-label="Sumário do projeto">
+      </nav>
+      <nav class="subnav" data-for="projeto" aria-label="Sumário do projeto">
         <a href="#projeto-visao">Visão</a>
         <a href="#projeto-marcas">Duas portas</a>
         <a href="#projeto-contexto">Contexto</a>
@@ -1132,23 +1135,120 @@
         <a href="#projeto-frente4">4 Intermediação</a>
         <a href="#projeto-frente5">5 Compra</a>
         <a href="#projeto-roadmap">Roadmap</a>
+        <a href="#tres-papeis">Três papéis</a>
+        <a href="#dados-necessarios">Dados</a>
+        <a href="#poc">Prova de conceito</a>
         <a href="#projeto-fontes">Fontes</a>
-      </div>
-      <div class="sumario" data-for="bases" aria-label="Sumário das bases">
-        <a href="#bases-fontes">Fontes</a>
-        <a href="#bases-eda">Análise</a>
-        <a href="#bases-consulta">Consulta</a>
-      </div>
+      </nav>
     </div>
-  </nav>
+  </header>
+  <span id="conteudo"></span>
 
 
-  <div id="panel-login" role="tabpanel" aria-label="Entrar">
-    <header class="hero login-hero" id="login">
+  <div id="panel-inicio" class="view" aria-label="Início">
+    <header class="home-hero">
       <div class="wrap">
-        <p class="kicker">Preca</p>
+        <p class="kicker">Precatórios · dados públicos · versão v0</p>
         <h1>Seu crédito tem data. A gente mostra qual.</h1>
-        <p class="lede">Consulta, Precificação e Bases pedem login. O Aprendizado e o Projeto continuam abertos, sem cadastro.</p>
+        <p class="lede">A Preca organiza as listas públicas de precatórios — a fila pendente do TRF4, os pagos do TRF2 e do TRF4 e os expedidos do SIOP — para quem tem um crédito a receber e para quem trabalha com cessão.</p>
+
+        <div class="portas">
+          <a class="porta" href="#preca">
+            <span class="quem">Para credores</span>
+            <h2>Tenho um precatório</h2>
+            <p>Entenda o seu crédito antes de aceitar qualquer proposta de compra.</p>
+            <ul>
+              <li>Encontre o crédito na fila do tribunal</li>
+              <li>Veja uma estimativa de quanto ele vale hoje, com a conta aberta</li>
+              <li>Saiba o que a regra nova do CNJ exige para vender com segurança</li>
+            </ul>
+            <p class="slogan">Tem pressa? Tem Preca.</p>
+            <span class="cta"><span class="go">Começar pela Preca →</span><small>Sem custo · estimativa v0</small></span>
+          </a>
+          <a class="porta balcao" href="#consulta" data-next="consulta">
+            <span class="quem">Para profissionais · Balcão Preca</span>
+            <h2>Sou profissional</h2>
+            <p>Para fundos, FIDCs, cessionários e escritórios que já operam cessão de precatórios.</p>
+            <ul>
+              <li>Radar da fila com filtros por ente, natureza, ano e valor</li>
+              <li>Bases públicas para consulta e download em CSV</li>
+              <li>Regularização de cessões frente à resolução do CNJ</li>
+            </ul>
+            <p class="slogan">Ambiente entre regulados, preparado para a Central de cessões.</p>
+            <span class="cta"><span class="go">Entrar no Balcão →</span><small>Com login · sem cadastro público</small></span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="inicio-prova">
+        <div class="wrap">
+          <h2>O que já está na base</h2>
+          <p class="section-lead">Números das listas oficiais, coletadas em 12/11/2026 (horário de Brasília). Cada número tem a fonte ao lado.</p>
+          <div class="kpis">
+            <article class="kpi">
+              <div class="v">62.993</div>
+              <div class="k">linhas na fila pendente de precatórios do TRF4</div>
+              <div class="f">Fonte: <a href="https://www.trf4.jus.br/trf4/controlador.php?acao=consulta_precatorios_ordem_cronologica_externa" target="_blank" rel="noopener">TRF4, ordem cronológica</a> · 12/11/2026</div>
+            </article>
+            <article class="kpi">
+              <div class="v">R$ 8,73 bi</div>
+              <div class="k">somados nessa fila, a receber</div>
+              <div class="f">Fonte: TRF4 · soma das linhas · 12/11/2026</div>
+            </article>
+            <article class="kpi">
+              <div class="v">172</div>
+              <div class="k">entes devedores na fila do TRF4 (o federal agregado e mais 171)</div>
+              <div class="f">Fonte: TRF4 · listas O, E e EE · 12/11/2026</div>
+            </article>
+            <article class="kpi">
+              <div class="v">164.012</div>
+              <div class="k">precatórios federais expedidos para 2026 (R$ 71,86 bi atualizados pelo IPCA)</div>
+              <div class="f">Fonte: <a href="https://www.gov.br/planejamento/pt-br/assuntos/orcamento/precatorios-content/painel-precatorios/dados-abertos" target="_blank" rel="noopener">SIOP, dados abertos</a> · 12/11/2026</div>
+            </article>
+          </div>
+          <div class="falta">
+            <article class="card">
+              <span class="st nao">O que a base não tem</span>
+              <h3 style="margin-top:10px">O nome do credor</h3>
+              <p>As listas públicas não trazem o nome. Quando há CPF ou CNPJ, ele vem mascarado pelo tribunal, só com os primeiros dígitos. O processo de origem também veio vazio na fila do TRF4.</p>
+            </article>
+            <article class="card">
+              <span class="st minuta">Cobertura</span>
+              <h3 style="margin-top:10px">Só parte dos tribunais</h3>
+              <p>A busca por crédito cobre hoje a fila pendente do TRF4. Os pagos do TRF2 e do TRF4, os mapas da dívida e o SIOP estão no Balcão. Outros tribunais ainda não entraram.</p>
+            </article>
+          </div>
+          <p class="api-status" id="inicio-api" aria-live="polite"><span class="st nao">Verificando a base…</span></p>
+        </div>
+      </section>
+
+      <section id="inicio-aviso">
+        <div class="wrap split">
+          <div>
+            <h2>A estimativa é v0 — e diz isso</h2>
+            <p class="section-lead">A Precificação v0 mostra a fórmula, os parâmetros e de onde vem cada número. As taxas de risco e de retorno são hipóteses, que você pode trocar. Não é laudo, não é parecer e não é recomendação de investimento.</p>
+            <span class="eq-mono">preço = valor no pagamento × (1 − p) ÷ (1 + r)<sup>T</sup></span>
+          </div>
+          <div class="card">
+            <span class="st minuta">Aprovada · não publicada</span>
+            <h3 style="margin-top:10px">A regra nova do CNJ para a venda de precatórios</h3>
+            <p>Aprovada em 10/11/2026. Pela minuta, a cessão passa a exigir escritura pública, registro eletrônico, comunicação à Central Nacional e homologação judicial. O texto final ainda não saiu.</p>
+            <p style="margin-top:10px"><a href="#resolucao-cessao">Entender a resolução →</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <div id="panel-login" class="view" aria-label="Entrar">
+    <header class="hero login-hero">
+      <div class="wrap">
+        <p class="kicker">Entrar · Balcão Preca e calculadora v0</p>
+        <h1>Entre na sua conta Preca</h1>
+        <p class="lede">O Balcão e a calculadora pedem login nesta fase. O Início, a explicação para credores e o Conhecimento continuam abertos, sem cadastro.</p>
       </div>
     </header>
     <main>
@@ -1164,17 +1264,20 @@
             <input type="password" name="senha" id="login-senha" required autocomplete="current-password" minlength="8">
           </label>
           <button type="submit" class="btn">Entrar</button>
-          <p class="login-note">Sem acesso? O Aprendizado e o Projeto estão livres pelas abas acima.</p>
+          <p class="login-note">Sem acesso? <a href="#inicio">Início</a>, <a href="#preca">Tenho um precatório</a> e <a href="#conhecimento">Conhecimento</a> estão abertos.</p>
         </form>
       </div>
     </main>
   </div>
 
-  <div id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta">
-    <header class="hero consulta-hero" id="consulta">
+  <div id="panel-consulta" class="view protected" aria-label="Radar da fila">
+    <div class="area-banner balcao" role="note">
+      <div class="wrap"><strong>Balcão Preca · área profissional</strong><span>Dados das listas públicas, com fonte e data em cada base. Uso restrito a contas convidadas.</span></div>
+    </div>
+    <header class="hero consulta-hero">
       <div class="wrap">
-        <p class="kicker">Consulta · bases públicas · novembro de 2026</p>
-        <h1>Buscar um precatório</h1>
+        <p class="kicker">Balcão · Radar da fila · bases públicas de novembro de 2026</p>
+        <h1>Radar da fila de precatórios</h1>
         <p class="lede">Pesquise pelo número do precatório, pelo nome do ente devedor ou por um CPF/CNPJ parcial já publicado. Os resultados vêm da fila pendente do TRF4, das listas de pagos do TRF2 e do TRF4 e dos expedidos do SIOP.</p>
         <form id="form-consulta">
           <div class="consulta-search">
@@ -1257,33 +1360,96 @@
   </div>
 
 
-  <div id="panel-precificacao" role="tabpanel" aria-labelledby="tab-precificacao">
+  <div id="panel-precificacao" class="view" aria-label="Preca, para quem tem um precatório">
     <div class="v0-banner" role="note">
       <div class="wrap">
         <span class="badge-v0">v0</span>
-        <p><strong>Calculadora experimental.</strong> Não é laudo, não é parecer e não é recomendação de investimento. Os números lidos das bases vêm com a fonte à vista; taxas, probabilidade e retorno exigido são hipóteses suas, a validar. Nada nesta tela substitui análise jurídica ou financeira.</p>
+        <p><strong>Estimativa experimental.</strong> Não é laudo, não é parecer e não é recomendação de investimento. Os números lidos das bases vêm com a fonte à vista; risco e retorno exigido são hipóteses, que você pode trocar.</p>
       </div>
     </div>
-    <header class="hero precif-hero" id="precificacao">
+    <header class="hero preca-hero">
       <div class="wrap">
-        <p class="kicker">Precificação <span class="badge-v0">v0</span> · experimental · hipóteses a validar</p>
-        <h1>Estimar um preço e uma faixa de deságio</h1>
-        <p class="lede">A fórmula é explícita: o preço é o valor no pagamento, reduzido por uma probabilidade de não pagamento ou atraso, descontado pela taxa de retorno exigida no prazo T. O deságio é 1 menos esse preço sobre o valor atual de hoje. T, quando a fonte permite, é o valor à frente na fila dividido pelo pagamento anual do devedor no mapa da dívida — e você pode trocá-lo.</p>
-        <form id="form-precif-busca" class="precif-search">
-          <label class="sr-only" for="precif-numero">Número do precatório</label>
-          <input id="precif-numero" type="search" name="numero" placeholder="Número do precatório na fila pendente do TRF4" autocomplete="off">
-          <button class="btn" type="submit">Carregar</button>
-        </form>
-        <p class="result-meta" id="precif-status">Informe um número da fila pendente do TRF4 ou preencha os campos à mão.</p>
+        <p class="kicker">Preca · para quem tem um precatório</p>
+        <h1>Saiba quanto vale o seu precatório antes de vender</h1>
+        <p class="lede">Três passos, em linguagem simples. O detalhe técnico fica guardado logo abaixo de cada resposta, para você ou o seu advogado conferirem.</p>
+        <ol class="stepper">
+          <li><a href="#preca-encontrar"><span class="n">1</span><span><strong>Encontrar meu crédito</strong><span class="d">Pelo número, na fila do tribunal</span></span></a></li>
+          <li><a href="#preca-valor"><span class="n">2</span><span><strong>Quanto vale</strong><span class="d">Faixa de preço, cenários e a conta aberta</span></span></a></li>
+          <li><a href="#preca-o-que-fazer"><span class="n">3</span><span><strong>O que fazer</strong><span class="d">Laudo, venda segura, deságio abusivo</span></span></a></li>
+        </ol>
       </div>
     </header>
-    <main class="precif-body">
-      <div class="wrap">
-        <div id="precif-credito" class="precif-credito" hidden></div>
-        <div id="precif-avisos" class="precif-aviso" hidden></div>
 
+    <main class="precif-body">
+      <div id="precificacao">
+        <section class="passo" id="preca-encontrar">
+          <div class="wrap">
+            <div class="passo-head">
+              <span class="n" aria-hidden="true">1</span>
+              <div>
+                <h2>Encontre o seu crédito</h2>
+                <p>Digite o número do precatório. Nesta versão, a busca reconhece a fila pendente do TRF4, coletada em 12/11/2026. Se o seu crédito é de outro tribunal, vá ao passo 2 e preencha os valores à mão.</p>
+              </div>
+            </div>
+
+            <div class="gate" role="region" aria-label="Acesso restrito">
+              <div>
+                <h3>A busca e a calculadora estão em acesso restrito</h3>
+                <p>Nesta fase de testes (v0), só quem tem conta entra. Ainda não há cadastro público. Enquanto isso, a explicação de como a conta é feita está no passo 2, e o que fazer com o seu crédito está no passo 3.</p>
+              </div>
+              <a class="btn preca lg" href="#login" data-next="precificacao">Entrar</a>
+            </div>
+
+            <div class="needs-auth">
+              <div class="preca-busca">
+                <form id="form-precif-busca" class="precif-search">
+                  <label class="sr-only" for="precif-numero">Número do precatório</label>
+                  <input id="precif-numero" type="search" name="numero" placeholder="Número do precatório (fila pendente do TRF4)" autocomplete="off">
+                  <button class="btn preca" type="submit">Buscar</button>
+                </form>
+                <p class="result-meta" id="precif-status" aria-live="polite">Informe um número da fila pendente do TRF4 ou preencha os valores à mão no passo 2.</p>
+              </div>
+              <div id="precif-credito" class="precif-credito" hidden></div>
+            </div>
+
+            <details class="tech">
+              <summary>Não sei o número do meu precatório <span class="sum-hint">· e se não estiver no TRF4?</span></summary>
+              <div class="tech-body">
+                <p>Peça o número ao advogado que cuidou da ação. As listas públicas não trazem o nome do credor; quando há CPF ou CNPJ, ele aparece mascarado pelo tribunal. Por isso a busca é pelo número.</p>
+                <p style="margin-top:8px">Se o crédito é de outro tribunal, a estimativa ainda funciona: no passo 2, informe o valor atual e o prazo esperado até o pagamento.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="passo" id="preca-valor">
+          <div class="wrap">
+            <div class="passo-head">
+              <span class="n" aria-hidden="true">2</span>
+              <div>
+                <h2>Veja quanto ele vale hoje</h2>
+                <p>A resposta vem primeiro: uma faixa de preço e três cenários. Logo abaixo está a conta inteira, com a origem de cada número.</p>
+              </div>
+            </div>
+
+            <div class="needs-auth">
+              <p id="precif-erro" class="precif-erro" hidden role="alert"></p>
+              <div id="precif-resultados" hidden>
+                <div id="precif-faixa" class="precif-faixa"></div>
+                <div id="precif-cenarios" class="precif-cenarios"></div>
+                <details class="tech" id="precif-memoria">
+                  <summary>Memória de cálculo <span class="sum-hint">· fórmula, parâmetros e de onde vem cada número</span></summary>
+                  <div class="tech-body">
+                    <div id="precif-breakdown" class="precif-formula"></div>
+                  </div>
+                </details>
+                <div id="precif-avisos" class="precif-aviso" hidden></div>
+              </div>
+              <details class="tech" id="precif-ajustes">
+                <summary>Preencher ou ajustar os valores <span class="sum-hint">· obrigatório se o crédito não foi achado no passo 1</span></summary>
+                <div class="tech-body">
         <form id="form-precif" class="precif-params" autocomplete="off">
-          <h2>Parâmetros <span class="badge-v0">v0</span></h2>
+          <h2 class="sr-only">Parâmetros v0</h2>
           <p class="section-lead">Os campos com “hipótese” não vêm das bases. Altere à vontade; o resultado muda na hora.</p>
           <div class="precif-grid">
             <label>Valor atual hoje (R$)
@@ -1330,23 +1496,100 @@
             </label>
           </div>
         </form>
+                </div>
+              </details>
+            </div>
 
-        <p id="precif-erro" class="precif-erro" hidden></p>
-        <div id="precif-resultados" hidden>
-          <div id="precif-faixa" class="precif-faixa"></div>
-          <div id="precif-cenarios" class="precif-cenarios"></div>
-          <div id="precif-breakdown" class="precif-formula"></div>
-        </div>
+            <div class="card" style="margin-top:18px">
+              <span class="tag">Em linguagem simples</span>
+              <h3>Como a conta é feita</h3>
+              <p>Quem compra um precatório paga hoje por um dinheiro que só chega depois. A estimativa parte do valor do seu crédito e desconta três coisas:</p>
+              <div class="formula-simples" aria-label="Fórmula em linguagem simples">
+                <span class="t">Valor que você vai receber no pagamento</span>
+                <span class="op">×</span>
+                <span class="t">chance de o pagamento sair (1 − p)</span>
+                <span class="op">÷</span>
+                <span class="t">retorno que o comprador exige pelo tempo de espera (1 + r)<sup>T</sup></span>
+              </div>
+              <ul style="margin-top:12px">
+                <li><strong>T</strong> é o prazo até o pagamento, em anos. No crédito federal, sai do ano do orçamento. Nos outros, é o valor à frente na fila dividido pelo que o devedor paga por ano, quando o mapa da dívida permite.</li>
+                <li><strong>p</strong> (risco de atraso ou não pagamento) e <strong>r</strong> (retorno exigido) são hipóteses desta v0: 15% e 10% ao ano, por padrão. Não são taxas de mercado medidas.</li>
+                <li><strong>Deságio</strong> é o desconto: 1 menos o preço dividido pelo valor atual do crédito.</li>
+              </ul>
+              <span class="eq-mono" style="margin-top:12px">preço = valor no pagamento × (1 − p) ÷ (1 + r)^T   ·   deságio = 1 − preço ÷ valor atual</span>
+            </div>
+          </div>
+        </section>
       </div>
+
+      <section class="passo" id="preca-o-que-fazer">
+        <div class="wrap">
+          <div class="passo-head">
+            <span class="n" aria-hidden="true">3</span>
+            <div>
+              <h2>O que fazer com essa estimativa</h2>
+              <p>Uma estimativa não é uma oferta. Ela serve para você conversar de igual para igual com quem quer comprar o seu crédito.</p>
+            </div>
+          </div>
+
+          <div class="acoes">
+            <article class="acao">
+              <header><h3>Proteja-se de deságio abusivo</h3><span class="st minuta">Minuta 27/10/2026</span></header>
+              <p>A minuta do CNJ não fixa um teto de deságio. A proteção vem da transparência:</p>
+              <ul class="checklist alerta">
+                <li><span>Compare a proposta com a faixa do passo 2. Se ela estiver muito abaixo, peça a conta ao comprador.</span></li>
+                <li><span>Exija que o preço, o deságio e um quadro-resumo constem da escritura. <span class="art">art. 8</span></span></li>
+                <li><span>Intermediário só pode cobrar taxa fixa, informada antes — nunca um percentual do seu crédito. <span class="art">art. 53</span></span></li>
+                <li><span>A cessão ao seu próprio advogado, ao escritório dele ou a empresas ligadas é proibida.</span></li>
+              </ul>
+            </article>
+
+            <article class="acao">
+              <header><h3>Venda com segurança</h3><span class="st minuta">Minuta 27/10/2026</span></header>
+              <p>Pela regra aprovada pelo CNJ, a venda só vale se seguir o rito completo <span class="art">(art. 6)</span>:</p>
+              <ul class="checklist">
+                <li><span>Escritura pública, em cartório.</span></li>
+                <li><span>Registro eletrônico em entidade registradora.</span></li>
+                <li><span>Comunicação à Central Nacional de Cessões de Créditos de Precatórios.</span></li>
+                <li><span>Homologação judicial.</span></li>
+              </ul>
+              <p style="margin-top:10px">Sem esse caminho, a titularidade não muda e o tribunal paga ao titular judicial. <span class="art">art. 24</span></p>
+            </article>
+
+            <article class="acao">
+              <header><h3>Peça um laudo</h3><span class="st construcao">Em construção</span></header>
+              <p>O laudo de precificação aplica o mesmo modelo da v0 a um crédito, em formato de documento. Ele ainda não está disponível: falta calibrar as hipóteses de risco, retorno e correção. Por enquanto, use a estimativa do passo 2 e guarde a memória de cálculo.</p>
+            </article>
+
+            <article class="acao">
+              <header><h3>Vender pelo Balcão Preca</h3><span class="st ideia">Ainda não opera</span></header>
+              <p>A ideia é conectar credores a compradores regulados, com taxa fixa informada antes. Isso ainda não está funcionando, e só começa depois da validação jurídica. Hoje a Preca não compra nem intermedeia créditos.</p>
+            </article>
+          </div>
+
+          <p class="fonte-line">
+            <span class="st minuta">Texto final não publicado</span>
+            <span>Artigos citados da minuta de 27/10/2026; podem mudar no texto final. Verificado em 13/11/2026.</span>
+            <a href="https://www.cnj.jus.br/wp-content/uploads/2026/10/voto-ato-8577-83.pdf" target="_blank" rel="noopener">Minuta (PDF do CNJ)</a>
+            <a href="https://www.cnj.jus.br/nova-resolucao-do-cnj-cria-central-de-controle-e-protege-credores-de-precatorios/" target="_blank" rel="noopener">Nota do CNJ</a>
+            <a href="#resolucao-cessao">Entender a resolução</a>
+          </p>
+
+          <p class="nao-parecer"><strong>Isto não é parecer jurídico nem recomendação de investimento.</strong> A estimativa usa dados públicos e hipóteses. Antes de vender, assinar ou receber qualquer adiantamento, converse com um advogado de sua confiança — que não seja parte interessada na compra.</p>
+        </div>
+      </section>
     </main>
   </div>
 
 
-  <div id="panel-bases" role="tabpanel" aria-labelledby="tab-bases">
-    <header class="hero" id="bases">
+  <div id="panel-bases" class="view protected" aria-label="Bases e downloads">
+    <div class="area-banner balcao" role="note">
+      <div class="wrap"><strong>Balcão Preca · área profissional</strong><span>Dados das listas públicas, com fonte e data em cada base. Uso restrito a contas convidadas.</span></div>
+    </div>
+    <header class="hero">
       <div class="wrap">
-        <p class="kicker">Bases · prova de conceito · 12/11/2026</p>
-        <h1>Consulta às bases públicas de precatórios</h1>
+        <p class="kicker">Balcão · Bases e downloads · coleta de 12/11/2026</p>
+        <h1>As bases públicas, para consultar e baixar</h1>
         <p class="lede">SIOP de 2026, a fila pendente do TRF4, listas de pagos do TRF2 e do TRF4, e os mapas da dívida do TRF2, TRF4 e TRF5. Busque, filtre e baixe os recortes. Os CPF e CNPJ de beneficiários aparecem só na forma parcial já publicada pelos tribunais.</p>
         <div class="meta-row">
           <span>Testado em <strong>12/11/2026</strong> (America/Sao_Paulo)</span>
@@ -1525,17 +1768,135 @@
   </div>
 
 
-<div id="panel-aprendizado" role="tabpanel" aria-labelledby="tab-aprendizado">
-  <header class="hero" id="aprendizado">
-    <span id="topo" hidden></span>
+  <div id="panel-lote" class="view protected" aria-label="Precificação em lote">
+    <div class="area-banner balcao" role="note">
+      <div class="wrap"><strong>Balcão Preca · área profissional</strong><span>Dados das listas públicas, com fonte e data em cada base. Uso restrito a contas convidadas.</span></div>
+    </div>
+    <header class="hero balcao-hero">
+      <div class="wrap">
+        <p class="kicker">Balcão · Precificação em lote · <span class="st construcao">Em construção</span></p>
+        <h1>Precificar uma carteira inteira</h1>
+        <p class="lede">O objetivo é aplicar o modelo da Precificação v0 a muitos créditos de uma vez, com um semáforo de risco por crédito. Isso ainda não existe. Abaixo, o que já dá para fazer hoje e o que falta.</p>
+      </div>
+    </header>
+    <main>
+      <section>
+        <div class="wrap">
+          <div class="dropzone" aria-disabled="true">
+            <strong>Envio de carteira (CSV) — indisponível na v0</strong>
+            <span>Nenhum arquivo é aceito ou guardado nesta tela. Ela só mostra onde o envio vai ficar.</span>
+          </div>
+          <div class="grid-2" style="margin-top:20px">
+            <article class="card">
+              <span class="st ok">Funciona hoje</span>
+              <h3 style="margin-top:10px">Um crédito por vez</h3>
+              <p>No <a href="#consulta">Radar da fila</a>, cada crédito pendente do TRF4 tem o botão “Precificar”, que abre a calculadora v0 já preenchida. Para recortes maiores, filtre e baixe o CSV em <a href="#bases">Bases e downloads</a>.</p>
+            </article>
+            <article class="card">
+              <span class="st construcao">Falta</span>
+              <h3 style="margin-top:10px">Calibrar antes de escalar</h3>
+              <p>Antes do lote, é preciso calibrar as hipóteses de risco (p), retorno (r) e correção (c), que hoje são de trabalho. Só então fecham o formato do laudo e o envio de carteira, previsto também na Regularização.</p>
+            </article>
+          </div>
+          <p class="fonte-line"><span>Plano detalhado:</span><a href="#projeto-frente3">Projeto · Frente 3, laudo de precificação</a></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="panel-regularizacao" class="view protected" aria-label="Regularização de cessões">
+    <div class="area-banner balcao" role="note">
+      <div class="wrap"><strong>Balcão Preca · área profissional</strong><span>Dados das listas públicas, com fonte e data em cada base. Uso restrito a contas convidadas.</span></div>
+    </div>
+    <header class="hero balcao-hero">
+      <div class="wrap">
+        <p class="kicker">Balcão · Regularização de cessões e pré-precatórios</p>
+        <h1>Sua carteira de cessões está pronta para a regra nova?</h1>
+        <p class="lede">Pela minuta da resolução do CNJ, cessão sem o rito completo não muda a titularidade, e o tribunal paga ao titular judicial (art. 24). Quem comprou por contrato particular precisa saber quais créditos estão em risco — e o que fazer com cada um.</p>
+        <div class="fonte-line">
+          <span class="st minuta">Aprovada em 10/11/2026 · não publicada</span>
+          <span>Vigência prevista: 30 dias após a publicação.</span>
+          <a href="#resolucao-cessao">Resumo da resolução</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section>
+        <div class="wrap">
+          <h2>Para quem</h2>
+          <p class="section-lead">Quem já tem estoque de cessões ou pré-precatórios e vai ter de regularizar — não o credor originário que ainda vai vender.</p>
+          <div class="grid-2">
+            <article class="card"><span class="tag">Carteira</span><h3>Fundos, FIDCs e securitizadoras</h3><p>Volume, documentação irregular em lote e pressão de cotista ou auditoria.</p></article>
+            <article class="card"><span class="tag">Carteira</span><h3>Compradores profissionais</h3><p>Cessionários que compraram por contrato particular e precisam saber o que ainda vale perante o tribunal e o devedor.</p></article>
+            <article class="card"><span class="tag">Canal</span><h3>Escritórios que intermediaram</h3><p>Conhecem os contratos antigos e os clientes. Podem ser canal — ou clientes, se tiverem de regularizar a própria intermediação à luz da taxa fixa.</p></article>
+            <article class="card"><span class="tag">Ponta</span><h3>Cessionários pessoa física</h3><p>Em lote encaminhado por escritório ou por um pacote simples.</p></article>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="wrap">
+          <h2>Como funciona</h2>
+          <p class="section-lead">Um caminho único, da planilha até a homologação. Ato privativo da advocacia fica com o advogado parceiro, constituído pelo cliente.</p>
+          <ol class="steps-lista">
+            <li><div><strong>Diagnóstico da carteira</strong><span>Cada crédito é classificado: pré-apresentação ou já expedido, instrumento usado e o que falta no rito da minuta.</span></div></li>
+            <li><div><strong>Auditoria da cadeia de cessões</strong><span>Quem cedeu a quem, quando e com que documento; cessão sucessiva, penhora ou honorários destacados; se a titularidade fecha com o que está no tribunal.</span></div></li>
+            <li><div><strong>Dossiê e minuta de petição de juntada</strong><span>A petição só entra nos autos se o advogado parceiro assinar e protocolar.</span></div></li>
+            <li><div><strong>Checklist e quadro-resumo da escritura</strong><span>O que a minuta pede no art. 6 e os campos do art. 8 (preço, deságio, quadro-resumo), para levar ao tabelião.</span></div></li>
+            <li><div><strong>Acompanhamento até a homologação</strong><span>Prazos, comunicações (notarial, Central, devedor) e status, quando esses passos existirem no texto final e na prática do tribunal.</span></div></li>
+          </ol>
+        </div>
+      </section>
+      <section>
+        <div class="wrap split">
+          <div>
+            <h2>Preço</h2>
+            <p class="section-lead">Valor fechado — por crédito, por carteira ou pelo acompanhamento. Nunca percentual sobre o precatório.</p>
+            <div class="aviso neutro"><span class="ico" aria-hidden="true">i</span><p><strong>Ainda sem tabela em reais.</strong> Os valores só saem depois de medir o custo real da primeira carteira-piloto. Até lá, a conversa é sobre o formato do preço.</p></div>
+          </div>
+          <div class="card">
+            <span class="st nao">Não confirmado</span>
+            <h3 style="margin-top:10px">Prazo de 10 dias para cessões antigas</h3>
+            <p>Reportagem do JOTA menciona um prazo de 10 dias, após a vigência, para juntar os contratos de cessões já feitas. Isso não está na minuta que lemos. Não trate esse prazo como regra até o texto final sair.</p>
+            <p class="fonte-line"><a href="https://www.jota.info/justica/cnj-aprova-novas-regras-para-cessao-de-precatorios-e-preve-regime-de-transicao" target="_blank" rel="noopener">Cobertura no JOTA</a></p>
+          </div>
+        </div>
+        <div class="wrap">
+          <div class="empty-state" style="margin-top:24px">
+            <h3>Contratar a regularização</h3>
+            <p>O canal de contato comercial ainda não foi definido nesta versão do site. Não há formulário de envio de carteira: nenhum dado de cliente é recebido por aqui.</p>
+            <div class="actions"><a class="btn ghost" href="#projeto-frente1">Ver o plano completo (Projeto · Frente 1)</a></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+<div id="panel-aprendizado" class="view" aria-label="Conhecimento">
+  <header class="hero">
     <div class="wrap">
-      <p class="kicker">Briefing de mercado · novembro de 2026</p>
-      <h1>O que é um precatório e como entrar nesse mercado</h1>
-      <p class="lede">Tudo o que aprendemos até aqui: o que é o crédito, as regras novas do CNJ e do STF, onde os dados estão hoje, quais informações são indispensáveis e como separar compra, intermediação e tecnologia — sem misturar papéis no mesmo crédito.</p>
-      <div class="meta-row">
-        <span>Para <strong>Jhonata Emerick</strong></span>
-        <span>Foco: comprar, intermediar e construir tecnologia</span>
-        <span>Atualizado em 13/11/2026</span>
+      <p class="kicker">Conhecimento · atualizado em 13/11/2026</p>
+      <h1>Precatórios, a regra nova do CNJ e os termos do mercado</h1>
+      <p class="lede">O que é o crédito, o que muda com a resolução de cessão, as decisões recentes do STF e onde estão os dados. Cada ponto traz a fonte e o grau de certeza.</p>
+      <div class="st-legend" style="margin-top:20px" aria-label="Legenda de status das fontes">
+        <span><span class="st oficial">Fonte oficial</span> nota ou documento do CNJ, STF ou tribunal</span>
+        <span><span class="st minuta">Minuta</span> texto ainda não publicado, pode mudar</span>
+        <span><span class="st nao">Não confirmado</span> só em imprensa, sem texto oficial</span>
+      </div>
+      <div class="status-card" role="region" aria-label="Situação da resolução do CNJ">
+        <h2>Resolução do CNJ sobre cessão de precatórios: onde está</h2>
+        <dl class="status-grid">
+          <div><dt>Aprovação</dt><dd>10/11/2026, plenário do CNJ, 18ª Sessão Ordinária</dd></div>
+          <div><dt>Publicação</dt><dd><span class="st minuta">Ainda não publicada</span> · sem número</dd></div>
+          <div><dt>Vigência</dt><dd>30 dias após a publicação (prevista)</dd></div>
+          <div><dt>Texto de referência</dt><dd>Minuta de 27/10/2026 · Ato Normativo 0008577-83.2026.2.00.0000</dd></div>
+        </dl>
+        <p class="fonte-line">
+          <span>Verificado em 13/11/2026.</span>
+          <a href="https://www.cnj.jus.br/nova-resolucao-do-cnj-cria-central-de-controle-e-protege-credores-de-precatorios/" target="_blank" rel="noopener">Nota do CNJ</a>
+          <a href="https://www.cnj.jus.br/wp-content/uploads/2026/10/voto-ato-8577-83.pdf" target="_blank" rel="noopener">Minuta (PDF do CNJ)</a>
+          <a href="#resolucao-cessao">Explicação artigo por artigo</a>
+        </p>
       </div>
     </div>
   </header>
@@ -1574,6 +1935,7 @@
             <header>
               <time datetime="2026-11-10">10/11/2026</time>
               <h3>CNJ aprova novas regras para a venda de precatórios</h3>
+              <span class="st oficial">Fonte oficial · CNJ</span>
             </header>
             <p>O Conselho Nacional de Justiça aprovou por unanimidade, na 18ª Sessão Ordinária, uma resolução sobre cessão de créditos de precatórios. Para a titularidade mudar e o comprador receber, a operação precisa de escritura pública, registro eletrônico em entidade registradora, comunicação à Central Nacional de Cessões de Créditos de Precatórios e homologação judicial. Sem isso, não muda a titularidade nem há pagamento ao cessionário.</p>
             <p>A Central será administrada pelo CNJ e vinculada ao SisPreq. A escritura terá de mostrar o valor atualizado, o preço negociado, o deságio, os custos e o valor líquido para quem vende. Há cautelas extras quando o credor é pessoa física não profissional.</p>
@@ -1589,6 +1951,7 @@
             <header>
               <time datetime="2026-11-03">3/11/2026</time>
               <h3>SisPreq integrado ao mercado financeiro</h3>
+              <span class="st oficial">Fonte oficial · CNJ</span>
             </header>
             <p>O CNJ, sob a presidência do ministro Edson Fachin, assinou acordos com o Colégio Notarial do Brasil e com a B3, a Cerc e a Núclea para desenvolver o Sistema Nacional de Precatórios (SisPreq) e integrá-lo às plataformas do mercado financeiro.</p>
             <div class="links">
@@ -1600,6 +1963,7 @@
             <header>
               <time datetime="2026-11-11">11/11/2026</time>
               <h3>STF suspende os casos da Tabela SUS</h3>
+              <span class="st oficial">Fonte oficial · STF</span>
             </header>
             <p>O ministro Gilmar Mendes, no RE 1612904, suspendeu em todo o país os processos sobre valores pagos pelo SUS a hospitais privados (revisão da Tabela SUS). A decisão inclui a expedição e o levantamento de precatórios e RPVs ligados a esses casos.</p>
             <p>São 7.738 processos. A União gastou mais de R$ 731 milhões em 2023 e 2024 para 94 autores. O risco potencial supera R$ 243 bilhões. Há preocupação com cessões feitas com deságio a instituições financeiras — um lembrete de que o assunto do processo pode travar o crédito depois da compra.</p>
@@ -1612,6 +1976,7 @@
             <header>
               <time datetime="2026-11-03">ADPF 1090 · até 3/11/2026</time>
               <h3>Cedae entra no regime de precatórios</h3>
+              <span class="st oficial">Fonte oficial · STF</span>
             </header>
             <p>Na sessão virtual encerrada em 3/11/2026, o STF, com relatoria do ministro Zanin, decidiu que a companhia de saneamento do Rio (Cedae) fica submetida ao regime de precatórios e que suas contas não podem ser bloqueadas para o pagamento dessas dívidas judiciais.</p>
             <div class="links">
@@ -1625,7 +1990,7 @@
 
     <section id="resolucao-cessao">
       <div class="wrap">
-        <h2>A resolução do CNJ sobre cessão</h2>
+        <div class="heading-with-status"><h2>A resolução do CNJ sobre cessão</h2><span class="st minuta">Minuta · pode mudar</span></div>
         <p class="section-lead">O que a minuta de 27/10/2026 diz sobre pré-precatório, preço, deságio e a transição das cessões já feitas. O texto final ainda não foi publicado.</p>
 
         <div class="prose">
@@ -1654,7 +2019,7 @@
             <p>A emenda Badaró alterou o art. 64 da minuta para preservar cessões anteriores. O que isso exige na prática (só juntada, escritura nova, ou os dois) só fica claro no texto publicado e na orientação do tribunal.</p>
           </article>
         </div>
-        <p class="note"><strong>Ainda não confirmado no texto oficial.</strong> Reportagem do JOTA menciona um prazo de 10 dias, após a vigência, para juntar nos autos os contratos particulares de cessões já feitas. Isso não está confirmado na minuta que lemos. Não se deve tratar esse prazo como regra até o texto final sair no Diário de Justiça.</p>
+        <p class="note"><span class="st nao">Não confirmado</span> <strong>Ainda não confirmado no texto oficial.</strong> Reportagem do JOTA menciona um prazo de 10 dias, após a vigência, para juntar nos autos os contratos particulares de cessões já feitas. Isso não está confirmado na minuta que lemos. Não se deve tratar esse prazo como regra até o texto final sair no Diário de Justiça.</p>
         <div class="links">
           <a href="https://www.cnj.jus.br/wp-content/uploads/2026/10/voto-ato-8577-83.pdf" target="_blank" rel="noopener">Minuta de 27/10/2026 (PDF do CNJ)</a>
           <a href="https://www.cnj.jus.br/nova-resolucao-do-cnj-cria-central-de-controle-e-protege-credores-de-precatorios/" target="_blank" rel="noopener">Nota do CNJ</a>
@@ -1701,187 +2066,10 @@
       </div>
     </section>
 
-    <section id="tres-papeis">
-      <div class="wrap">
-        <h2>Três papéis, três empresas</h2>
-        <p class="section-lead">Mesmo que você queira atuar nos três lados — comprar, intermediar e construir a tecnologia — a estrutura precisa estar separada.</p>
-
-        <p class="golden">Regra de ouro: <strong>nunca atuar em dois papéis no mesmo crédito.</strong> Três CNPJs diferentes. E, antes de montar a compradora e a intermediária, vale validar a estrutura com um advogado: o texto final da resolução ainda será publicado e pode detalhar regras sobre partes ligadas.</p>
-
-        <div class="grid-3">
-          <article class="card">
-            <span class="tag">1 · Capital</span>
-            <h3>Empresa compradora</h3>
-            <p>Uma empresa ou um fundo (como um FIDC) que compra precatórios com deságio e recebe quando o ente público paga. É nela que ficam o caixa, o risco e os investidores.</p>
-          </article>
-          <article class="card">
-            <span class="tag">2 · Relacionamento</span>
-            <h3>Empresa intermediária</h3>
-            <p>Conecta credores a compradores e cobra taxa fixa, informada antes — como a regra nova exige, sem percentual. Se levar um credor para a própria compradora, isso parece conflito de interesses, do tipo que o CNJ quer fiscalizar. Por isso, ou ela atende só compradores de terceiros, ou o vínculo fica explícito na escritura e a cobrança ao credor continua só com taxa fixa.</p>
-          </article>
-          <article class="card">
-            <span class="tag seal">3 · Começar por aqui</span>
-            <h3>Empresa de tecnologia</h3>
-            <p>Vende o sistema — busca nos tribunais, análise de risco, gestão das cessões — para outros compradores, intermediários e escritórios. Não toca em nenhum crédito, então é a parte mais limpa e escalável. Alimenta as outras duas com dados, cobrando por contrato, como faria com qualquer cliente.</p>
-          </article>
-        </div>
-
-        <div class="prose" style="margin-top: 28px;">
-          <p>A recomendação é começar pela tecnologia: ela gera o fluxo de oportunidades de que as outras duas precisam e não depende de capital. Se você não for o advogado do credor, a regra nova até ajuda a compradora, porque tira a concorrência dos escritórios na aquisição do crédito.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="dados-necessarios">
-      <div class="wrap">
-        <h2>Os dados que todo papel precisa ter</h2>
-        <p class="section-lead">Em qualquer um dos três papéis, a base é a mesma. O que muda é só o que você faz com ela. Quatro blocos dizem se o crédito é bom e limpo. Os três últimos dizem quanto ele vale e quando paga.</p>
-
-        <div class="diagram" role="img" aria-label="Dois grupos de dados: à esquerda, o que indica se o crédito é bom e limpo; à direita, o que indica quanto vale e quando paga.">
-          <div class="group limpo">
-            <p class="label">Grupo 1</p>
-            <h3>O crédito é bom e limpo?</h3>
-            <div class="block">
-              <h4>Dados do precatório</h4>
-              <p>Número do precatório e do processo de origem, tribunal, ente devedor, natureza (alimentar ou comum), valor de face, data-base, ano do orçamento, posição na fila cronológica e situação (pendente, parcelado ou pago).</p>
-            </div>
-            <div class="block">
-              <h4>Dados do processo</h4>
-              <p>Fase, movimentações, trânsito em julgado, recursos pendentes e se o assunto está suspenso por tema do STF — como a Tabela SUS. Vem do Datajud e dos autos.</p>
-            </div>
-            <div class="block">
-              <h4>Dados do credor</h4>
-              <p>Titular atual, CPF ou CNPJ, se é pessoa física idosa ou com doença grave (prioridade na fila), advogado constituído e honorários destacados.</p>
-            </div>
-            <div class="block">
-              <h4>Ônus sobre o crédito</h4>
-              <p>Cessões anteriores, penhoras, bloqueios e compensações com dívida tributária. Hoje isso está nos autos; depois deve estar na Central do CNJ.</p>
-            </div>
-          </div>
-
-          <div class="group valor">
-            <p class="label">Grupo 2</p>
-            <h3>Quanto vale e quando paga?</h3>
-            <div class="block">
-              <h4>Dados do devedor</h4>
-              <p>Orçamento reservado para precatórios na LOA, valores pagos nos últimos anos, estoque total da dívida e regime de pagamento (em dia ou regime especial). Com isso se estima quando o precatório vai ser pago de verdade.</p>
-            </div>
-            <div class="block">
-              <h4>Cálculo</h4>
-              <p>Índice de correção (hoje a regra é a Selic), juros, impostos retidos na fonte e valor líquido. Com o prazo estimado, isso dá o deságio justo e a taxa de retorno (TIR).</p>
-            </div>
-            <div class="block">
-              <h4>Mercado</h4>
-              <p>Deságios praticados por tribunal e por ente, e quem está comprando. É o dado mais difícil de conseguir hoje. As escrituras da regra nova devem começar a revelar esse mercado.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="poc">
-      <div class="wrap">
-        <h2>Prova de conceito: o que deu para puxar</h2>
-        <p class="section-lead">Teste feito em 12/11/2026, por curl, nas fontes que tínhamos em vista — TJSP, TRFs, CJF e a API pública do Datajud — e também nos dados abertos de precatórios do SIOP/MPO. Abaixo, o ranking do que é mais fácil de puxar hoje.</p>
-
-        <div class="ranking">
-          <article class="rank best">
-            <div class="n" aria-hidden="true">1</div>
-            <div>
-              <header>
-                <span class="tag">Mais fácil</span>
-                <h3>SIOP / MPO — dados abertos</h3>
-              </header>
-              <p>O painel de dados abertos do Ministério do Planejamento e Orçamento publica CSV por exercício (<span class="serif">expedidos_2008</span> a <span class="serif">expedidos_2027</span>). No exercício de 2026 há 164.012 precatórios: Justiça Federal 143.007, Estadual 15.426, Trabalho 4.469, STJ 1.078 e STF 32.</p>
-              <p>Os campos incluem exercício, tribunal, datas, unidade orçamentária / ente, tipo de causa, valor original e valor atualizado. Não vêm número do precatório, do processo nem do credor. Serve bem para dimensionar o mercado, não para analisar um crédito específico.</p>
-              <div class="links">
-                <a href="https://www.gov.br/planejamento/pt-br/assuntos/orcamento/precatorios-content/painel-precatorios/dados-abertos" target="_blank" rel="noopener">Dados abertos do SIOP/MPO</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="rank">
-            <div class="n" aria-hidden="true">2</div>
-            <div>
-              <header>
-                <h3>TRF2 e TRF4 — planilhas sem login</h3>
-              </header>
-              <p>Os dois tribunais oferecem CSV ou XLSX sem login e sem captcha. As listas de precatórios já pagos trazem ordem cronológica, natureza, número do precatório, CPF ou CNPJ parcial, valores e datas. No TRF2, a lista de 2024 tem cerca de 15.964 linhas; no TRF4, o conjunto de 2022 a 2025 tem 210.486 linhas. Há também mapas da dívida: 156 entidades no TRF2 e 285 no TRF4.</p>
-              <p>A fila pendente do TRF4 sai do formulário de ordem cronológica (POST <span class="serif">rdoTipo=O|E|EE</span>, CSV na mesma sessão, sem captcha) e já está nesta prova de conceito: 62.993 linhas, R$ 8,73 bilhões. A fila pendente do TRF2 segue com captcha.</p>
-              <div class="links">
-                <a href="https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs" target="_blank" rel="noopener">Precatórios e RPVs do TRF2</a>
-                <a href="https://consulta.trf4.jus.br/trf4/controlador.php?acao=pagina_precatorios" target="_blank" rel="noopener">Página de precatórios do TRF4</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="rank">
-            <div class="n" aria-hidden="true">3</div>
-            <div>
-              <header>
-                <h3>TRF5 — mapa em planilha, lista em PDF</h3>
-              </header>
-              <p>O mapa da dívida sai em XLS com facilidade (499 entidades). Já a lista item a item está em um PDF de 1.746 páginas, menos prático para automatizar.</p>
-              <div class="links">
-                <a href="https://rpvprecatorio.trf5.jus.br/mapa" target="_blank" rel="noopener">Mapa de precatórios do TRF5</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="rank">
-            <div class="n" aria-hidden="true">4</div>
-            <div>
-              <header>
-                <h3>API pública do Datajud</h3>
-              </header>
-              <p>Responde pela classe 1265 (Precatório). No TRF3, por exemplo, retornou 6.114 processos. Não traz valor, credor nem posição na fila — só o andamento. A consulta ao TJSP deu timeout / 504.</p>
-            </div>
-          </article>
-
-          <article class="rank">
-            <div class="n" aria-hidden="true">5</div>
-            <div>
-              <header>
-                <h3>CJF</h3>
-              </header>
-              <p>Há um painel em Power BI, mas não encontramos um arquivo para baixar.</p>
-            </div>
-          </article>
-
-          <article class="rank">
-            <div class="n" aria-hidden="true">6</div>
-            <div>
-              <header>
-                <h3>TJSP DEPRE — o mais difícil de automatizar</h3>
-              </header>
-              <p>A lista geral sai em PDF, via formulário com captcha. Entre as fontes testadas, é a pior para puxar automaticamente.</p>
-              <div class="links">
-                <a href="https://portal.tjsp.jus.br/Precatorios/Precatorios/ListaGeral" target="_blank" rel="noopener">Lista geral de precatórios do TJSP</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="rank">
-            <div class="n" aria-hidden="true">7</div>
-            <div>
-              <header>
-                <h3>TRF1, TRF3, TRF6 e dados.gov.br</h3>
-              </header>
-              <p>O TRF1 só permite consulta caso a caso. TRF3 e TRF6 não foram verificados — houve falha de conexão. A presença desses dados em dados.gov.br não foi confirmada.</p>
-            </div>
-          </article>
-        </div>
-
-        <div class="reco">
-          <p><strong>Recomendação.</strong> A prova de conceito começou por TRF2, TRF4 e SIOP, e essas bases já estão na aba <a href="#bases">Bases</a>, com consulta e download. O Datajud entra para enriquecer o andamento dos processos. O TJSP fica para um momento seguinte. Os próximos passos estão no <a href="#projeto-roadmap">roadmap do projeto</a>.</p>
-        </div>
-      </div>
-    </section>
-
     <section id="glossario">
       <div class="wrap">
         <h2>Glossário</h2>
-        <p class="section-lead">Os termos que aparecem ao longo deste briefing, em linguagem direta.</p>
+        <p class="section-lead">Os termos do mercado de precatórios, em linguagem direta.</p>
         <dl class="glossary">
           <div>
             <dt>Deságio</dt>
@@ -1930,10 +2118,13 @@
   </div>
 
 
-  <div id="panel-projeto" role="tabpanel" aria-labelledby="tab-projeto">
-    <header class="hero" id="projeto">
+  <div id="panel-projeto" class="view" aria-label="Projeto, área interna">
+    <div class="area-banner interno" role="note">
+      <div class="wrap"><strong>Área interna · Projeto</strong><span>Estratégia, frentes de receita e roadmap. Não faz parte da navegação do produto.</span><a href="#inicio">Voltar ao site</a></div>
+    </div>
+    <header class="hero">
       <div class="wrap">
-        <p class="kicker">Projeto · novembro de 2026</p>
+        <p class="kicker">Projeto · área interna · novembro de 2026</p>
         <h1>Uma plataforma para o mercado de precatórios</h1>
         <p class="lede">Comprar, intermediar e construir a tecnologia — em empresas separadas, e nessa ordem invertida: primeiro a plataforma, depois a intermediação e a compra. As frentes de receita seguem essa tese, alinhadas à resolução do CNJ.</p>
         <div class="meta-row">
@@ -1952,7 +2143,7 @@
           <div class="prose">
             <p>As fontes continuam sendo os Tribunais de Justiça, os TRFs e o CJF, os TRTs, a API pública do Datajud e as leis orçamentárias (LOA), além dos dados abertos do SIOP/MPO. A oportunidade está em normalizar esses formatos diferentes e cruzá-los — lista cronológica, andamento do processo, orçamento do devedor e ônus do crédito.</p>
             <p>As regras novas do CNJ para a cessão e a futura Central Nacional de Cessões, vinculada ao SisPreq, mudam o jeito de comprar e de intermediar. A plataforma precisa nascer já alinhada a isso: escritura pública, registro eletrônico, comunicação à central e homologação judicial. Enquanto a central não opera, o sistema se apoia nas fontes que já existem e deixa o encaixe com a central preparado.</p>
-            <p>A tese é atuar nos três lados, em empresas separadas, começando pela tecnologia. A lógica dos três papéis — e por que não misturá-los no mesmo crédito — está em <a href="#tres-papeis">Aprendizado</a>. Aqui, a ordem de construção:</p>
+            <p>A tese é atuar nos três lados, em empresas separadas, começando pela tecnologia. A lógica dos três papéis — e por que não misturá-los no mesmo crédito — está em <a href="#tres-papeis">Bastidores · três papéis</a>. Aqui, a ordem de construção:</p>
           </div>
           <div id="projeto-estrutura">
           <p class="golden">Regra de ouro: <strong>nunca atuar em dois papéis no mesmo crédito.</strong> Três empresas diferentes. Antes de abrir a intermediária e a compradora, validar a estrutura com um advogado: o texto final da resolução ainda será publicado e pode detalhar regras sobre partes ligadas.</p>
@@ -2084,7 +2275,7 @@
           <h2>Contexto regulatório</h2>
           <p class="section-lead">A resolução de cessão já foi aprovada, mas ainda não publicada. O que muda para o negócio — e onde está a explicação completa.</p>
           <div class="prose">
-            <p>Em 10/11/2026 o CNJ aprovou o Ato Normativo 0008577-83.2026.2.00.0000. A vigência prevista é de 30 dias após a publicação no Diário de Justiça. Até lá, trabalhamos com a minuta de 27/10/2026. A explicação da norma — pré-precatório, rito da cessão, preço e deságio, transição das cessões antigas — está em <a href="#resolucao-cessao">Aprendizado · Resolução CNJ</a>, com a notícia da aprovação em <a href="#novidades">Novidades</a>.</p>
+            <p>Em 10/11/2026 o CNJ aprovou o Ato Normativo 0008577-83.2026.2.00.0000. A vigência prevista é de 30 dias após a publicação no Diário de Justiça. Até lá, trabalhamos com a minuta de 27/10/2026. A explicação da norma — pré-precatório, rito da cessão, preço e deságio, transição das cessões antigas — está em <a href="#resolucao-cessao">Conhecimento · Resolução CNJ</a>, com a notícia da aprovação em <a href="#novidades">Novidades</a>.</p>
           </div>
           <div class="grid-3" style="margin-top:24px;">
             <article class="card">
@@ -2149,9 +2340,9 @@
           <p class="section-lead">A primeira oferta comercial da empresa de tecnologia: ajudar quem já comprou ou intermediou créditos a entrar na regra nova, antes que o pagamento vá para o titular judicial.</p>
 
           <div class="prose frente-intro">
-            <p>O fundamento normativo — a resolução ainda inédita, o pré-precatório e o rito da cessão — está no <a href="#projeto-contexto">contexto regulatório</a> e, com os artigos da minuta, em <a href="#resolucao-cessao">Aprendizado</a>. Aqui, o produto.</p>
+            <p>O fundamento normativo — a resolução ainda inédita, o pré-precatório e o rito da cessão — está no <a href="#projeto-contexto">contexto regulatório</a> e, com os artigos da minuta, em <a href="#resolucao-cessao">Conhecimento</a>. Aqui, o produto.</p>
           </div>
-          <p class="note">No comercial desta frente, não venda prazo extraoficial (como o de 10 dias reportado pelo JOTA) até ele estar no texto publicado. O detalhe da transição está em <a href="#resolucao-cessao">Aprendizado · Resolução CNJ</a>.</p>
+          <p class="note">No comercial desta frente, não venda prazo extraoficial (como o de 10 dias reportado pelo JOTA) até ele estar no texto publicado. O detalhe da transição está em <a href="#resolucao-cessao">Conhecimento · Resolução CNJ</a>.</p>
 
           <div class="frente-block">
             <h3>O problema e a janela</h3>
@@ -2704,7 +2895,7 @@
           </div>
           <p class="section-lead">O segundo CNPJ, depois da tecnologia: conectar credores a compradores cobrando só taxa fixa, informada antes — como a minuta exige no art. 53.</p>
           <div class="prose">
-            <p>Não há percentual sobre o crédito, nem tela, nem operação nesta frente hoje. Ela só começa depois da validação jurídica da estrutura e com a regra de ouro em vigor: a intermediária não atua no mesmo crédito em que a compradora do grupo estiver comprando. Se houver vínculo, ele fica explícito na escritura. A lógica dos papéis está na <a href="#projeto-visao">visão geral</a> e em <a href="#tres-papeis">Aprendizado</a>.</p>
+            <p>Não há percentual sobre o crédito, nem tela, nem operação nesta frente hoje. Ela só começa depois da validação jurídica da estrutura e com a regra de ouro em vigor: a intermediária não atua no mesmo crédito em que a compradora do grupo estiver comprando. Se houver vínculo, ele fica explícito na escritura. A lógica dos papéis está na <a href="#projeto-visao">visão geral</a> e em <a href="#tres-papeis">Bastidores · três papéis</a>.</p>
           </div>
         </div>
       </section>
@@ -2798,7 +2989,7 @@
               <div class="status-col done">
                 <h3>Feito</h3>
                 <ul>
-                  <li>Pesquisa das novidades de novembro de 2026 (CNJ, SisPreq, Tabela SUS e Cedae) e a explicação da resolução de cessão em Aprendizado.</li>
+                  <li>Pesquisa das novidades de novembro de 2026 (CNJ, SisPreq, Tabela SUS e Cedae) e a explicação da resolução de cessão em Conhecimento.</li>
                   <li>Teste de fontes para a POC (12/11/2026) e base SIOP + TRF2 + TRF4 + TRF5 no site, com a fila pendente do TRF4.</li>
                   <li>Abas Consulta, Precificação v0 e Bases no ar.</li>
                   <li>Planos publicados das Frentes 1 (regularização) e 2 (assinatura Radar).</li>
@@ -2828,10 +3019,193 @@
         </div>
       </section>
 
+      <section id="projeto-bastidores" class="bastidores-head">
+        <div class="wrap">
+          <h2>Bastidores: papéis, dados e prova de conceito</h2>
+          <p class="section-lead">Estas três seções estavam no Aprendizado. São material de estratégia, por isso moraram para o Projeto. As âncoras antigas continuam funcionando.</p>
+        </div>
+      </section>
+      <section id="tres-papeis">
+        <div class="wrap">
+          <h2>Três papéis, três empresas</h2>
+          <p class="section-lead">Mesmo que você queira atuar nos três lados — comprar, intermediar e construir a tecnologia — a estrutura precisa estar separada.</p>
+
+          <p class="golden">Regra de ouro: <strong>nunca atuar em dois papéis no mesmo crédito.</strong> Três CNPJs diferentes. E, antes de montar a compradora e a intermediária, vale validar a estrutura com um advogado: o texto final da resolução ainda será publicado e pode detalhar regras sobre partes ligadas.</p>
+
+          <div class="grid-3">
+            <article class="card">
+              <span class="tag">1 · Capital</span>
+              <h3>Empresa compradora</h3>
+              <p>Uma empresa ou um fundo (como um FIDC) que compra precatórios com deságio e recebe quando o ente público paga. É nela que ficam o caixa, o risco e os investidores.</p>
+            </article>
+            <article class="card">
+              <span class="tag">2 · Relacionamento</span>
+              <h3>Empresa intermediária</h3>
+              <p>Conecta credores a compradores e cobra taxa fixa, informada antes — como a regra nova exige, sem percentual. Se levar um credor para a própria compradora, isso parece conflito de interesses, do tipo que o CNJ quer fiscalizar. Por isso, ou ela atende só compradores de terceiros, ou o vínculo fica explícito na escritura e a cobrança ao credor continua só com taxa fixa.</p>
+            </article>
+            <article class="card">
+              <span class="tag seal">3 · Começar por aqui</span>
+              <h3>Empresa de tecnologia</h3>
+              <p>Vende o sistema — busca nos tribunais, análise de risco, gestão das cessões — para outros compradores, intermediários e escritórios. Não toca em nenhum crédito, então é a parte mais limpa e escalável. Alimenta as outras duas com dados, cobrando por contrato, como faria com qualquer cliente.</p>
+            </article>
+          </div>
+
+          <div class="prose" style="margin-top: 28px;">
+            <p>A recomendação é começar pela tecnologia: ela gera o fluxo de oportunidades de que as outras duas precisam e não depende de capital. Se você não for o advogado do credor, a regra nova até ajuda a compradora, porque tira a concorrência dos escritórios na aquisição do crédito.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="dados-necessarios">
+        <div class="wrap">
+          <h2>Os dados que todo papel precisa ter</h2>
+          <p class="section-lead">Em qualquer um dos três papéis, a base é a mesma. O que muda é só o que você faz com ela. Quatro blocos dizem se o crédito é bom e limpo. Os três últimos dizem quanto ele vale e quando paga.</p>
+
+          <div class="diagram" role="img" aria-label="Dois grupos de dados: à esquerda, o que indica se o crédito é bom e limpo; à direita, o que indica quanto vale e quando paga.">
+            <div class="group limpo">
+              <p class="label">Grupo 1</p>
+              <h3>O crédito é bom e limpo?</h3>
+              <div class="block">
+                <h4>Dados do precatório</h4>
+                <p>Número do precatório e do processo de origem, tribunal, ente devedor, natureza (alimentar ou comum), valor de face, data-base, ano do orçamento, posição na fila cronológica e situação (pendente, parcelado ou pago).</p>
+              </div>
+              <div class="block">
+                <h4>Dados do processo</h4>
+                <p>Fase, movimentações, trânsito em julgado, recursos pendentes e se o assunto está suspenso por tema do STF — como a Tabela SUS. Vem do Datajud e dos autos.</p>
+              </div>
+              <div class="block">
+                <h4>Dados do credor</h4>
+                <p>Titular atual, CPF ou CNPJ, se é pessoa física idosa ou com doença grave (prioridade na fila), advogado constituído e honorários destacados.</p>
+              </div>
+              <div class="block">
+                <h4>Ônus sobre o crédito</h4>
+                <p>Cessões anteriores, penhoras, bloqueios e compensações com dívida tributária. Hoje isso está nos autos; depois deve estar na Central do CNJ.</p>
+              </div>
+            </div>
+
+            <div class="group valor">
+              <p class="label">Grupo 2</p>
+              <h3>Quanto vale e quando paga?</h3>
+              <div class="block">
+                <h4>Dados do devedor</h4>
+                <p>Orçamento reservado para precatórios na LOA, valores pagos nos últimos anos, estoque total da dívida e regime de pagamento (em dia ou regime especial). Com isso se estima quando o precatório vai ser pago de verdade.</p>
+              </div>
+              <div class="block">
+                <h4>Cálculo</h4>
+                <p>Índice de correção (hoje a regra é a Selic), juros, impostos retidos na fonte e valor líquido. Com o prazo estimado, isso dá o deságio justo e a taxa de retorno (TIR).</p>
+              </div>
+              <div class="block">
+                <h4>Mercado</h4>
+                <p>Deságios praticados por tribunal e por ente, e quem está comprando. É o dado mais difícil de conseguir hoje. As escrituras da regra nova devem começar a revelar esse mercado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="poc">
+        <div class="wrap">
+          <h2>Prova de conceito: o que deu para puxar</h2>
+          <p class="section-lead">Teste feito em 12/11/2026, por curl, nas fontes que tínhamos em vista — TJSP, TRFs, CJF e a API pública do Datajud — e também nos dados abertos de precatórios do SIOP/MPO. Abaixo, o ranking do que é mais fácil de puxar hoje.</p>
+
+          <div class="ranking">
+            <article class="rank best">
+              <div class="n" aria-hidden="true">1</div>
+              <div>
+                <header>
+                  <span class="tag">Mais fácil</span>
+                  <h3>SIOP / MPO — dados abertos</h3>
+                </header>
+                <p>O painel de dados abertos do Ministério do Planejamento e Orçamento publica CSV por exercício (<span class="serif">expedidos_2008</span> a <span class="serif">expedidos_2027</span>). No exercício de 2026 há 164.012 precatórios: Justiça Federal 143.007, Estadual 15.426, Trabalho 4.469, STJ 1.078 e STF 32.</p>
+                <p>Os campos incluem exercício, tribunal, datas, unidade orçamentária / ente, tipo de causa, valor original e valor atualizado. Não vêm número do precatório, do processo nem do credor. Serve bem para dimensionar o mercado, não para analisar um crédito específico.</p>
+                <div class="links">
+                  <a href="https://www.gov.br/planejamento/pt-br/assuntos/orcamento/precatorios-content/painel-precatorios/dados-abertos" target="_blank" rel="noopener">Dados abertos do SIOP/MPO</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="rank">
+              <div class="n" aria-hidden="true">2</div>
+              <div>
+                <header>
+                  <h3>TRF2 e TRF4 — planilhas sem login</h3>
+                </header>
+                <p>Os dois tribunais oferecem CSV ou XLSX sem login e sem captcha. As listas de precatórios já pagos trazem ordem cronológica, natureza, número do precatório, CPF ou CNPJ parcial, valores e datas. No TRF2, a lista de 2024 tem cerca de 15.964 linhas; no TRF4, o conjunto de 2022 a 2025 tem 210.486 linhas. Há também mapas da dívida: 156 entidades no TRF2 e 285 no TRF4.</p>
+                <p>A fila pendente do TRF4 sai do formulário de ordem cronológica (POST <span class="serif">rdoTipo=O|E|EE</span>, CSV na mesma sessão, sem captcha) e já está nesta prova de conceito: 62.993 linhas, R$ 8,73 bilhões. A fila pendente do TRF2 segue com captcha.</p>
+                <div class="links">
+                  <a href="https://www.trf2.jus.br/trf2/consultas-e-servicos/precatorios-federais-requisicoes-de-pequeno-valor-rpvs" target="_blank" rel="noopener">Precatórios e RPVs do TRF2</a>
+                  <a href="https://consulta.trf4.jus.br/trf4/controlador.php?acao=pagina_precatorios" target="_blank" rel="noopener">Página de precatórios do TRF4</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="rank">
+              <div class="n" aria-hidden="true">3</div>
+              <div>
+                <header>
+                  <h3>TRF5 — mapa em planilha, lista em PDF</h3>
+                </header>
+                <p>O mapa da dívida sai em XLS com facilidade (499 entidades). Já a lista item a item está em um PDF de 1.746 páginas, menos prático para automatizar.</p>
+                <div class="links">
+                  <a href="https://rpvprecatorio.trf5.jus.br/mapa" target="_blank" rel="noopener">Mapa de precatórios do TRF5</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="rank">
+              <div class="n" aria-hidden="true">4</div>
+              <div>
+                <header>
+                  <h3>API pública do Datajud</h3>
+                </header>
+                <p>Responde pela classe 1265 (Precatório). No TRF3, por exemplo, retornou 6.114 processos. Não traz valor, credor nem posição na fila — só o andamento. A consulta ao TJSP deu timeout / 504.</p>
+              </div>
+            </article>
+
+            <article class="rank">
+              <div class="n" aria-hidden="true">5</div>
+              <div>
+                <header>
+                  <h3>CJF</h3>
+                </header>
+                <p>Há um painel em Power BI, mas não encontramos um arquivo para baixar.</p>
+              </div>
+            </article>
+
+            <article class="rank">
+              <div class="n" aria-hidden="true">6</div>
+              <div>
+                <header>
+                  <h3>TJSP DEPRE — o mais difícil de automatizar</h3>
+                </header>
+                <p>A lista geral sai em PDF, via formulário com captcha. Entre as fontes testadas, é a pior para puxar automaticamente.</p>
+                <div class="links">
+                  <a href="https://portal.tjsp.jus.br/Precatorios/Precatorios/ListaGeral" target="_blank" rel="noopener">Lista geral de precatórios do TJSP</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="rank">
+              <div class="n" aria-hidden="true">7</div>
+              <div>
+                <header>
+                  <h3>TRF1, TRF3, TRF6 e dados.gov.br</h3>
+                </header>
+                <p>O TRF1 só permite consulta caso a caso. TRF3 e TRF6 não foram verificados — houve falha de conexão. A presença desses dados em dados.gov.br não foi confirmada.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="reco">
+            <p><strong>Recomendação.</strong> A prova de conceito começou por TRF2, TRF4 e SIOP, e essas bases já estão no Balcão, em <a href="#bases">Bases e downloads</a>, com consulta e download. O Datajud entra para enriquecer o andamento dos processos. O TJSP fica para um momento seguinte. Os próximos passos estão no <a href="#projeto-roadmap">roadmap do projeto</a>.</p>
+          </div>
+        </div>
+      </section>
+
       <section id="projeto-fontes">
         <div class="wrap">
           <h2>Fontes de dados e limitações</h2>
-          <p class="section-lead">O que cada bloco de dado precisa ter, onde ele está hoje e o que a base ainda não cobre. A consulta e o download das fontes já coletadas estão na aba <a href="#bases">Bases</a>. O modelo conceitual está em <a href="#dados-necessarios">Aprendizado</a>.</p>
+          <p class="section-lead">O que cada bloco de dado precisa ter, onde ele está hoje e o que a base ainda não cobre. A consulta e o download das fontes já coletadas estão no Balcão, em <a href="#bases">Bases e downloads</a>. O modelo conceitual está em <a href="#dados-necessarios">Bastidores · dados necessários</a>.</p>
           <div id="projeto-modelo">
           <h3 style="margin-bottom:12px;">Os sete blocos</h3>
           <p class="section-lead">Os quatro primeiros dizem se o crédito é bom e limpo; os três últimos, quanto vale e quando paga.</p>
@@ -2925,116 +3299,129 @@
   </div>
 
 
-  <footer>
+  <footer class="site-footer">
     <div class="wrap">
-      <p class="update">Preca · www.preca.com.br · atualizado em 13/11/2026</p>
-      <p class="disclaimer">Este texto é um briefing informal, reunido a partir do que apuramos até esta data. Não é aconselhamento jurídico, financeiro ou de investimento. Antes de estruturar empresas, comprar créditos ou intermediar cessões, consulte um advogado e aguarde o texto final da resolução do CNJ e o ato conjunto com o Banco Central.</p>
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <span class="mark">Preca</span>
+          <p>Seu crédito tem data. A gente mostra qual.</p>
+        </div>
+        <div>
+          <h2>Para credores</h2>
+          <ul>
+            <li><a href="#preca">Tenho um precatório</a></li>
+            <li><a href="#preca-valor">Quanto vale (v0)</a></li>
+            <li><a href="#preca-o-que-fazer">Vender com segurança</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Balcão Preca</h2>
+          <ul>
+            <li><a href="#consulta">Radar da fila</a></li>
+            <li><a href="#bases">Bases e downloads</a></li>
+            <li><a href="#balcao-regularizacao">Regularização</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Conhecimento</h2>
+          <ul>
+            <li><a href="#resolucao-cessao">Resolução do CNJ</a></li>
+            <li><a href="#glossario">Glossário</a></li>
+            <li><a href="#projeto" class="foot-interno">Projeto (área interna)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-legal">
+        <p>Dados das listas públicas do TRF4, do TRF2, do TRF5 e do SIOP, coletados em 12/11/2026 (horário de Brasília). Conteúdo jurídico verificado em 13/11/2026.</p>
+        <p>A Preca é uma ferramenta em versão v0. Nada aqui é parecer jurídico, laudo, aconselhamento financeiro ou recomendação de investimento. A resolução do CNJ sobre cessão ainda não foi publicada; os artigos citados são da minuta de 27/10/2026 e podem mudar. Antes de vender, comprar ou intermediar um crédito, consulte um advogado.</p>
+      </div>
     </div>
   </footer>
 
   <script>
     (function () {
-      var TABS = ["consulta", "precificacao", "bases", "aprendizado", "projeto"];
-      var PROJETO = {
-        projeto: 1,
-        "projeto-visao": 1,
-        "projeto-estrutura": 1,
-        "projeto-marcas": 1,
-        "projeto-contexto": 1,
-        "projeto-frentes": 1,
-        "projeto-frente1": 1,
-        "projeto-frente2": 1,
-        "projeto-frente3": 1,
-        "projeto-frente4": 1,
-        "projeto-frente5": 1,
-        "projeto-roadmap": 1,
-        "projeto-modelo": 1,
-        "projeto-riscos": 1,
-        "projeto-status": 1,
-        "projeto-fontes": 1
-      };
-      var BASES = {
-        bases: 1,
-        "bases-fontes": 1,
-        "bases-eda": 1,
-        "bases-consulta": 1
-      };
+      var R = window.precaRoute;
+      var ROOTS = { "": 1, inicio: 1, preca: 1, consulta: 1, bases: 1, "balcao-lote": 1, "balcao-regularizacao": 1, conhecimento: 1, aprendizado: 1, topo: 1, projeto: 1, login: 1 };
 
       function currentId() {
         return (location.hash || "").replace(/^#/, "").split("?")[0];
       }
 
-      function tabFromId(id) {
-        id = (id || "").split("?")[0];
-        if (id === "precificacao" || (id && id.indexOf("precificacao") === 0)) return "precificacao";
-        if (BASES[id] || (id && id.indexOf("bases") === 0)) return "bases";
-        if (PROJETO[id] || (id && id.indexOf("projeto") === 0)) return "projeto";
-        if (id === "login") return "login";
-        if (id === "aprendizado" || (id && id.indexOf("aprendizado") === 0) || id === "o-que-e" || id === "novidades" || id === "resolucao-cessao" || id === "onde-estao" || id === "tres-papeis" || id === "dados-necessarios" || id === "poc" || id === "glossario" || id === "topo") return "aprendizado";
-        return "consulta";
-      }
-
       function apply(scroll) {
+        R.normalizeHash();
         var id = currentId();
-        var tab = tabFromId(id);
+        var view = R.viewFromId(id);
         if (typeof window.radarGuardTab === "function") {
-          tab = window.radarGuardTab(tab, id) || tab;
+          view = window.radarGuardTab(view, id) || view;
         }
-        document.documentElement.dataset.tab = tab;
+        var root = document.documentElement;
+        root.dataset.tab = view;
+        root.dataset.area = R.AREA[view] || "inicio";
 
-        var tabs = document.querySelectorAll(".tabs [role='tab']");
-        for (var i = 0; i < tabs.length; i++) {
-          var on = tabs[i].getAttribute("data-tab") === tab;
-          tabs[i].setAttribute("aria-selected", on ? "true" : "false");
-          tabs[i].tabIndex = on ? 0 : -1;
+        var area = root.dataset.area;
+        var links = document.querySelectorAll(".site-nav a[data-area]");
+        for (var i = 0; i < links.length; i++) {
+          if (links[i].getAttribute("data-area") === area) links[i].setAttribute("aria-current", "page");
+          else links[i].removeAttribute("aria-current");
         }
+        var subs = document.querySelectorAll(".subnav a[data-sub]");
+        for (var j = 0; j < subs.length; j++) {
+          if (subs[j].getAttribute("data-sub") === view) subs[j].setAttribute("aria-current", "page");
+          else subs[j].removeAttribute("aria-current");
+        }
+        var titles = { inicio: "Preca — seu crédito tem data", preca: "Tenho um precatório · Preca", consulta: "Radar da fila · Balcão Preca", bases: "Bases · Balcão Preca", lote: "Precificação em lote · Balcão Preca", regularizacao: "Regularização · Balcão Preca", conhecimento: "Conhecimento · Preca", projeto: "Projeto (interno) · Preca", login: "Entrar · Preca" };
+        document.title = titles[view] || titles.inicio;
 
         if (!scroll) return;
-        var isRoot = !id || id === "consulta" || id === "precificacao" || id === "aprendizado" || id === "projeto" || id === "bases" || id === "topo" || id === "login";
-        if (isRoot) {
+        if (ROOTS[id] && id !== "precificacao") {
           window.scrollTo(0, 0);
           return;
         }
         var target = document.getElementById(id);
         if (target) target.scrollIntoView();
+        else window.scrollTo(0, 0);
       }
 
-      window.radarTabFromId = tabFromId;
+      window.radarTabFromId = R.viewFromId;
       window.radarApply = apply;
-      document.documentElement.dataset.tab = tabFromId(currentId());
 
       window.addEventListener("hashchange", function () { apply(true); });
       document.addEventListener("DOMContentLoaded", function () {
+        var panels = document.querySelectorAll(".view[id^='panel-']");
+        var map = { "panel-inicio": "inicio", "panel-login": "login", "panel-precificacao": "preca", "panel-consulta": "consulta", "panel-bases": "bases", "panel-lote": "lote", "panel-regularizacao": "regularizacao", "panel-aprendizado": "conhecimento", "panel-projeto": "projeto" };
+        for (var k = 0; k < panels.length; k++) {
+          if (map[panels[k].id]) panels[k].setAttribute("data-view", map[panels[k].id]);
+        }
         var root = document.documentElement;
         var prev = root.style.scrollBehavior;
         root.style.scrollBehavior = "auto";
         apply(true);
         root.style.scrollBehavior = prev;
+
+        window.addEventListener("load", function () {
+          var id0 = currentId();
+          if (ROOTS[id0] && id0 !== "precificacao") setTimeout(function () { window.scrollTo(0, 0); }, 0);
+        });
+
+        var health = document.getElementById("inicio-api");
+        if (health && window.fetch) {
+          fetch("/api/health", { credentials: "same-origin" })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+              var fmt = new Intl.NumberFormat("pt-BR");
+              if (d && d.ok) {
+                health.innerHTML = "<span class='st ok'>Base no ar</span> <span>Agora: " + fmt.format(d.trf4_pendentes) +
+                  " linhas da fila do TRF4 e " + fmt.format(d.siop) + " do SIOP carregadas · última verificação dos arquivos em " +
+                  String(d.testado_em || "").replace(/[<>&]/g, "") + "</span>";
+              } else {
+                health.innerHTML = "<span class='st nao'>Base indisponível</span> <span>A base não respondeu agora. Os números acima são da coleta de 12/11/2026.</span>";
+              }
+            })
+            .catch(function () {
+              health.innerHTML = "<span class='st nao'>Sem conexão</span> <span>Não foi possível verificar a base agora. Os números acima são da coleta de 12/11/2026.</span>";
+            });
+        }
       });
-
-      var brand = document.querySelector("a.brand");
-      if (brand) {
-        brand.addEventListener("click", function (e) {
-          e.preventDefault();
-          var tab = document.documentElement.dataset.tab || "consulta";
-          var dest = tab === "projeto" || tab === "bases" || tab === "aprendizado" || tab === "precificacao" || tab === "login" ? tab : "consulta";
-          if (currentId() !== dest) location.hash = dest;
-          window.scrollTo(0, 0);
-        });
-      }
-
-      var tablist = document.querySelector(".tabs[role='tablist']");
-      if (tablist) {
-        tablist.addEventListener("keydown", function (e) {
-          if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-          e.preventDefault();
-          var cur = document.documentElement.dataset.tab || "consulta";
-          var i = TABS.indexOf(cur);
-          if (i < 0) i = 0;
-          var next = e.key === "ArrowRight" ? TABS[(i + 1) % TABS.length] : TABS[(i + TABS.length - 1) % TABS.length];
-          location.hash = next;
-        });
-      }
     })();
   </script>
   <script src="/login.js"></script>

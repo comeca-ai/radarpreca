@@ -1,5 +1,6 @@
 (function () {
-  var PROTECTED = { consulta: 1, precificacao: 1, bases: 1 };
+  // Views do Balcão exigem login. A área Preca é pública e esconde a calculadora até haver sessão.
+  var PROTECTED = { consulta: 1, bases: 1, lote: 1, regularizacao: 1 };
   var state = { user: null, ready: false };
 
   function root() { return document.documentElement; }
@@ -12,7 +13,7 @@
     var id = currentId();
     if (id === "login") return "login";
     if (typeof window.radarTabFromId === "function") return window.radarTabFromId(id);
-    return "consulta";
+    return "inicio";
   }
 
   function isProtected(tab) {
@@ -167,7 +168,7 @@
     root().dataset.auth = "out";
     showAuthSlot();
     emitAuth();
-    location.hash = "login";
+    location.hash = "inicio";
     applyTabs();
   }
 
@@ -177,11 +178,17 @@
     var sair = document.getElementById("btn-sair");
     if (sair) sair.addEventListener("click", onSair);
 
-    var tabs = document.querySelectorAll(".tabs [role='tab']");
+    document.addEventListener("click", function (ev) {
+      var a = ev.target && ev.target.closest ? ev.target.closest("a[data-next]") : null;
+      if (!a || state.user) return;
+      try { sessionStorage.setItem("radar_next", a.getAttribute("data-next")); } catch (err) {}
+    });
+
+    var tabs = document.querySelectorAll(".site-nav a[data-tab], .subnav a[href]");
     for (var i = 0; i < tabs.length; i++) {
       tabs[i].addEventListener("click", function (ev) {
         if (state.user || !state.ready) return;
-        var tab = ev.currentTarget.getAttribute("data-tab");
+        var tab = ev.currentTarget.getAttribute("data-tab") || ev.currentTarget.getAttribute("data-sub") || "";
         if (!isProtected(tab)) return;
         ev.preventDefault();
         try { sessionStorage.setItem("radar_next", tab); } catch (err) {}

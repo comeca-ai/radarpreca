@@ -265,9 +265,14 @@
 
     var faixaEl = $("#precif-faixa");
     if (faixa) {
+      var precos = nomes.map(function (n) { return calcs[n].preco; }).filter(function (v) { return isFinite(v); });
+      var pMin = precos.length ? Math.min.apply(null, precos) : null;
+      var pMax = precos.length ? Math.max.apply(null, precos) : null;
       faixaEl.innerHTML =
-        "<p class='tag-v0'>Faixa de deságio · v0 · hipótese</p>" +
-        "<p class='faixa-num'>" + pct2(faixa.min) + " a " + pct2(faixa.max) + "</p>" +
+        "<p class='tag-v0'>Estimativa de preço hoje · v0 · hipótese</p>" +
+        (pMin != null ? "<p class='faixa-preco'>" + money(pMin) + " a " + money(pMax) + "</p>" : "") +
+        "<p class='faixa-sub'>Deságio de <strong>" + pct2(faixa.min) + " a " + pct2(faixa.max) + "</strong> sobre o valor atual · " +
+        "<span class='st nao'>Confiança baixa</span> <span class='muted'>hipóteses de risco e retorno ainda não calibradas</span></p>" +
         "<p>Deságio do cenário-base: <strong>" + pct2(calcs.base.desagio) + "</strong>" +
         (calcs.base.agio ? " (ágio: o preço sai acima do valor atual, porque a correção ou o prazo empurram o valor no pagamento)." : ".") +
         " Calculado como 1 − Preço / Valor atual hoje. Não é deságio de mercado.</p>";
@@ -338,17 +343,21 @@
         if (!res.data) throw new Error("sem dados");
         if (!res.ok && !res.data.credito) {
           meta.textContent = res.data.erro || "Número não localizado na fila pendente do TRF4.";
+          var aj = document.getElementById("precif-ajustes");
+          if (aj) aj.open = true;
           applyPrefill(res.data);
           return;
         }
         var c = res.data.credito;
+        var ajustes = document.getElementById("precif-ajustes");
+        if (ajustes) ajustes.open = !c;
         meta.textContent = c
           ? ("Crédito " + c.numero_precatorio + " lido da fila pendente do TRF4.")
           : "Calculadora em branco. Preencha os campos à mão.";
         applyPrefill(res.data);
       })
       .catch(function () {
-        meta.textContent = "Não foi possível falar com a API de precificação.";
+        meta.textContent = "Não foi possível falar com a API de precificação agora. Tente de novo em instantes ou preencha os valores à mão no passo 2.";
       });
   }
 
@@ -358,7 +367,8 @@
   }
 
   function onHash() {
-    if (hashBase() !== "precificacao") return;
+    var base = hashBase();
+    if (base !== "precificacao" && base !== "preca" && base.indexOf("preca-") !== 0) return;
     var numero = hashParams().get("numero");
     var form = $("#form-precif-busca");
     if (form && numero) {
